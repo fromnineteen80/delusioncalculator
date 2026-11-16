@@ -75,7 +75,7 @@ header{position:relative}
 @media (max-width:767px){ #start{position:static;min-height:2.4em;margin:6px 0 0;font-size:11.5px;pointer-events:auto} #start[hidden]{display:block!important;visibility:hidden} }
 .brand + .tagline{font:500 clamp(16px,1.9vw,19px)/1.4 var(--body);color:var(--ink);opacity:.78;margin:10px 0 0;max-width:none;text-wrap:pretty;letter-spacing:-.005em}
 h1{font:700 clamp(34px,5vw,52px)/1.02 var(--display);color:var(--ink);margin:0;letter-spacing:-.02em}
-.brand{display:inline-flex;align-items:baseline;gap:.26em;font-size:clamp(34px,5vw,52px);position:relative;padding-bottom:20px;max-width:100%}
+.brand{color:inherit;text-decoration:none;cursor:pointer;display:inline-flex;align-items:baseline;gap:.26em;font-size:clamp(34px,5vw,52px);position:relative;padding-bottom:20px;max-width:100%}
 .brand::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;border-radius:2px;background:var(--accent)}
 .brand .logo{flex:none;height:.66em;width:.825em;color:var(--ink);overflow:visible}
 .brand .logo-heart{fill:var(--accent)}
@@ -269,6 +269,7 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
 .rp-prog svg{width:36px;height:36px;flex:none;transform:rotate(-90deg)} .rp-prog.big svg{width:64px;height:64px}
 .rp-prog circle{fill:none;stroke-width:4} .rp-prog .tr{stroke:var(--track)} .rp-prog .fg{stroke:var(--accent);stroke-linecap:round;transition:stroke-dashoffset .2s ease}
 .rp-prog.spin svg{animation:rpspin 1s linear infinite} @keyframes rpspin{to{transform:rotate(270deg)}} @media (prefers-reduced-motion:reduce){.rp-prog.spin svg{animation:none}}
+.stale > :not(#rpProg){opacity:.4;pointer-events:none;transition:opacity .2s} #rpProg{position:sticky;top:0;z-index:5;background:var(--sheet)}
 .rp-prog b{display:block;font:600 13px var(--body)} .rp-prog span{display:block;font-size:11.5px;line-height:1.4;color:var(--muted)}
 
 .rp-cards{display:grid;grid-template-columns:repeat(var(--cols,1),minmax(0,1fr));gap:16px;align-items:start;margin:16px 0 8px}
@@ -709,7 +710,7 @@ a.ext{color:var(--accent-ink);text-decoration:none}
 </style>
 <div class="wrap">
 <header>
-  <div class="brand"><svg class="logo" viewBox="2 3 20 18.35" aria-hidden="true"><path class="logo-heart" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="#fff" transform="translate(12 11.6) scale(.45) translate(-12 -12)"/></svg><h1>You’re All Delusional</h1></div>
+  <a class="brand" href="./" id="brandHome" aria-label="You’re All Delusional: start over"><svg class="logo" viewBox="2 3 20 18.35" aria-hidden="true"><path class="logo-heart" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="#fff" transform="translate(12 11.6) scale(.45) translate(-12 -12)"/></svg><h1>You’re All Delusional</h1></a>
   <p class="tagline">It’s highly likely <em class="you">you</em> need a reality check about today’s dating economy.<br><em class="cta">Take our questionnaire and find out.</em></p>
   <div class="start" id="start" hidden></div>
   <div class="instr" id="instr">
@@ -2781,9 +2782,10 @@ function metroTable(list, rows, mine, odds, ex){
 
 async function compJob(F, A, rows, mine, base, fin, w, token, C0, WB){
   const live = () => token === JOB;
-  RUN_KEY = {key: JSON.stringify(F), token};
+  RUN_KEY = {key: JSON.stringify(F), token}; runProg(.03, 'Scoring your answers');
   const C = C0 || compete(A.codes, F, RUN);
   if (!live() || !C) return;
+  runProg(.08, 'Ranking you against the nation');
   const nat = await later(() => live() ? compete(D.cbsa.map((c, i) => i).filter(i => D.cbsa[i].t === 1), F, {n: 120, maxCells: 60}) : null);   // national rank only; a lighter run keeps the page responsive
   if (!live()) return;
   const you = F.mySex === 'M' ? 'men' : 'women', them = w.pl, one = F.T === 'M' ? 'man' : 'woman';
@@ -2826,6 +2828,7 @@ async function compJob(F, A, rows, mine, base, fin, w, token, C0, WB){
   const cand = rows.slice(), odds = new Map();
   $('cmpNote').textContent = `Scoring all ${cand.length} metro areas…`;
   for (let s = 0; s < cand.length; s += 2){
+    if (live()) runProg(.2 + .5 * s / cand.length, 'Scoring every metro area');
     await later(() => { if (!live()) return; for (const r of cand.slice(s, s + 2)) odds.set(r.i, r.i === mine && A.codes.length === 1 ? C : compete([r.i], F, {n: 150, maxCells: 50})); });
     if (!live()) return;
     if (s % 20 === 0) $('cmpNote').textContent = `Scoring all ${cand.length} metro areas… ${Math.min(cand.length, s + 2)} done`;
@@ -2859,7 +2862,8 @@ async function compJob(F, A, rows, mine, base, fin, w, token, C0, WB){
     const L2 = computeAll(A.codes, F2), C2 = compete(A.codes, F2, RUN), w2 = wouldDate(C2);
     // Same run as the bar, so only the change itself moves the number.
     const f2 = w2 != null ? w2 : L2[L2.length - 1].after; return {f2, C2}; };
-  for (const idea of ideas){
+  for (const [ii, idea] of ideas.entries()){
+    if (live()) runProg(.75 + .2 * ii / ideas.length, 'Testing the moves that would change your odds');
     await later(() => { if (!live()) return; out.push({...idea, ...tryIdea([idea])}); });
     if (!live()) return;
   }
@@ -3412,6 +3416,7 @@ async function buildReport(F, A, C, fin, WB, live, X = {}){
     if (small.length) cards.push(card('c-minor', 'more_horiz', 'Also consider', `These move your chances by less than a point either way.`,
       `<ul class="rp-minor">${small.map(r => `<li><span>${esc(r.label)}</span><b>${sgn(r.dc)}</b></li>`).join('')}</ul>`)); }
   cards.splice(0, cards.length, ...cardOrder(cards));   // the jump links and the cards share one order
+  box.classList.remove('stale');
   box.innerHTML = `${reportSummary(F, A, C, fin, WB, rows, X)}
     <nav class="rp-jump" aria-label="Jump to a card">${cards.map(c => { const m = c.match(/class="rp-card ([\w-]+)".*?<\/span>([^<]+)<\/h3>/); return m ? `<a href="#" data-to="${m[1]}">${m[2]}</a>` : ''; }).join('')}</nav>
     <div class="rp-cards" id="rpCards">${cards.join('')}</div>${familyFloor(F)}`;
@@ -3563,9 +3568,18 @@ function enterReport(){
   if (L && REPORT_FOR === L.key && $('reportBody').querySelector('.rp-cards')){ $('report').hidden = false; layoutCards(true); }
   else if (L){ const [F, A, C, fin, WB, X] = L.args; buildReport(F, A, C, fin, WB, () => document.body.classList.contains('rv'), X); }
   else if (RUN_KEY && RUN_KEY.key === key && RUN_KEY.token === JOB){   // still scoring these answers: the report builds when it finishes
-    $('report').hidden = false; if (!$('reportBody').querySelector('.rp-cards')) $('reportBody').innerHTML = '<div class="rp-prog big spin"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="16" class="tr"/><circle cx="20" cy="20" r="16" class="fg" style="stroke-dasharray:25 76"/></svg><div><b>Finishing your results</b><span>Scoring every metro area and the moves that would change your odds</span></div></div>'; }
-  else render(); $('resultsBtn').setAttribute('aria-pressed', 'true'); $('resultsBtn').querySelector('.pm').textContent = '–';
+    $('report').hidden = false; if ($('reportBody').querySelector('.rp-cards')) runProg(.1, 'Scoring your answers'); else $('reportBody').innerHTML = '<div class="rp-prog big spin"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="16" class="tr"/><circle cx="20" cy="20" r="16" class="fg" style="stroke-dasharray:25 76"/></svg><div><b>Finishing your results</b><span>Scoring every metro area and the moves that would change your odds</span></div></div>'; }
+  else { $('report').hidden = false; runProg(.01, 'Scoring your answers'); render(); } $('resultsBtn').setAttribute('aria-pressed', 'true'); $('resultsBtn').querySelector('.pm').textContent = '–';
   $('bar').scrollIntoView({behavior: 'auto', block: 'start'});
+}
+// While new answers are scored, the report shows a progress ring at once and dims the cards it's replacing.
+function runProg(f, lab){
+  const box = $('reportBody'); if (!box || $('report').hidden || !document.body.classList.contains('rv')) return;
+  let pr = $('rpProg'); const old = !!box.querySelector('.rp-cards');
+  if (!pr){ pr = document.createElement('div'); pr.id = 'rpProg'; pr.className = 'rp-prog'; pr.setAttribute('role', 'progressbar'); pr.setAttribute('aria-valuemin', '0'); pr.setAttribute('aria-valuemax', '100'); }
+  if (old){ pr.classList.remove('big'); if (box.firstChild !== pr) box.prepend(pr); box.classList.add('stale'); } else { pr.classList.add('big'); if (!box.contains(pr)) box.replaceChildren(pr); }
+  const c = 2 * Math.PI * 16, pct = Math.round(f * 100); pr.classList.remove('spin'); pr.setAttribute('aria-valuenow', String(pct));
+  pr.innerHTML = `<svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="16" class="tr"/><circle cx="20" cy="20" r="16" class="fg" style="stroke-dasharray:${c.toFixed(2)};stroke-dashoffset:${(c * (1 - f)).toFixed(2)}"/></svg><div><b>${old ? 'Updating your results' : 'Finishing your results'} · ${pct}%</b><span>${lab}</span></div>`;
 }
 function exitReport(openPart){
   const go = () => { GRID.classList.remove('done'); document.body.classList.remove('rv'); $('report').hidden = true; if (openPart != null) setPart(openPart, true); render(); };
@@ -3774,6 +3788,7 @@ new MutationObserver(qtProg).observe($('prog2'), {childList: true, characterData
 function qtSave(){ try { const c = answersCode(); if (c) sessionStorage.setItem('yad-answers', c); else sessionStorage.removeItem('yad-answers'); sessionStorage.setItem('yad-tab', String(QTAB)); } catch (e) {} }
 let qtT; $('f').addEventListener('input', () => { clearTimeout(qtT); qtT = setTimeout(qtSave, 400); }); $('f').addEventListener('change', () => { clearTimeout(qtT); qtT = setTimeout(qtSave, 400); });
 document.body.classList.add('qtabbed'); GRID.classList.remove('intro');
+$('brandHome').addEventListener('click', e => { e.preventDefault(); try { sessionStorage.removeItem('yad-answers'); sessionStorage.removeItem('yad-tab'); } catch (x) {} location.href = location.pathname; });
 { let t = 0, c = null; try { c = sessionStorage.getItem('yad-answers'); t = +(sessionStorage.getItem('yad-tab') || 0); } catch (e) {}
   if (c) loadAnswers(c); selTab(t === 1 ? 1 : 0, false); qtProg(); }
 const tryLoad = () => { const ok = loadAnswers($('loadCode').value); $('saveMsg').className = 'save-msg' + (ok ? '' : ' bad'); $('saveMsg').textContent = ok ? 'Your answers are back. Change anything to keep exploring.' : 'That code didn’t work. Copy the whole code and try again.'; if (ok){ $('loadCode').value = ''; fitBox($('loadCode')); try { document.activeElement && document.activeElement.blur(); $('loadCode').blur(); } catch (e) {} /* closes the phone keyboard */ if ($('saveBtn').getAttribute('aria-expanded') === 'true') $('saveBtn').click(); if (answersComplete()){
