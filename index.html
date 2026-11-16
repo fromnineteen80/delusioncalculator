@@ -545,12 +545,8 @@ html:root[data-scheme="dark"] .msi{font-variation-settings:"GRAD" -25}
 /* Phones: the report title and its one-line description get the full width; the save and close links move to their own row below. */
 @media (max-width:767px){#report .card-head{flex-wrap:wrap} #report .card-head > .hgrp{flex:1 1 100%} #report .card-head > .rp-close{margin-left:0}}
 /* The family floor: cards under the report */
-:root{--ff-tax:#1e2b45;--ff-save:#3e6797;--ff-home:#6f95c2;--ff-kids:#a8480b;--ff-car:#b88a00;--ff-food:#4d7a12;--ff-health:#17663b;--ff-debt:#a3221a;--ff-life:#8a6bb0;
-  --ff-p1:#3e6797;--ff-p2:#7a5fa6;--ff-p3:#c98a1b;--ff-ok:#17663b}
-@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){--ff-tax:#c9d6ea;--ff-save:#a9c3e6;--ff-home:#6f95c2;--ff-kids:#e08a52;--ff-car:#e0b93a;--ff-food:#8fbf4f;--ff-health:#4fb77a;--ff-debt:#e0645a;--ff-life:#ab92d4;
-  --ff-p1:#8fb0d9;--ff-p2:#ab92d4;--ff-p3:#e0a94a;--ff-ok:#4fb77a} }
-:root[data-theme="dark"]{--ff-tax:#c9d6ea;--ff-save:#a9c3e6;--ff-home:#6f95c2;--ff-kids:#e08a52;--ff-car:#e0b93a;--ff-food:#8fbf4f;--ff-health:#4fb77a;--ff-debt:#e0645a;--ff-life:#ab92d4;
-  --ff-p1:#8fb0d9;--ff-p2:#ab92d4;--ff-p3:#e0a94a;--ff-ok:#4fb77a}
+:root{--ff-tax:var(--navy);--ff-save:var(--accent-ink);--ff-home:var(--accent);--ff-kids:var(--long);--ff-car:var(--fair-ink);--ff-food:var(--hi);--ff-health:var(--good);--ff-debt:var(--poor);--ff-life:var(--faint);
+  --ff-p1:var(--accent-ink);--ff-p2:var(--long);--ff-p3:var(--fair-ink);--ff-ok:var(--good)}
 .ff{margin:22px 0 4px}
 .ff-title{padding:14px 0 12px;border-top:2px solid var(--navy)}
 .ff-title h2{margin:0;font:700 20px/1.2 var(--display);color:var(--navy)} .ff-title p{margin:4px 0 0;font-size:11.5px;line-height:1.4;color:var(--muted)}
@@ -576,7 +572,7 @@ html:root[data-scheme="dark"] .msi{font-variation-settings:"GRAD" -25}
 .ff-key{display:flex;flex-wrap:wrap;gap:6px 16px;margin:0 0 10px;font-size:11.5px;color:var(--muted)} .ff-key b{color:var(--ink)}
 .ff-dot{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:6px;vertical-align:0}
 .ff-dot.ff-p1,.ff-bar .ff-p1{background:var(--ff-p1)} .ff-dot.ff-p2,.ff-bar .ff-p2{background:var(--ff-p2)} .ff-dot.ff-p3,.ff-bar .ff-p3{background:var(--ff-p3)}
-.ff-head,.ff-step{display:grid;grid-template-columns:minmax(150px,1.1fr) minmax(140px,1.3fr) 92px minmax(0,1.6fr) minmax(0,1.6fr);gap:4px 14px;align-items:center}
+.ff-head,.ff-step{display:grid;grid-template-columns:minmax(170px,1.1fr) 92px minmax(0,1.7fr) minmax(0,1.7fr);gap:4px 14px;align-items:center}
 .ff-head{padding:0 0 4px;border-bottom:1px solid var(--rule);font-size:11px;font-weight:600;color:var(--muted)}
 .ff-steps{list-style:none;margin:0;padding:0}
 .ff-step{padding:7px 0;border-bottom:1px dotted var(--rule);font-size:12px;line-height:1.35}
@@ -584,6 +580,9 @@ html:root[data-scheme="dark"] .msi{font-variation-settings:"GRAD" -25}
 .ff-bar{display:flex;height:14px;background:var(--track);border-radius:3px;overflow:hidden} .ff-bar i{display:block;height:100%}
 .ff-ct{font-variant-numeric:tabular-nums;white-space:nowrap} .ff-ct b{font-size:14px} .ff-ct span{display:block;font-size:11px;color:var(--muted)}
 .ff-says,.ff-holds{margin:0} .ff-holds{color:var(--poor)}
+.ff-flow{overflow-x:auto;margin:4px 0 14px} .ff-flow svg{display:block;width:100%;min-width:760px;height:auto;font-family:var(--body)}
+.ff-fh{font-size:12px;fill:var(--ink)} .ff-fc,.ff-fd{font-size:11.5px;fill:var(--muted)} .ff-fb{font-weight:700;fill:var(--ink)} .ff-fn{font-size:11.5px;font-weight:700;fill:var(--ink)}
+.ff-fm{font-size:13px;font-weight:700;fill:var(--ff-ok)} .ff-fs{font-size:12px;font-weight:700;fill:var(--muted)}
 .ff-tally{margin-top:10px;font-size:13px} .ff-tally b{font-size:15px} .ff-tally > b:first-child{color:var(--ff-ok)} .ff-tally span{color:var(--faint);margin:0 4px}
 @media (max-width:979px){.ff-head{display:none} .ff-step{grid-template-columns:minmax(0,1fr) auto;gap:5px 12px}
   .ff-sl{grid-column:1} .ff-ct{grid-column:2;grid-row:1;text-align:right} .ff-bar{grid-column:1/-1} .ff-says,.ff-holds{grid-column:1/-1}}
@@ -3983,11 +3982,66 @@ function ffPath(F){
   if (!deg) return 2;
   return inc == null ? -1 : inc > 72436 ? 0 : 1;   // BLS 2025: women with only a bachelor's earn a median $1,393 a week
 }
+// The Gauntlet flow: 1,000 men through eight steps on three paths, with the men who fall short peeling off at each step.
+// FF_FLOW[k] = flows from column k to k+1 as [from lane, to lane, men]; lane -1 is the starting 1,000.
+const FF_FLOW = [
+  [[-1, 0, 370], [-1, 2, 630]],
+  [[0, 0, 216], [0, 1, 154], [2, 2, 630]],
+  [[0, 0, 147], [0, 1, 69], [1, 1, 154], [2, 2, 630]],
+  [[0, 0, 109], [1, 1, 104], [2, 2, 410]],
+  [[0, 0, 95], [1, 1, 82], [2, 2, 324]],
+  [[0, 0, 48], [1, 1, 11], [2, 2, 42]],
+  [[0, 0, 41], [1, 1, 9], [2, 2, 36]],
+  [[0, 0, 25], [1, 1, 5], [2, 2, 21]]
+];
+const FF_DROP = [null, null, null, 'never married', 'divorced', 'under $250k', 'couldn’t buy nearby', 'fewer than two kids'];
+function ffFlowSVG(p){
+  const W = 1140, x0 = 62, colW = (W - x0 - 190) / 8, s = 0.3, nw = 7, top = 74, gap = 16;
+  // lane slots: each lane keeps a fixed top so bands read as continuous paths
+  const Y = [top, top + s * 216 + gap]; Y.push(Math.max(top + s * 370, Y[1] + s * 223) + gap);
+  const H = Y[2] + s * 630 + 92, X = k => x0 + k * colW, lc = ['var(--ff-p1)', 'var(--ff-p2)', 'var(--ff-p3)'];
+  const op = l => p < 0 || p === l ? 1 : 0.28, band = (xa, ya, ha, xb, yb, hb, fill, o) => { const m = (xa + xb) / 2;
+    return `<path d="M${xa},${ya}C${m},${ya} ${m},${yb} ${xb},${yb}L${xb},${yb + hb}C${m},${yb + hb} ${m},${ya + ha} ${xa},${ya + ha}Z" fill="${fill}" fill-opacity="${o}"/>`; };
+  let g = '', nodes = '', labels = '';
+  // lane sizes at each column (column 0 = start, 1..8 = after each step)
+  const size = [[0, 0, 0]]; FF_FLOW.forEach(F => { const z = [0, 0, 0]; F.forEach(([, b, n]) => z[b] += n); size.push(z); });
+  // starting node
+  nodes += `<rect x="${X(0) - nw}" y="${top}" width="${nw}" height="${s * 1000}" fill="var(--navy)"/>`;
+  labels += `<text x="${X(0) - nw - 6}" y="${top + 12}" text-anchor="end" class="ff-fn">1,000</text>`;
+  FF_FLOW.forEach((F, k) => {
+    const xa = X(k), xb = X(k + 1) - nw; const outOff = [0, 0, 0], inOff = [0, 0, 0]; let startOff = 0;
+    F.forEach(([a, b, n]) => {
+      const ya = a < 0 ? top + startOff : Y[a] + outOff[a], yb = Y[b] + inOff[b];
+      g += band(xa, ya, s * n, xb, yb, s * n, lc[b], 0.3 * op(b));
+      if (a < 0) startOff += s * n; else outOff[a] += s * n; inOff[b] += s * n;
+    });
+    // men who fall short at this step peel off under each lane
+    if (k >= 3) [0, 1, 2].forEach(l => { const d = size[k][l] - size[k + 1][l]; if (d > 0){ const ya = Y[l] + s * size[k + 1][l];
+      g += band(xa, ya, s * d, xa + colW * 0.55, ya + 12, s * d, 'var(--faint)', 0.22 * op(l)); } });
+    [0, 1, 2].forEach(l => { const n = size[k + 1][l]; if (!n) return;
+      nodes += `<rect x="${xb}" y="${Y[l]}" width="${nw}" height="${Math.max(1.2, s * n)}" fill="${lc[l]}" opacity="${op(l)}"/>`;
+      labels += `<text x="${xb + nw + 4}" y="${Y[l] + 12}" class="ff-fn" fill="${lc[l]}" opacity="${op(l)}">${n}</text>`; });
+    const st = FF_STEPS[k]; const t = st[0].replace('Out-earn the women he’d marry', 'Out-earn the women he’d marry').split(' ');
+    const half = Math.ceil(t.length / 2), cx = X(k + 1) - nw / 2;
+    labels += `<text x="${cx}" y="16" text-anchor="middle" class="ff-fh">${t.slice(0, half).join(' ')}</text><text x="${cx}" y="31" text-anchor="middle" class="ff-fh">${t.slice(half).join(' ')}</text>
+      <text x="${cx}" y="52" text-anchor="middle" class="ff-fc"><tspan class="ff-fb">${st[2].toLocaleString('en-US')}</tspan> of ${st[3].toLocaleString('en-US')}</text>`;
+    if (FF_DROP[k]){ const d = size[k][0] + size[k][1] + size[k][2] - size[k + 1][0] - size[k + 1][1] - size[k + 1][2];
+      labels += `<text x="${X(k) + colW * 0.5}" y="${H - 52}" text-anchor="middle" class="ff-fd"><tspan class="ff-fb">${d}</tspan></text><text x="${X(k) + colW * 0.5}" y="${H - 36}" text-anchor="middle" class="ff-fd">${FF_DROP[k]}</text>`; }
+  });
+  // made it: the three paths gather into one green node
+  const xm = X(8) + 70, made = size[8], mh = s * 51; let off = 0;
+  [0, 1, 2].forEach(l => { g += band(X(8), Y[l], s * made[l], xm - nw, top + off, s * made[l], 'var(--ff-ok)', 0.32 * op(l)); off += s * made[l]; });
+  nodes += `<rect x="${xm - nw}" y="${top}" width="${nw}" height="${mh}" fill="var(--ff-ok)"/><rect x="${xm - nw}" y="${top + mh + 6}" width="${nw}" height="${s * 949}" fill="var(--faint)" opacity=".55"/>`;
+  labels += `<text x="${xm + 4}" y="${top + 13}" class="ff-fm">51 made it</text><text x="${xm + 4}" y="${top + mh + 6 + 16}" class="ff-fs">949 fell short</text>
+    <text x="${xm - nw / 2}" y="16" text-anchor="middle" class="ff-fh">Final</text><text x="${xm - nw / 2}" y="31" text-anchor="middle" class="ff-fh">tally</text>
+    <text x="${x0 - nw / 2}" y="16" text-anchor="middle" class="ff-fh">Men</text><text x="${x0 - nw / 2}" y="31" text-anchor="middle" class="ff-fh">turning 37</text>
+    <text x="${x0 - nw}" y="${H - 52}" class="ff-fd"><tspan class="ff-fb">Fell short</tspan></text><text x="${x0 - nw}" y="${H - 36}" class="ff-fd">at each step</text>`;
+  return `<div class="ff-flow"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Flow of 1,000 men turning 37 through eight steps. 51 make it and 949 fall short: 377 never married, 122 divorced, 400 under $250,000, 15 couldn’t buy nearby, 35 had fewer than two kids.">${g}${nodes}${labels}</svg></div>`;
+}
 function ffGauntlet(F){
   const p = ffPath(F), seg = (v, cls) => v ? `<i class="${cls}" style="width:${v / 10}%"></i>` : '';
   const rows = FF_STEPS.map(([lab, still, made, of, says, holds], k) => `<li class="ff-step">
       <div class="ff-sl"><span class="ff-n">${k + 1}</span><b>${lab}</b></div>
-      <div class="ff-bar" role="img" aria-label="${made} of ${of} men">${seg(still[0], 'ff-p1')}${seg(still[1], 'ff-p2')}${seg(still[2], 'ff-p3')}</div>
       <div class="ff-ct"><b>${made.toLocaleString('en-US')}</b> of ${of.toLocaleString('en-US')}<span>${Math.round(made / of * 1000) / 10}%</span></div>
       <p class="ff-says">${says}</p><p class="ff-holds">${holds}</p></li>`).join('');
   const you = p < 0 ? '' : `<p class="ff-you"><span class="ff-dot ${FF_PATHS[p][1]}"></span>Your answers put you on the <b>${FF_PATHS[p][0].toLowerCase()}</b> path, where <b>${FF_PATHS[p][3]} of ${FF_PATHS[p][2]}</b> men (${(FF_PATHS[p][3] / FF_PATHS[p][2] * 100).toFixed(1)}%) make it.</p>`;
@@ -3995,9 +4049,10 @@ function ffGauntlet(F){
     <p class="rp-cl">Start with 1,000 men turning 37 and apply the published share who clear each step to the men still in the running. 51 reach a marriage, a home near good jobs, two kids and $250,000 together. 949 fall short.</p>
     <div class="rp-body">${you}
     <div class="ff-key">${FF_PATHS.map(([l, c, n, m]) => `<span><span class="ff-dot ${c}"></span>${l}: <b>${m}</b> of ${n} make it</span>`).join('')}</div>
-    <div class="ff-head" aria-hidden="true"><span>Step</span><span>Men still in, of 1,000</span><span>Made it</span><span>What the numbers say</span><span>What is holding men back</span></div>
+    ${ffFlowSVG(p)}
+    <div class="ff-head" aria-hidden="true"><span>Step</span><span>Made it</span><span>What the numbers say</span><span>What is holding men back</span></div>
     <ol class="ff-steps">${rows}</ol>
-    <div class="ff-tally"><b>51</b> made it <span>·</span> <b>949</b> fell short: 377 never married, 122 divorced, 400 under $250,000, 15 couldn’t buy nearby, 35 had fewer than two kids</div></div></section>`;
+    <div class="ff-tally" hidden><b>51</b> made it <span>·</span> <b>949</b> fell short: 377 never married, 122 divorced, 400 under $250,000, 15 couldn’t buy nearby, 35 had fewer than two kids</div></div></section>`;
 }
 
 // 3. The budget for the user's area, grouped like a household budget.
