@@ -1,0 +1,52 @@
+# Insurify average annual home insurance, $300K dwelling, by state (2026)
+Alaska|1320.0
+Alabama|3408.0
+Arkansas|3552.0
+Arizona|2184.0
+California|2040.0
+Colorado|3240.0
+Connecticut|1980.0
+Delaware|1272.0
+Florida|6408.0
+Georgia|2496.0
+Hawaii|1488.0
+Iowa|2508.0
+Idaho|1728.0
+Illinois|2568.0
+Indiana|2220.0
+Kansas|3996.0
+Kentucky|3252.0
+Louisiana|5028.0
+Massachusetts|1956.0
+Maryland|1944.0
+Maine|1200.0
+Michigan|2256.0
+Minnesota|2676.0
+Missouri|2904.0
+Mississippi|3348.0
+Montana|2664.0
+North Carolina|3192.0
+North Dakota|2664.0
+Nebraska|4044.0
+New Hampshire|1188.0
+New Jersey|1224.0
+New Mexico|3264.0
+Nevada|1308.0
+New York|1356.0
+Ohio|1716.0
+Oklahoma|5556.0
+Oregon|1320.0
+Pennsylvania|1272.0
+Rhode Island|2364.0
+South Carolina|2700.0
+South Dakota|2736.0
+Tennessee|3096.0
+Texas|4668.0
+Utah|1524.0
+Virginia|1656.0
+Vermont|984.0
+Washington|1404.0
+District of Columbia|1200.0
+Wisconsin|1512.0
+West Virginia|1536.0
+Wyoming|1704.0

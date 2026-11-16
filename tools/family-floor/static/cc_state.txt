@@ -1,0 +1,52 @@
+# Experian average credit card balance by state, March 2026 (national $6,659)
+Alaska|7760
+District of Columbia|7740
+Hawaii|7654
+Connecticut|7494
+New Jersey|7464
+Florida|7444
+Texas|7383
+Maryland|7358
+Nevada|7293
+Colorado|7189
+Georgia|7145
+California|7129
+Virginia|7122
+New York|6901
+Washington|6867
+Arizona|6850
+Massachusetts|6801
+Delaware|6742
+New Hampshire|6735
+Rhode Island|6641
+Illinois|6545
+South Carolina|6505
+Utah|6459
+North Carolina|6398
+Tennessee|6257
+Wyoming|6236
+Louisiana|6170
+Oregon|6149
+Pennsylvania|6100
+Oklahoma|6072
+Montana|6064
+Idaho|6060
+Minnesota|5989
+Alabama|5932
+New Mexico|5925
+Kansas|5915
+Missouri|5879
+Maine|5878
+Vermont|5876
+North Dakota|5849
+Nebraska|5813
+Michigan|5791
+Ohio|5706
+Arkansas|5624
+South Dakota|5587
+Indiana|5467
+Mississippi|5327
+West Virginia|5287
+Kentucky|5279
+Wisconsin|5264
+Iowa|5187

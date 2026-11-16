@@ -1,0 +1,52 @@
+# Insurify average full-coverage car insurance, monthly, by state (Nov 1, 2026)
+Alabama|142.0
+Alaska|94.0
+Arizona|163.0
+Arkansas|149.0
+California|204.0
+Colorado|217.0
+Connecticut|225.0
+Delaware|263.0
+Florida|235.0
+Georgia|259.0
+Hawaii|126.0
+Idaho|107.0
+Illinois|163.0
+Indiana|128.0
+Iowa|111.0
+Kansas|157.0
+Kentucky|194.0
+Louisiana|208.0
+Maine|139.0
+Maryland|301.0
+Massachusetts|138.0
+Michigan|230.0
+Minnesota|182.0
+Mississippi|186.0
+Missouri|180.0
+Montana|141.0
+Nebraska|135.0
+Nevada|261.0
+New Hampshire|85.0
+New Jersey|257.0
+New Mexico|133.0
+New York|217.0
+North Carolina|113.0
+North Dakota|114.0
+Ohio|117.0
+Oklahoma|169.0
+Oregon|157.0
+Pennsylvania|161.0
+Rhode Island|295.0
+South Carolina|255.0
+South Dakota|152.0
+Tennessee|132.0
+Texas|204.0
+Utah|146.0
+Vermont|139.0
+Virginia|207.0
+Washington|184.0
+District of Columbia|227.0
+West Virginia|157.0
+Wisconsin|125.0
+Wyoming|94.0
