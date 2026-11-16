@@ -603,6 +603,33 @@ html:root[data-scheme="dark"] .msi{font-variation-settings:"GRAD" -25}
 .ff-split{display:flex;height:30px;border-radius:5px;overflow:hidden;margin:0 0 12px;font-size:11.5px;font-weight:600}
 .ff-split i{display:flex;align-items:center;min-width:0;padding:0 8px;font-style:normal;white-space:nowrap;overflow:hidden}
 .ff-you-b{background:var(--accent-soft);color:var(--accent-ink)} .ff-them-b{background:var(--navy);color:var(--sheet);justify-content:flex-end}
+
+/* Questionnaire tabs: one section at a time on every screen size; live results pinned beside it on wide screens. */
+.qtabs{display:flex;gap:6px;padding:6px;background:var(--sheet);border:1px solid var(--rule);border-radius:8px}
+.qtab{flex:1 1 0;min-width:0;display:flex;align-items:center;gap:10px;min-height:46px;padding:6px 12px;border:0;border-radius:6px;background:none;color:var(--muted);font:600 14px/1.2 var(--body);text-align:left;cursor:pointer}
+.qtab .step{flex:none;width:24px;height:24px;border-radius:50%;background:var(--track);color:var(--muted);font:700 13px/24px var(--display);text-align:center}
+.qtab small{display:block;margin-top:2px;font:400 11px/1.3 var(--mono);color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.qtab:hover{color:var(--navy)}
+.qtab[aria-selected="true"]{background:var(--accent-soft);color:var(--navy)} .qtab[aria-selected="true"] .step{background:var(--navy);color:var(--sheet)}
+.qtab:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+body.qtabbed .part.tab-off{display:none}
+body.qtabbed .part-head{cursor:default} body.qtabbed .part-head .pm,body.qtabbed .part-head .hd-done{display:none}
+body.qtabbed .grid:not(.done) .about-done,body.qtabbed .grid:not(.done) .q-done{display:block!important}
+body.qtabbed .about-done,body.qtabbed .q-done{height:46px;margin:8px 0 20px;background:var(--navy);border-color:var(--navy);color:var(--sheet);font-size:14px}
+body.qtabbed .about-done:hover,body.qtabbed .q-done:hover{opacity:.9}
+body.qtabbed .grid.done .part{display:none}
+body.qtabbed .grid.done .qtabs{max-width:560px}
+body.qtabbed .grid.done .qtab[aria-selected="true"]{background:none;color:var(--muted)} body.qtabbed .grid.done .qtab[aria-selected="true"] .step{background:var(--track);color:var(--muted)}
+body.qtabbed .grid.done .qtab:hover{color:var(--navy);background:var(--accent-soft)}
+/* the tab already names the section, so its header keeps only the subtitle */
+body.qtabbed .part-head{padding:14px 0 12px} body.qtabbed .part-head .step,body.qtabbed .part-head h2{display:none} body.qtabbed .part-head p{margin:0}
+@media (min-width:901px){
+  body.qtabbed .grid:not(.done){grid-template-columns:minmax(0,1.05fr) minmax(0,1fr)}
+  body.qtabbed .grid:not(.done) .out{position:sticky;top:0;max-height:100vh;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}
+  body.qtabbed .grid:not(.done) .parts .qtabs{position:sticky;top:0;z-index:6;box-shadow:0 -12px 0 4px var(--paper),0 6px 0 4px var(--paper)}
+}
+@media (min-width:1662px){ body.qtabbed .grid:not(.done){grid-template-columns:minmax(0,1.05fr) minmax(0,1fr)} }
+@media (max-width:900px){ body.qtabbed .grid:not(.done) .parts .qtabs{position:sticky;top:0;z-index:6;box-shadow:0 0 0 8px var(--paper)} }
 </style>
 <style>
 /* Report header: the card key sits under the tagline; the actions are outlined buttons like Done; Close report is hidden once the summary is collapsed and filled with the accent while it's open. */
@@ -782,7 +809,7 @@ a.ext{color:var(--accent-ink);text-decoration:none}
       <label for="myMh">Mental health<select id="myMh"><option value="">Skip</option><option value="none">No diagnosis</option><option value="dep">History of depression</option><option value="smi">Serious mental illness</option></select></label>
       <label for="myDis">Disabilities<select id="myDis"><option value="">Skip</option><option value="none">No disability</option><option value="mob">Difficulty walking or climbing stairs</option><option value="other">Another disability</option></select></label>
     </div>
-    <button type="button" class="done-btn about-done" id="aboutDone">Finished About you</button>
+    <button type="button" class="done-btn about-done" id="aboutDone">Save and go to Your ideal match</button>
   </div></div>
   </section>
 
@@ -870,7 +897,7 @@ a.ext{color:var(--accent-ink);text-decoration:none}
       <div class="pair"><div class="lbl cbq">Marriage goals<div class="checks"><label class="check"><input type="checkbox" id="wantsMarQ"> Wants to get married</label></div></div><div class="lbl cbq">Voting<div class="checks"><label class="check"><input type="checkbox" id="voted"> Voted in 2024</label></div></div></div>
     </div>
 
-    <button type="button" class="done-btn q-done" id="doneBtn">Finished the questionnaire</button>
+    <button type="button" class="done-btn q-done" id="doneBtn">Run report</button>
   </div></div>
   </section>
 </form>
@@ -3533,6 +3560,7 @@ function exitReport(openPart){
   morph(go); $('resultsBtn').setAttribute('aria-pressed', 'false'); $('resultsBtn').querySelector('.pm').textContent = '+';
 }
 PARTS.forEach((P, i) => P.querySelector('.part-head').addEventListener('click', () => {
+  if (document.body.classList.contains('qtabbed')) return;
   const opening = P.classList.contains('closed');
   if (opening && GRID.classList.contains('done')) return exitReport(i);
   // Stacked in the left column on wide screens: only one part open at a time.
@@ -3542,17 +3570,13 @@ PARTS.forEach((P, i) => P.querySelector('.part-head').addEventListener('click', 
 const GRID = document.querySelector('.grid');
 const morph = go => (document.startViewTransition && !matchMedia('(prefers-reduced-motion: reduce)').matches) ? document.startViewTransition(go) : go();
 // Finishing About you (button, or answering every About you question) returns the original two-column layout.
-function aboutDone(){
-  if (!GRID.classList.contains('intro')) return;
-  morph(() => { setPart(0, false); GRID.classList.remove('intro'); });
-  GRID.scrollIntoView({behavior: 'auto', block: 'start'});
-}
+function aboutDone(){ selTab(1, true); }
 $('aboutDone').addEventListener('click', aboutDone);
 // Header Done: About you closes (moving on to your ideal match the first time through); ideal match works like Finished the questionnaire.
 document.querySelectorAll('.hd-done').forEach(b => b.addEventListener('click', e => { e.stopPropagation();
   if (b.dataset.part === '1') return $('doneBtn').click();
   if (GRID.classList.contains('intro')) aboutDone(); else setPart(0, false); }));
-$('part1').addEventListener('change', () => { if (!GRID.classList.contains('intro')) return; const F = readForm(); if (ABOUT_KEYS.every(k2 => F[k2] !== '' && F[k2] != null)) aboutDone(); });
+$('part1').addEventListener('change', () => { if (true) return; const F = readForm(); if (ABOUT_KEYS.every(k2 => F[k2] !== '' && F[k2] != null)) aboutDone(); });
 $('doneBtn').addEventListener('click', () => { if ($('resultsBtn').disabled){ const m = ['mySex','seek','zip'].map(id => $(id)).find(el => !el.value); (m || $('mySex')).focus(); return; } enterReport(); });   // needs the basics first
 $('resultsBtn').addEventListener('click', () => GRID.classList.contains('done') ? exitReport(0) : enterReport());
 // Close report: when the cards are ready, the summary folds into its tile and the cards stay; before then it reads
@@ -3563,7 +3587,7 @@ $('reportClose').addEventListener('click', () => {
   else exitReport(0);
 });
 // Edit: back to both question sections side by side, open.
-$('editBtn').addEventListener('click', () => { if (GRID.classList.contains('done')) exitReport(); GRID.classList.add('intro'); setPart(0, true); setPart(1, true); render(); GRID.scrollIntoView({behavior: 'auto', block: 'start'}); });
+$('editBtn').addEventListener('click', () => { if (GRID.classList.contains('done')) exitReport(); selTab(QTAB, false); GRID.scrollIntoView({behavior: 'auto', block: 'start'}); });
 // Every metro scatter: hover or tap a dot for a label centered over it, kept inside the plot.
 function scTip(e){ const svg = e.target.closest && e.target.closest('svg.sc'); if (!svg) return;
   const g = svg.querySelector('.sc-tip'), pts = svg._pts || (svg._pts = JSON.parse(svg.dataset.pts)), [bx0, by0, bx1, by1] = svg.dataset.box.split(',').map(Number);
@@ -3715,6 +3739,30 @@ function answersComplete(){
   if (!$('myAttL').hidden && !v('myAtt')) return false;
   return [...$('f').querySelectorAll('fieldset.pills')].every(fs => fs.closest('[hidden]') || fs.querySelector('input:checked'));
 }
+// Tabs: About you and Your ideal match, one at a time. Answers stay put while switching and are kept for this browser session.
+let QTAB = 0;
+const QTABS = document.createElement('div');
+QTABS.className = 'qtabs'; QTABS.setAttribute('role', 'tablist'); QTABS.setAttribute('aria-label', 'Questionnaire sections');
+QTABS.innerHTML = '<button type="button" class="qtab" role="tab" id="qt0" data-t="0" aria-controls="part1"><span class="step">1</span><span>About you<small id="qtp1"></small></span></button>'
+  + '<button type="button" class="qtab" role="tab" id="qt1" data-t="1" aria-controls="part2"><span class="step">2</span><span>Your ideal match<small id="qtp2"></small></span></button>';
+$('f').prepend(QTABS);
+function selTab(i, scroll){
+  QTAB = i;
+  PARTS.forEach((P, k) => { P.classList.toggle('tab-off', k !== i); setPart(k, true); P.setAttribute('role', 'tabpanel'); P.setAttribute('aria-labelledby', 'qt' + k); });
+  QTABS.querySelectorAll('.qtab').forEach((b, k) => { b.setAttribute('aria-selected', String(k === i)); b.tabIndex = k === i ? 0 : -1; });
+  if (scroll){ const r = QTABS.getBoundingClientRect(); if (r.top < 0 || r.top > innerHeight * 0.5) QTABS.scrollIntoView({behavior: 'auto', block: 'start'}); }
+  setTimeout(layoutFields, 0); qtSave();
+}
+QTABS.addEventListener('click', e => { const b = e.target.closest('.qtab'); if (!b) return; if (GRID.classList.contains('done')) exitReport(); selTab(+b.dataset.t, true); });
+QTABS.addEventListener('keydown', e => { if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return; e.preventDefault(); const i = 1 - QTAB; if (GRID.classList.contains('done')) exitReport(); selTab(i, false); $('qt' + i).focus(); });
+const qtProg = () => { $('qtp1').textContent = $('prog1').textContent; $('qtp2').textContent = $('prog2').textContent; };
+new MutationObserver(qtProg).observe($('prog1'), {childList: true, characterData: true, subtree: true});
+new MutationObserver(qtProg).observe($('prog2'), {childList: true, characterData: true, subtree: true});
+function qtSave(){ try { const c = answersCode(); if (c) sessionStorage.setItem('yad-answers', c); else sessionStorage.removeItem('yad-answers'); sessionStorage.setItem('yad-tab', String(QTAB)); } catch (e) {} }
+let qtT; $('f').addEventListener('input', () => { clearTimeout(qtT); qtT = setTimeout(qtSave, 400); }); $('f').addEventListener('change', () => { clearTimeout(qtT); qtT = setTimeout(qtSave, 400); });
+document.body.classList.add('qtabbed'); GRID.classList.remove('intro');
+{ let t = 0, c = null; try { c = sessionStorage.getItem('yad-answers'); t = +(sessionStorage.getItem('yad-tab') || 0); } catch (e) {}
+  if (c) loadAnswers(c); selTab(t === 1 ? 1 : 0, false); qtProg(); }
 const tryLoad = () => { const ok = loadAnswers($('loadCode').value); $('saveMsg').className = 'save-msg' + (ok ? '' : ' bad'); $('saveMsg').textContent = ok ? 'Your answers are back. Change anything to keep exploring.' : 'That code didn’t work. Copy the whole code and try again.'; if (ok){ $('loadCode').value = ''; fitBox($('loadCode')); try { document.activeElement && document.activeElement.blur(); $('loadCode').blur(); } catch (e) {} /* closes the phone keyboard */ if ($('saveBtn').getAttribute('aria-expanded') === 'true') $('saveBtn').click(); if (answersComplete()){
     // Wait until scoring for these answers has started (it runs a moment after loading), then open the results.
     const key = JSON.stringify(readForm()), t0 = Date.now();
