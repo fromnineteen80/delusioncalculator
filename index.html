@@ -3996,7 +3996,7 @@ const FF_FLOW = [
 ];
 const FF_DROP = [null, null, null, 'never married', 'divorced', 'under $250k', 'couldn’t buy nearby', 'fewer than two kids'];
 function ffFlowSVG(p){
-  const W = 1140, x0 = 62, colW = (W - x0 - 190) / 8, s = 0.3, nw = 7, top = 74, gap = 16;
+  const W = 1160, x0 = 62, colW = (W - x0 - 225) / 8, s = 0.3, nw = 7, top = 74, gap = 16;
   // lane slots: each lane keeps a fixed top so bands read as continuous paths
   const Y = [top, top + s * 216 + gap]; Y.push(Math.max(top + s * 370, Y[1] + s * 223) + gap);
   const H = Y[2] + s * 630 + 92, X = k => x0 + k * colW, lc = ['var(--ff-p1)', 'var(--ff-p2)', 'var(--ff-p3)'];
@@ -4032,11 +4032,11 @@ function ffFlowSVG(p){
   const xm = X(8) + 70, made = size[8], mh = s * 51; let off = 0;
   [0, 1, 2].forEach(l => { g += band(X(8), Y[l], s * made[l], xm - nw, top + off, s * made[l], 'var(--ff-ok)', 0.32 * op(l)); off += s * made[l]; });
   nodes += `<rect x="${xm - nw}" y="${top}" width="${nw}" height="${mh}" fill="var(--ff-ok)"/><rect x="${xm - nw}" y="${top + mh + 6}" width="${nw}" height="${s * 949}" fill="var(--faint)" opacity=".55"/>`;
-  labels += `<text x="${xm + 4}" y="${top + 13}" class="ff-fm">51 made it</text><text x="${xm + 4}" y="${top + mh + 6 + 16}" class="ff-fs">949 fell short</text>
+  labels += `<text x="${xm + 4}" y="${top + 13}" class="ff-fm">51 men made it</text><text x="${xm + 4}" y="${top + mh + 6 + 16}" class="ff-fs">949 men fell short</text>
     <text x="${xm - nw / 2}" y="16" text-anchor="middle" class="ff-fh">Final</text><text x="${xm - nw / 2}" y="31" text-anchor="middle" class="ff-fh">tally</text>
     <text x="${x0 - nw / 2}" y="16" text-anchor="middle" class="ff-fh">Men</text><text x="${x0 - nw / 2}" y="31" text-anchor="middle" class="ff-fh">turning 37</text>
     <text x="${x0 - nw}" y="${H - 52}" class="ff-fd"><tspan class="ff-fb">Fell short</tspan></text><text x="${x0 - nw}" y="${H - 36}" class="ff-fd">at each step</text>`;
-  return `<div class="ff-flow"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Flow of 1,000 men turning 37 through eight steps. 51 make it and 949 fall short: 377 never married, 122 divorced, 400 under $250,000, 15 couldn’t buy nearby, 35 had fewer than two kids.">${g}${nodes}${labels}</svg></div>`;
+  return `<div class="ff-flow"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Flow of 1,000 men turning 37 through eight steps. 51 men make it and 949 men fall short: 377 never married, 122 divorced, 400 under $250,000, 15 couldn’t buy nearby, 35 had fewer than two kids.">${g}${nodes}${labels}</svg></div>`;
 }
 function ffGauntlet(F){
   const p = ffPath(F), seg = (v, cls) => v ? `<i class="${cls}" style="width:${v / 10}%"></i>` : '';
@@ -4046,7 +4046,7 @@ function ffGauntlet(F){
       <p class="ff-says">${says}</p><p class="ff-holds">${holds}</p></li>`).join('');
   const you = p < 0 ? '' : `<p class="ff-you"><span class="ff-dot ${FF_PATHS[p][1]}"></span>Your answers put you on the <b>${FF_PATHS[p][0].toLowerCase()}</b> path, where <b>${FF_PATHS[p][3]} of ${FF_PATHS[p][2]}</b> men (${(FF_PATHS[p][3] / FF_PATHS[p][2] * 100).toFixed(1)}%) make it.</p>`;
   return `<section class="rp-card ff-card ff-wide c-floor" id="ffGauntlet"><h3><span class="msi" aria-hidden="true">route</span>The American Dream Gauntlet</h3>
-    <p class="rp-cl">Start with 1,000 men turning 37 and apply the published share who clear each step to the men still in the running. 51 reach a marriage, a home near good jobs, two kids and $250,000 together. 949 fall short.</p>
+    <p class="rp-cl">Start with 1,000 men turning 37 and apply the published share who clear each step to the men still in the running. 51 men end up married, with two kids, a home near good jobs and $250,000 a year between them. 949 men don’t. Keep that in mind before setting an income filter or writing someone off over a paycheck. The life most of us picture as normal now takes an income only a small share of couples reach, and most men are being measured against it, by women and by themselves.</p>
     <div class="rp-body">${you}
     <div class="ff-key">${FF_PATHS.map(([l, c, n, m]) => `<span><span class="ff-dot ${c}"></span>${l}: <b>${m}</b> of ${n} make it</span>`).join('')}</div>
     ${ffFlowSVG(p)}
