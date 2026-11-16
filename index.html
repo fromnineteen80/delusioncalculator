@@ -4045,7 +4045,7 @@ function ffGauntlet(F){
       <div class="ff-ct"><b>${made.toLocaleString('en-US')}</b> of ${of.toLocaleString('en-US')}<span>${Math.round(made / of * 1000) / 10}%</span></div>
       <p class="ff-says">${says}</p><p class="ff-holds">${holds}</p></li>`).join('');
   const you = p < 0 ? '' : `<p class="ff-you"><span class="ff-dot ${FF_PATHS[p][1]}"></span>Your answers put you on the <b>${FF_PATHS[p][0].toLowerCase()}</b> path, where <b>${FF_PATHS[p][3]} of ${FF_PATHS[p][2]}</b> men (${(FF_PATHS[p][3] / FF_PATHS[p][2] * 100).toFixed(1)}%) make it.</p>`;
-  return `<section class="rp-card ff-card ff-wide c-floor" id="ffGauntlet"><h3><span class="msi" aria-hidden="true">route</span>The American Dream Gauntlet</h3>
+  return `<section class="rp-card ff-card ff-wide c-floor" id="ffGauntlet"><h3><span class="msi" aria-hidden="true">route</span>Running Today’s American Dream Gauntlet</h3>
     <p class="rp-cl">Start with 1,000 men turning 37 and apply the published share who clear each step to the men still in the running. 51 men end up married, with two kids, a home near good jobs and $250,000 a year between them. 949 men don’t. Keep that in mind before setting an income filter or writing someone off over a paycheck. The life most of us picture as normal now takes an income only a small share of couples reach, and most men are being measured against it, by women and by themselves.</p>
     <div class="rp-body">${you}
     <div class="ff-key">${FF_PATHS.map(([l, c, n, m]) => `<span><span class="ff-dot ${c}"></span>${l}: <b>${m}</b> of ${n} make it</span>`).join('')}</div>
