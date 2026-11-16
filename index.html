@@ -540,7 +540,7 @@ html:root[data-scheme="dark"] .msi{font-variation-settings:"GRAD" -25}
 .bl-n{font:600 11px var(--mono);fill:var(--ink)} .bl-l{font:400 10px var(--body);fill:var(--muted)}
 .bl-foot{display:flex;justify-content:space-between;align-items:flex-start;margin-top:-6px} .bl-foot > div{display:grid;justify-items:start;gap:1px;max-width:48%} .bl-foot > div:last-child{justify-items:end;text-align:right}
 .bl-foot b{font:600 12px var(--mono);color:var(--ink)} .bl-foot span:not(.msi){font-size:11px;color:var(--muted);line-height:1.3}
-.ag-ic{font-size:16px;line-height:1;vertical-align:-3px;margin:0 2px 0 -4px;color:var(--accent)}
+.ag-ic{font-size:16px;line-height:1;vertical-align:-3px;margin:0 4px 0 -3px;color:var(--accent)}
 .bl-ic{font-size:40px;width:auto;height:auto;line-height:1;overflow:visible} .bl-ic.me{color:var(--muted)} .bl-ic.th{color:var(--accent)}
 .rp-card.c-bell{border-top-color:var(--faint)}
 /* Phones: the report title and its one-line description get the full width; the save and close links move to their own row below. */
@@ -3333,7 +3333,7 @@ async function buildReport(F, A, C, fin, WB, live, X = {}){
         : `The ${them} who would date you are most often ${nb(wp)}. The ${them} you’d pursue are most often ${nb(pp)}.`;
       const wk = B.indexOf(wp), wpn = Math.round(wv[wk] * EXR.age.wouldN);
       cards.push(card('c-age', 'groups', 'Who you match by age', lede,
-        `<div class="sc-wrap"><svg viewBox="0 0 ${W} ${H}" class="sc" role="img" aria-label="${esc(lede.replace(/<[^>]+>/g, ''))}">${g}</svg></div><div class="sq-legend"><span><i class="k on"></i>Would date you and actively dating · ${fmtN(EXR.age.wouldN)}</span>${wp !== pp ? `<span><i class="k on"></i><span class="msi ag-ic" aria-hidden="true">${F.T === 'M' ? 'man' : 'woman'}</span>Would date you most often, ${wp} · ${fmtN(wpn)}</span>` : ''}<span><i class="k mut"></i>You’d pursue and actively dating · ${fmtN(C.poolN)}</span></div>`));
+        `<div class="sc-wrap"><svg viewBox="0 0 ${W} ${H}" class="sc" role="img" aria-label="${esc(lede.replace(/<[^>]+>/g, ''))}">${g}</svg></div><div class="sq-legend"><span><i class="k on"></i>Would date you and actively dating · ${fmtN(EXR.age.wouldN)}</span>${wp !== pp ? `<span><span class="msi ag-ic" aria-hidden="true">${F.T === 'M' ? 'man' : 'woman'}</span>Would date you most often, ${wp} · ${fmtN(wpn)}</span>` : ''}<span><i class="k mut"></i>You’d pursue and actively dating · ${fmtN(C.poolN)}</span></div>`));
     }
   }
   // Your area against the nation: one card for the people you want, one for the people you compete with.
