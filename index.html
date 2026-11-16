@@ -61,6 +61,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .instr-btn .pm::before{content:"";width:6px;height:6px;border-right:1.7px solid currentColor;border-bottom:1.7px solid currentColor;transform:translateY(-.5px) rotate(45deg);transition:transform .15s ease}
 .instr-btn[aria-expanded="true"] .pm::before,.instr-btn[aria-pressed="true"] .pm::before{transform:translateY(3.75px) rotate(-135deg)}
 @media (prefers-reduced-motion:reduce){.instr-btn .pm::before{transition:none}}
+#resultsBtn .pm,#editBtn .pm{display:none}   /* Edit and Results are plain links now; only the menus keep a chevron */
 .instr-panel{display:grid;grid-template-rows:0fr;transition:grid-template-rows .25s ease}
 .instr-panel.open{grid-template-rows:1fr}
 .instr-inner{overflow:hidden;font-size:13px;color:var(--ink);padding-inline:5px;margin-inline:-5px}
@@ -95,7 +96,8 @@ h1{font:700 clamp(34px,5vw,52px)/1.02 var(--display);color:var(--ink);margin:0;l
 @media (min-width:768px){
   header{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:0;align-items:center;padding-bottom:14px}
   header .brand{font-size:28px;padding-bottom:0;white-space:nowrap} header .brand::after{display:none} header h1{font-size:28px}
-  header .brand + .tagline{margin:0 0 0 auto;padding:0 0 0 24px;text-align:right;font-size:12.5px;line-height:1.2;max-width:470px}
+  header .brand + .tagline{margin:0 0 0 auto;padding:0 0 0 32px;text-align:right;font-size:13px;line-height:1.3;max-width:none}
+  @media (min-width:900px){ header .brand + .tagline{white-space:nowrap} }
   header .instr{grid-column:1/-1}
 }
 }
@@ -538,7 +540,7 @@ html:root[data-scheme="dark"] .msi{font-variation-settings:"GRAD" -25}
 .rp-key i{display:inline-block;width:18px;height:3px;border-radius:2px} .rp-key .k-m{background:var(--accent)} .rp-key .k-c{background:color-mix(in srgb,var(--accent) 45%,var(--sheet))} .rp-key .k-o{background:var(--faint)}
 .ver{margin:14px 0 0;font:400 11.5px/1.4 var(--mono);color:var(--muted)}
 .bl-wrap{position:relative;margin-top:6px} .bl{display:block;width:100%;height:auto} .bl-me,.bl-th{fill:none;stroke-width:2.5} .bl-me{stroke:color-mix(in srgb,var(--accent) 45%,var(--sheet))} .bl-th{stroke:var(--accent)} .bl-m{fill:var(--muted)}
-.bl-n{font:600 11px var(--mono);fill:var(--ink)} .bl-l{font:400 10px var(--body);fill:var(--muted)}
+.bl-n{font:600 11px var(--mono);fill:var(--ink)} .bl-n.bl-nb{font-family:var(--body)} .bl-l{font:400 10px var(--body);fill:var(--muted)}
 .bl-foot{display:flex;justify-content:space-between;align-items:flex-start;margin-top:-6px} .bl-foot > div{display:grid;justify-items:start;gap:1px;max-width:48%} .bl-foot > div:last-child{justify-items:end;text-align:right}
 .bl-foot b{font:600 12px var(--mono);color:var(--ink)} .bl-foot span:not(.msi){font-size:11px;color:var(--muted);line-height:1.3}
 .ag-ic{font-size:16px;line-height:1;vertical-align:-3px;margin:0 4px 0 -3px;color:var(--accent)}
@@ -3403,7 +3405,7 @@ async function buildReport(F, A, C, fin, WB, live, X = {}){
     const path = m => 'M' + SEG.map((q, k) => (k ? '' : q[0].map((v, d) => d ? v : m(v)).join(' ') + ' ') + 'C ' + q.slice(1).map(p2 => [m(p2[0]), p2[1]].join(' ')).join(', ')).join(' ');
     const svg = `<svg viewBox="0 0 360 356" class="bl" role="img" aria-label="Your competition and the ${them} who would date you, meeting at ${fmtN(fin)} mutual matches">
       <path d="${path(v => v)}" class="bl-me"/><path d="${path(v => 360 - v)}" class="bl-th"/>
-      <circle cx="180" cy="34" r="5" class="bl-m"/><text x="180" y="18" text-anchor="middle" class="bl-n">${fin >= 1 ? fmtN(fin) : 'No'} ${Math.round(fin) === 1 ? (F.T === 'M' ? 'man' : 'woman') : them} would mutually match with you</text>
+      <circle cx="180" cy="34" r="5" class="bl-m"/><text x="180" y="18" text-anchor="middle" class="bl-n bl-nb">${fin >= 1 ? fmtN(fin) : 'No'} ${Math.round(fin) === 1 ? (F.T === 'M' ? 'man' : 'woman') : them} would mutually match with you</text>
       ${L.map((r, k) => lab(58 + k * 58, -1, r)).join('')}${R.map((r, k) => lab(58 + k * 42, 1, r)).join('')}</svg>`;
     cards.push(card('c-bell', 'favorite', 'Your dating market', `${cap0(mw)} on the left, narrowing to the ${mw} you compete with. ${cap0(tw)} on the right, from all local ${tw} filtered to the ${tw} you’d pursue. The two meet at your local mutual matches.`,
       `<div class="bl-wrap">${svg}<div class="bl-foot"><div><span class="msi bl-ic me" aria-hidden="true">${F.mySex === 'M' ? 'man' : 'woman'}</span><b>${fmtN(adultsIn(A.codes, F.mySex))}</b><span>local ${F.mySex === 'M' ? 'men' : 'women'} 18 and over</span></div><div><span class="msi bl-ic th" aria-hidden="true">${F.T === 'M' ? 'man' : 'woman'}</span><b>${fmtN(adultsIn(A.codes, F.T))}</b><span>local ${them} 18 and over</span></div></div></div>`));
