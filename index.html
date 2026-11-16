@@ -9,7 +9,7 @@
 <title>You’re All Delusional</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,500,0,-25..0&icon_names=account_balance_wallet,arrow_downward,arrow_forward,balance,contrast,dark_mode,diversity_3,favorite,filter_alt,groups,hourglass,info_i,insights,leaderboard,light_mode,location_city,man,more_horiz,percent,person,route,scatter_plot,search,star,swords,trending_up,tune,woman&display=block">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,500,0,-25..0&icon_names=account_balance_wallet,arrow_downward,arrow_forward,balance,contrast,dark_mode,diversity_3,favorite,filter_alt,groups,hourglass,info_i,insights,leaderboard,light_mode,location_city,man,more_horiz,near_me,percent,person,route,scatter_plot,search,star,swords,trending_up,tune,woman&display=block">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
 /* Layout: federal statistical brief. Sticky result bar on top; questionnaire left, tabulated profile right; single column on phones. */
@@ -540,6 +540,7 @@ html:root[data-scheme="dark"] .msi{font-variation-settings:"GRAD" -25}
 .bl-n{font:600 11px var(--mono);fill:var(--ink)} .bl-l{font:400 10px var(--body);fill:var(--muted)}
 .bl-foot{display:flex;justify-content:space-between;align-items:flex-start;margin-top:-6px} .bl-foot > div{display:grid;justify-items:start;gap:1px;max-width:48%} .bl-foot > div:last-child{justify-items:end;text-align:right}
 .bl-foot b{font:600 12px var(--mono);color:var(--ink)} .bl-foot span:not(.msi){font-size:11px;color:var(--muted);line-height:1.3}
+.ag-ic{font-size:16px;line-height:1;vertical-align:-3px;margin:0 2px 0 -4px;color:var(--accent)}
 .bl-ic{font-size:40px;width:auto;height:auto;line-height:1;overflow:visible} .bl-ic.me{color:var(--muted)} .bl-ic.th{color:var(--accent)}
 .rp-card.c-bell{border-top-color:var(--faint)}
 /* Phones: the report title and its one-line description get the full width; the save and close links move to their own row below. */
@@ -565,6 +566,13 @@ html:root[data-scheme="dark"] .msi{font-variation-settings:"GRAD" -25}
 .ff-v{font-weight:600;font-variant-numeric:tabular-nums} .ff-v.ok{color:var(--ff-ok)}
 .ff-rank li.ff-me{background:var(--accent-soft);font-weight:700} .ff-rank li.ff-me .ff-nm em{font-style:normal;font-weight:500;color:var(--accent-ink)}
 .ff-rank li.ff-line{display:block;margin:6px 0;padding:6px 4px 2px;border-top:2px solid var(--poor);color:var(--poor);font-weight:700;font-size:11.5px}
+.ff-col{display:flex;flex-direction:column;gap:16px;min-width:0}
+.ff-near{list-style:none;margin:0;padding:0;font-size:13px}
+.ff-near li{display:grid;grid-template-columns:minmax(0,1fr) auto 64px;gap:4px 12px;align-items:baseline;padding:6px 4px;border-top:1px dotted var(--rule);border-radius:4px} .ff-near li:first-child{border-top:0}
+.ff-near .ff-nm{white-space:normal} .ff-near small{display:block;font-size:11px;color:var(--muted)} .ff-near .ff-v{font-weight:600;font-variant-numeric:tabular-nums}
+.ff-near li.ff-me{background:var(--accent-soft);font-weight:700}
+.ff-df{text-align:right;font:600 12px var(--mono);color:var(--muted)} .ff-df.ok{color:var(--ff-ok)} .ff-df.up{color:var(--poor)}
+.ff-rank li.ff-line2{border-top-color:var(--muted);color:var(--muted)}
 .ff-rank.ff-q li.ff-line{display:none}
 @media (max-width:767px){.ff-rank{columns:auto;max-height:380px;overflow-y:auto;padding-right:4px;scroll-behavior:smooth}}
 /* gauntlet */
@@ -871,11 +879,13 @@ a.ext{color:var(--accent-ink);text-decoration:none}
       <div class="pair">
         <label for="smoke">Smokes cigarettes<select id="smoke"><option value="any">No preference</option><option value="yes">Yes</option><option value="no">No</option></select></label>
         <label for="vape">Vapes<select id="vape"><option value="any">No preference</option><option value="yes">Yes</option><option value="no">No</option></select></label>
-        <label for="drink" class="wide">Alcohol consumption<select id="drink"><option value="any">No preference</option><option value="none">Don’t drink</option><option value="mod">Drink, but never binge</option><option value="binge">Sometimes binge drink</option></select></label>
         <label for="pot">Uses marijuana<select id="pot"><option value="any">No preference</option><option value="yes">Yes</option><option value="no">No</option></select></label>
         <label for="drugs">Uses other drugs<select id="drugs"><option value="any">No preference</option><option value="yes">Yes</option><option value="no">No</option></select></label>
-        <label for="mh" class="wide">Mental health<select id="mh"><option value="any">No preference</option><option value="nodx">No diagnosis</option><option value="deph">History of depression</option><option value="smih">Serious mental illness</option></select></label>
       </div>
+      <fieldset id="drinkPick" class="pills" data-name="drink"><legend>Alcohol consumption <span class="pick">(pick one or more)</span></legend>
+        <div class="chips"><label><input type="checkbox" name="drink" value="any" checked> No preference</label><label><input type="checkbox" name="drink" value="none"> Don’t drink</label><label><input type="checkbox" name="drink" value="mod"> Drink, but never binge</label><label><input type="checkbox" name="drink" value="binge"> Sometimes binge drink</label></div></fieldset>
+      <fieldset id="mhPick" class="pills" data-name="mh"><legend>Mental health <span class="pick">(pick one or more)</span></legend>
+        <div class="chips"><label><input type="checkbox" name="mh" value="any" checked> No preference</label><label><input type="checkbox" name="mh" value="nodx"> No diagnosis</label><label><input type="checkbox" name="mh" value="deph"> History of depression</label><label><input type="checkbox" name="mh" value="smih"> Serious mental illness</label></div></fieldset>
       <fieldset id="disPick" class="pills" data-name="dis"><legend>Disabilities <span class="pick">(pick one or more)</span></legend>
         <div class="chips"><label><input type="checkbox" name="dis" value="any" checked> No preference</label><label><input type="checkbox" name="dis" value="none"> No disability</label><label><input type="checkbox" name="dis" value="mob"> Difficulty walking or climbing stairs</label><label><input type="checkbox" name="dis" value="other"> Another disability</label></div></fieldset>
       <div class="lbl cbq">Criminal record<div class="checks"><label class="check"><input type="checkbox" id="noFel"> No felony record</label></div></div>
@@ -889,9 +899,8 @@ a.ext{color:var(--accent-ink);text-decoration:none}
         </div>
       <fieldset id="polPick" class="pills" data-name="pol"><legend>Politics <span class="pick">(pick one or more)</span></legend>
         <div class="chips"><label><input type="checkbox" name="pol" value="any" checked> No preference</label><label><input type="checkbox" name="pol" value="c"> Conservative</label><label><input type="checkbox" name="pol" value="m"> Moderate</label><label><input type="checkbox" name="pol" value="l"> Liberal</label></div></fieldset>
-      <div class="pair">
-        <label for="hist">Past sexual partners<select id="hist"><option value="any">No preference</option><option value="low">3 or fewer</option><option value="mid">4 to 10</option><option value="high">More than 10</option></select></label>
-      </div>
+      <fieldset id="histPick" class="pills" data-name="hist"><legend>Past sexual partners <span class="pick">(pick one or more)</span></legend>
+        <div class="chips"><label><input type="checkbox" name="hist" value="any" checked> No preference</label><label><input type="checkbox" name="hist" value="low"> 3 or fewer</label><label><input type="checkbox" name="hist" value="mid"> 4 to 10</label><label><input type="checkbox" name="hist" value="high"> More than 10</label></div></fieldset>
       <fieldset id="relPick" class="pills" data-name="trad"><legend>Religion <span class="pick">(pick one or more)</span></legend>
         <div class="chips"><label><input type="checkbox" name="trad" value="any" checked> No preference</label><label><input type="checkbox" name="trad" value="cath"> Catholic</label><label><input type="checkbox" name="trad" value="prot"> Protestant</label><label><input type="checkbox" name="trad" value="lds"> Latter-day Saint</label><label><input type="checkbox" name="trad" value="orth"> Eastern Orthodox</label><label><input type="checkbox" name="trad" value="jw"> Jehovah’s Witness</label><label><input type="checkbox" name="trad" value="jew"> Jewish</label><label><input type="checkbox" name="trad" value="mus"> Muslim</label><label><input type="checkbox" name="trad" value="hin"> Hindu</label><label><input type="checkbox" name="trad" value="bud"> Buddhist</label><label><input type="checkbox" name="trad" value="oth"> Another faith</label><label><input type="checkbox" name="trad" value="ath"> Atheist</label><label><input type="checkbox" name="trad" value="agn"> Agnostic</label></div></fieldset>
       <div class="pair"><div class="lbl cbq">Marriage goals<div class="checks"><label class="check"><input type="checkbox" id="wantsMarQ"> Wants to get married</label></div></div><div class="lbl cbq">Voting<div class="checks"><label class="check"><input type="checkbox" id="voted"> Voted in 2024</label></div></div></div>
@@ -1198,8 +1207,8 @@ const bmiOf = (ht, wt) => ht && wt ? 703 * wt / (ht * ht) : null;
 const BMI_OPTS = {under: 'Underweight (BMI under 18.5)', slim: 'Slim healthy weight (BMI 18.5–22.9)', fit: 'Upper healthy weight (BMI 23–24.9)', over: 'Overweight (BMI 25–29.9)', obese: 'Obese (BMI 30+)'};
 const ACT_OPTS = {none: 'No exercise', some: 'Under 150 minutes a week', aer: '150 to 299 minutes a week', both: '150 to 299 minutes a week plus strength training', high: '300 or more minutes a week'};
 const DIS_OPTS = {none: 'No disability', mob: 'Difficulty walking or climbing stairs', other: 'Another disability'};
-const LEGACY = {bmi: {nob: ['under','slim','fit','over'], norm: ['slim','fit'], lean: ['slim']}, act: {anyex: ['some','aer','both','high'], aer: ['aer','both','high'], both: ['both','high'], high: ['high']}, dis: {mob: ['none','other'], all: ['none']}};
-const setOf = (F, k) => { const v = F[k]; return Array.isArray(v) ? v : !v || v === 'any' ? [] : (LEGACY[k][v] || []); };
+const LEGACY = {drink: {nobinge: ['none','mod']}, mh: {smi: ['nodx','deph'], dep: ['nodx']}, hist: {'1': ['low'], '3': ['low'], '5': ['low','mid'], '10': ['low','mid']}, bmi: {nob: ['under','slim','fit','over'], norm: ['slim','fit'], lean: ['slim']}, act: {anyex: ['some','aer','both','high'], aer: ['aer','both','high'], both: ['both','high'], high: ['high']}, dis: {mob: ['none','other'], all: ['none']}};
+const setOf = (F, k) => { const v = F[k]; return Array.isArray(v) ? v : !v || v === 'any' ? [] : ((LEGACY[k] || {})[v] || [v]); };
 // Smoking and vaping: Yes / No / no preference. Older answers used noSmoke and noVape.
 // Education, citizenship and politics in your ideal match are pick-one-or-more with exact choices. Older answers (one threshold) still work.
 const EDU_OPTS = {'0': 'High school or less', '1': 'Some college', '2': "Associate's degree", '3': "Bachelor's degree", '4': 'Graduate degree'};
@@ -1243,8 +1252,8 @@ function readForm(){
     mar:picks('marQ', 'mar'), race:picks('raceQ', 'race'), born:picks('', 'born'),
     edu: picks('', 'edu'), emp: -1, field: picks('fieldQ', 'field').map(Number),
     kids:v('kids'), wantKids:v('wantKids'), incLo: moneyNum(v('incLo')) || 0, incHi: (n => n == null || n >= INC_MAX ? Infinity : n)(moneyNum(v('incHi'))),
-    bmi:picks('', 'bmi'), act:picks('', 'act'), noSmoke: false, noVape: false, smoke:v('smoke'), vape:v('vape'), drink:v('drink'), pot:v('pot'), drugs:v('drugs'), mh:v('mh'), dis:picks('', 'dis'),
-    goal:v('goal'), faith:'any', trads: picks('relQ', 'trad'), att: v('att'), pol:picks('', 'pol'), hist:v('hist'),
+    bmi:picks('', 'bmi'), act:picks('', 'act'), noSmoke: false, noVape: false, smoke:v('smoke'), vape:v('vape'), drink:picks('', 'drink'), pot:v('pot'), drugs:v('drugs'), mh:picks('', 'mh'), dis:picks('', 'dis'),
+    goal:v('goal'), faith:'any', trads: picks('relQ', 'trad'), att: v('att'), pol:picks('', 'pol'), hist:picks('', 'hist'),
     ori: c('oriOnly') ? 'only' : 'any', looking: c('lookingOnly'), work: workOwn(), wantsMar: c('wantsMarQ'), noFelony: c('noFel'), voted: c('voted'),
     conv:1, reach:1
   };
@@ -1366,8 +1375,8 @@ function jtTests(F){
   const AS = setOf(F, 'act'); if (AS.length){ const R = AS.map(v => ({none: 0, some: 1, aer: 2, both: 3, high: 4})[v]); t.act = {b: x => has(R, x.act)}; }
   if (smokeOf(F) !== 'any'){ const v = smokeOf(F) === 'no' ? 0 : 1; t.smoke = {b: x => x.smoke === v}; }
   if (vapeOf(F) !== 'any'){ const v = vapeOf(F) === 'no' ? 0 : 1; t.vape = {b: x => x.vape === v}; }
-  if (F.drink && F.drink !== 'any'){ const R = {none: [0], nobinge: [0,1], mod: [1], binge: [2]}[F.drink]; if (R) t.drink = {b: x => has(R, x.drink)}; }
-  if (['nodx','dep','deph'].includes(F.mh)){ const v = F.mh === 'deph' ? 1 : 0; t.dep = {b: x => x.dep === v}; }
+  const DRs = setOf(F, 'drink'); if (DRs.length && DRs.length < 3){ const R = DRs.map(v => ({none: 0, mod: 1, binge: 2})[v]); t.drink = {b: x => has(R, x.drink)}; }
+  const MHs = setOf(F, 'mh'); if (MHs.length === 1 && MHs[0] !== 'smih'){ const v = MHs[0] === 'deph' ? 1 : 0; t.dep = {b: x => x.dep === v}; }
   return t;
 }
 // How much more often a set of tests pass together than if they were unrelated (1 = unrelated). Thin samples lean toward 1.
@@ -1451,21 +1460,19 @@ function computeFor(codes, F){
 // widowed respondents), by sex and age: each health filter's pass rate is multiplied by its lift with every health filter already applied.
   const HEV = [];
   const hl = (x, e) => { const L = (D.hLift || {})[T + (x.mid < 35 ? 0 : x.mid < 65 ? 1 : 2)]; if (!L) return 1; let f = 1; for (const j2 of HEV) f *= L[e + '|' + j2] || L[j2 + '|' + e] || 1; return f; };
-  if (F.mh && F.mh !== 'any'){
+  const MHs = setOf(F, 'mh');
+  if (MHs.length && MHs.length < 3){
+    // Bands: no diagnosis = never diagnosed with depression and no serious illness; depression history without serious illness; serious mental illness
+    // (estimate: serious illness counted inside the diagnosed group). Picking more than one adds their shares.
     const S = x => clamp(k.smi[band(x.mid)] * nsd(x.c, 'smi', band(x.mid)), 0, .5), Dp = x => clamp(x.s.h[M.dep] * pl(x,'depression'), 0, .8);
-    if (F.mh === 'smi' || F.mh === 'dep'){   // older answers: "No serious illness", "No depression history"
-      apply(x => clamp((1 - (F.mh === 'smi' ? S(x) : Dp(x))) * (F.mh === 'dep' ? hl(x, 'nodep') : 1), 0, 1));
-      if (F.mh === 'dep') HEV.push('nodep');
-      jtAdj('dep');
-      push('Mental health', F.mh === 'smi' ? 'No serious mental illness' : 'Never diagnosed with depression', F.mh === 'smi' ? 'SAMHSA NSDUH 2023, adjusted by CDC PLACES' : 'CDC BRFSS 2024 by state, adjusted by CDC PLACES');
-    } else {
-      // Bands: no diagnosis = never diagnosed with depression and no serious illness; depression history without serious illness; serious mental illness (estimate: serious illness counted inside the diagnosed group).
-      apply(x => { const s5 = S(x), d5 = Math.max(Dp(x), s5); return clamp(F.mh === 'nodx' ? (1 - d5) * hl(x, 'nodep') : F.mh === 'deph' ? d5 - s5 : s5, 0, 1); });
-      if (F.mh === 'nodx') HEV.push('nodep');
-      jtAdj('dep');
-      push('Mental health', {nodx: 'No diagnosis', deph: 'History of depression', smih: 'Serious mental illness'}[F.mh], 'CDC BRFSS 2024 by state (depression), SAMHSA NSDUH 2023 (serious mental illness), adjusted by CDC PLACES');
-    }
+    const only = MHs.length === 1 && MHs[0] === 'nodx';
+    apply(x => { const s5 = S(x), d5 = Math.max(Dp(x), s5); let p = 0;
+      if (MHs.includes('nodx')) p += (1 - d5) * (only ? hl(x, 'nodep') : 1); if (MHs.includes('deph')) p += d5 - s5; if (MHs.includes('smih')) p += s5; return clamp(p, 0, 1); });
+    if (only) HEV.push('nodep');
+    jtAdj('dep');
+    push('Mental health', MHs.map(v => ({nodx: 'No diagnosis', deph: 'History of depression', smih: 'Serious mental illness'})[v]).join(' or '), 'CDC BRFSS 2024 by state (depression), SAMHSA NSDUH 2023 (serious mental illness), adjusted by CDC PLACES');
   }
+
   if (setOf(F, 'dis').length){
     const DS = setOf(F, 'dis');
     apply(x => { const a = x.mid < 35 ? 0 : x.mid < 65 ? 1 : x.mid < 75 ? 2 : 3, amb = x.s.amb[a], dis = Math.max(amb, x.s.dis[a]);
@@ -1637,14 +1644,17 @@ function computeFor(codes, F){
     push('Vape', no ? "Doesn't vape" : 'Vapes', 'CDC BRFSS 2024 by state, adjusted by CDC PLACES');
   }
   const drinkRate = (x, kind) => clamp(x.s.h[M[kind]] * (kind === 'binge' ? pl(x,'binge') : 1) * AGE_F[kind][band(x.mid)] * (1 - (kind === 'binge' ? .5 : .3) * devout), 0, .95);
-  if (F.drink && F.drink !== 'any'){
-    // Bands: don't drink (no alcohol in the past month), drink without binging, binge at least sometimes. "nobinge" is an older answer.
-    const dv = F.drink, alc = x => drinkRate(x, 'alc'), bin = x => Math.min(alc(x), drinkRate(x, 'binge'));
-    apply(x => clamp(dv === 'none' ? (1 - alc(x)) * hl(x, 'nodrink') : dv === 'nobinge' ? (1 - bin(x)) * hl(x, 'nobinge') : dv === 'mod' ? (alc(x) - bin(x)) * hl(x, 'nobinge') : bin(x), 0, 1));
-    if (dv !== 'binge') HEV.push(dv === 'none' ? 'nodrink' : 'nobinge');
+  const DRs = setOf(F, 'drink');
+  if (DRs.length && DRs.length < 3){
+    // Bands: don't drink (no alcohol in the past month), drink without binging, binge at least sometimes. Picking more than one adds their shares.
+    const alc = x => drinkRate(x, 'alc'), bin = x => Math.min(alc(x), drinkRate(x, 'binge')), noB = !DRs.includes('binge'), lift = noB ? (DRs.length === 1 ? 'nodrink' : 'nobinge') : null;
+    apply(x => { let p = 0; if (DRs.includes('none')) p += 1 - alc(x); if (DRs.includes('mod')) p += alc(x) - bin(x); if (DRs.includes('binge')) p += bin(x);
+      return clamp(p * (lift ? hl(x, DRs.length === 1 && DRs[0] === 'mod' ? 'nobinge' : lift) : 1), 0, 1); });
+    if (noB) HEV.push(DRs.length === 1 && DRs[0] === 'none' ? 'nodrink' : 'nobinge');
     jtAdj('drink');
-    push('Alcohol consumption', {none: "Doesn't drink", nobinge: 'Never binge drinks', mod: 'Drinks, but never binges', binge: 'Sometimes binge drinks'}[dv], 'CDC BRFSS 2024 by state and sex, adjusted by CDC PLACES');
+    push('Alcohol consumption', DRs.map(v => ({none: "Doesn't drink", mod: 'Drinks, but never binges', binge: 'Sometimes binge drinks'})[v]).join(' or '), 'CDC BRFSS 2024 by state and sex, adjusted by CDC PLACES');
   }
+
   const potR = x => clamp(k.drugsAll[band(x.mid)] * nsd(x.c, 'mj', band(x.mid)) * (1 - .65 * devout) * (bach ? .9 : 1), 0, 1);
   const illR = x => clamp(k.drugsHard[band(x.mid)] * nsd(x.c, 'ill', band(x.mid)) * (1 - .65 * devout) * (bach ? .9 : 1), 0, 1);
   if (F.pot && F.pot !== 'any'){
@@ -1656,14 +1666,15 @@ function computeFor(codes, F){
     apply(x => dv === 'all' ? 1 - potR(x) : dv === 'no' ? 1 - illR(x) : illR(x));
     push('Other drug use', dv === 'all' ? 'No drugs, including marijuana' : dv === 'no' ? "Doesn't use other drugs" : 'Uses other drugs', 'SAMHSA NSDUH 2023 by state (past-year use, the standard survey measure)');
   }
-  if (F.hist && F.hist !== 'any'){
+  const HSs = setOf(F, 'hist');
+  if (HSs.length && HSs.length < 3){
     const FW = {wk:[2.4,1.8,1.4,1.15], mon:[1.6,1.4,1.2,1.08], id:[1.15,1.1,1.05,1], rel:[1.15,1.1,1.05,1], any:[1,1,1,1]};
-    // Cumulative shares at 1, 3, 5 and 10 partners (CDC NSFG); the bands are differences between them.
+    // Cumulative shares at 1, 3, 5 and 10 partners (CDC NSFG); the bands are differences between them. Picking more than one adds their shares.
     const cum = (x, i) => clamp((x.m === 'nm' ? k.partNM : k.partPM)[i] * [1.2,1.05,1,.92][x.b <= 2 ? 0 : x.b === 3 ? 1 : x.b === 4 ? 2 : 3] * (FW[RF.fw] || FW.any)[i], 0, .95);
-    const old = {'1':0, '3':1, '5':2, '10':3}[F.hist];
-    apply(x => old != null ? cum(x, old) : F.hist === 'low' ? cum(x, 1) : F.hist === 'mid' ? Math.max(0, Math.max(cum(x, 3), cum(x, 1)) - cum(x, 1)) : 1 - Math.max(cum(x, 3), cum(x, 1)));
-    push('Past sexual partners', old != null ? (F.hist === '1' ? 'One or none' : `${F.hist} or fewer`) : {low: '3 or fewer', mid: '4 to 10', high: 'More than 10'}[F.hist], 'CDC National Survey of Family Growth');
+    apply(x => { const c1 = cum(x, 1), c3 = Math.max(cum(x, 3), c1); let p = 0; if (HSs.includes('low')) p += c1; if (HSs.includes('mid')) p += c3 - c1; if (HSs.includes('high')) p += 1 - c3; return clamp(p, 0, 1); });
+    push('Past sexual partners', HSs.map(v => ({low: '3 or fewer', mid: '4 to 10', high: 'More than 10'})[v]).join(' or '), 'CDC National Survey of Family Growth');
   }
+
   if (F.goal && F.goal !== 'any'){
     apply(x => { const g = goalMix(T, x.mid); return F.goal === 'serious' ? g.commit + g.either : g.casual + g.either; });
     push('Relationship goals', F.goal === 'serious' ? 'Wants a committed relationship (or is open to either)' : 'Open to casual (or to either)', 'Pew Research Center 2019 survey of single adults, by sex and age');
@@ -1902,7 +1913,7 @@ function openToYou(F, T, bach, devout, H){
     if (F.myVape === 'yes'){ const v = vapeOf(F) === 'no' ? 0 : vapeOf(F) === 'yes' ? 1 : clamp(x.s.h[M.ecig] * AGE_F.ecig[band(x.mid)], 0, .6); p *= v * .95 + (1 - v) * .5; }   // estimate
     if (F.myDrink === 'binge'){
       // Match Singles in America 2016: heavy drinking is a turnoff for 78%. Applied to people who don't binge drink themselves.
-      const b2 = F.drink === 'binge' ? 1 : F.drink && F.drink !== 'any' ? 0 : H.drinkRate(x, 'binge');
+      const DS = setOf(F, 'drink'), b2 = DS.length === 1 && DS[0] === 'binge' ? 1 : DS.length && !DS.includes('binge') ? 0 : H.drinkRate(x, 'binge');
       p *= st(b2 + (1 - b2) * likP(.78), kLife());
     }
     if (F.myPot === 'yes'){
@@ -2124,7 +2135,7 @@ function trigOf(F){
 // to a typical person who meets your filters, versus a typical local person at the market's average age. Kept between 0.25× and 6×.
 const DESIRE = new Map();
 function poolTraits(F){
-  const t = {}, one = (v, map) => { if (v && v !== 'any' && map[v] != null) return map[v]; };
+  const t = {}, one = (v, map) => { if (Array.isArray(v)) v = v.length === 1 ? v[0] : ''; if (v && v !== 'any' && map[v] != null) return map[v]; };
   if (F.race && F.race.length === 1) t.myRace = F.race[0];
   const es = eduSet(F); if (es && es.length) t.myEdu = String(Math.min(...es));
   const bs = setOf(F, 'bmi'); if (bs.length){ const mid = {under: 17.5, slim: 21, fit: 24, over: 27.5, obese: 33}, b = bs.reduce((a, k2) => a + mid[k2], 0) / bs.length;
@@ -2326,7 +2337,7 @@ function compete(codes, F, opts = {}){
 const cap0 = t => t.charAt(0).toUpperCase() + t.slice(1);
 function blankFilters(F){
   return {...F, ageMin: F.ageMin, ageMax: F.ageMax, htMin:56, htMax:80, mar:[], race:[], born:[], edu:[], emp:-1, field:[], kids:'any', wantKids:'any', incLo:0, incHi:Infinity,
-    looking:true, bmi:[], act:[], noSmoke:false, noVape:false, smoke:'any', vape:'any', drink:'any', pot:'any', drugs:'any', mh:'any', dis:[], faith:'any', trads:[], att:'any', pol:[], goal:'any', hist:'any', ori:'any', work:false, wantsMar:false, noFelony:false, voted:false,
+    looking:true, bmi:[], act:[], noSmoke:false, noVape:false, smoke:'any', vape:'any', drink:[], pot:'any', drugs:'any', mh:[], dis:[], faith:'any', trads:[], att:'any', pol:[], goal:'any', hist:[], ori:'any', work:false, wantsMar:false, noFelony:false, voted:false,
     myAge:null, myRace:'', myHt:null, myWt:null, myInc:null, myEdu:'', myEduRaw:'', myMar:'', myKids:'', myMore:'', myWed:'', myTrad:'', myFaith:'', myPol:'', myGoal:'', mySmoke:'', myVape:'', myDrink:'', myPot:'', myDrug:'', myAct:'', myFel:'', myMh:'', myDis:'', myHist:''};
 }
 
@@ -2621,7 +2632,7 @@ function renderInner(active, pre){
   const CX = F.T !== 'B' ? (() => { const b = {...blankFilters(F), T: F.T, mySex: F.mySex, ageMin: 18, ageMax: 84}, L0 = computeFor(A.codes, b), LA = computeFor(A.codes, {...b, looking: true});
     return {single: (L0.find(l => l.title === 'Age') || L0[0]).after, local: adultsIn(A.codes, F.T), act: LA[LA.length - 1].after}; })() : null;
   const left = openStep
-    ? `<div class="bgrp"><div class="num">${leftBig >= 1 ? fmtN(leftBig) : '0'}${WB != null ? '' : rng}${pctTag(pctOf(leftBig, ofN))}</div><div class="txt">${cap0(F.T === 'B' ? 'local single ' + w.pl : 'local single ' + oriWord(F.T, F.mySex))} would be interested in you<span class="odds">out of ${fmtX(ofN)} local single ${F.T === 'B' ? w.pl : oriWord(F.T, F.mySex)}</span>${look && WBact != null ? `<span class="odds l3">only ${fmtN(WBact)} are actively dating and would likely date you</span>` : ''}</div></div>`
+    ? `<div class="bgrp"><div class="num">${leftBig >= 1 ? fmtN(leftBig) : '0'}${WB != null ? '' : rng}${pctTag(pctOf(leftBig, ofN))}</div><div class="txt">${cap0(F.T === 'B' ? 'local single ' + w.pl : 'local single ' + oriWord(F.T, F.mySex))} would be interested in you<span class="odds">out of ${fmtX(ofN)} local single ${F.T === 'B' ? w.pl : oriWord(F.T, F.mySex)}</span>${look && WBact != null ? `<span class="odds l3">only ${fmtN(WBact)} ${w.pl} are actively dating and would likely date you</span>` : ''}</div></div>`
     : `<div class="bgrp"><div class="num">${fmtX(F.T === 'B' ? singlesIn(A.codes, F.mySex) : oriCount(A.codes, F, F.mySex, F.T))}</div><div class="txt">Competing against other single ${F.T === 'B' ? youPl : oriWord(F.mySex, F.T)}<span class="odds">out of ${fmtX(adultsIn(A.codes, F.mySex))} local ${youPl}</span></div></div>`;
   const right = filtered
     ? `<div class="bgrp br"><div class="txt">${F.T === 'B' ? cap0(w.pl) : 'Single ' + oriWord(F.T, F.mySex)} in <b>${esc(area)}</b> you would pursue<span class="odds">out of ${F.T === 'B' || !CX ? fmtX(loc) + ' local ' + w.pl : fmtX(CX.local) + ' local ' + w.pl}</span>${look ? `<span class="odds l3">${CX ? fmtX(CX.act) + ' ' + w.pl + ' are actively dating' : ''}<span class="cmpSlot"></span></span>` : `<span class="odds l3 res-only"><span class="cmpSlot"></span></span>`}</div><div class="num">${meetAll >= 1 ? fmtN(meetAll) : '0'}${pctTag(pctOf(meetAll, F.T === 'B' || !CX ? loc : CX.local))}</div></div>`
@@ -2923,12 +2934,12 @@ function reportItems(F){
   if (F.ageMin !== 18 || F.ageMax !== 84){ const w = typicalWindow(F); items.push({side: 'want', key: 'age', label: `Ages ${F.ageMin}–${F.ageMax}`, off: {ageMin: w[0], ageMax: w[1]}, why: `Against the ages most people your age would date (${w[0]}–${w[1]})`}); }
   if (F.htMin > 56 || F.htMax < 80) items.push({side: 'want', key: 'ht', label: `Height: ${htRange(F.htMin, F.htMax)}`, off: {htMin: 56, htMax: 80}});
   if (F.incLo > 0 || !noCap(F.incHi)) items.push({side: 'want', key: 'inc', label: `Income: ${incLabel(F.incLo, F.incHi)}`, off: {incLo: 0, incHi: Infinity}});
-  const sel = [['kids', 'kids'], ['wantKids', 'wantKids'], ['smoke', 'smoke'], ['vape', 'vape'], ['drink', 'drink'], ['pot', 'pot'], ['drugs', 'drugs'], ['mh', 'mh'], ['goal', 'goal'], ['hist', 'hist'], ['att', 'att']];
+  const sel = [['kids', 'kids'], ['wantKids', 'wantKids'], ['smoke', 'smoke'], ['vape', 'vape'], ['pot', 'pot'], ['drugs', 'drugs'], ['goal', 'goal'], ['att', 'att']];
   for (const [k, id] of sel) if (JSON.stringify(F[k]) !== JSON.stringify(B0[k]) && $(id)) items.push({side: 'want', key: k, label: `${lblOf(id)}: ${optOf(id)}`, off: {[k]: B0[k]}});
   if (F.race.length) items.push({side: 'want', key: 'race', label: `Race: ${pillTxt('race', F.race)}`, off: {race: []}});
   if (F.mar.length) items.push({side: 'want', key: 'mar', label: `Marriage history: ${pillTxt('mar', F.mar)}`, off: {mar: []}});
   if (F.trads.length) items.push({side: 'want', key: 'trads', label: `Religion: ${pillTxt('trad', F.trads)}`, off: {trads: []}});
-  for (const [k, nm] of [['edu', 'Education'], ['born', 'Citizenship'], ['pol', 'Politics'], ['bmi', 'Body type'], ['act', 'Exercise frequency'], ['dis', 'Disabilities']]) { const v = k === 'edu' ? (eduSet(F) || []).map(String) : k === 'born' ? bornSet(F) : k === 'pol' ? polSet(F) : setOf(F, k); if (v.length) items.push({side: 'want', key: k, label: `${nm}: ${pillTxt(k, v)}`, off: {[k]: []}}); }
+  for (const [k, nm] of [['edu', 'Education'], ['born', 'Citizenship'], ['pol', 'Politics'], ['bmi', 'Body type'], ['act', 'Exercise frequency'], ['drink', 'Alcohol consumption'], ['mh', 'Mental health'], ['hist', 'Past sexual partners'], ['dis', 'Disabilities']]) { const v = k === 'edu' ? (eduSet(F) || []).map(String) : k === 'born' ? bornSet(F) : k === 'pol' ? polSet(F) : setOf(F, k); if (v.length) items.push({side: 'want', key: k, label: `${nm}: ${pillTxt(k, v)}`, off: {[k]: []}}); }
   if (F.field.length) items.push({side: 'want', key: 'field', label: `Field of work: ${pillTxt('field', F.field.map(String))}`, off: {field: []}});
   for (const [k, txt] of [['noFelony', 'No felony record'], ['work', 'Has a paying job'], ['wantsMar', 'Wants to get married'], ['voted', 'Voted in 2024']]) if (F[k]) items.push({side: 'want', key: k, label: txt, off: {[k]: false}});
   if (F.ori === 'only') items.push({side: 'want', key: 'ori', label: 'Excludes bisexual', off: {ori: 'any'}});
@@ -3320,8 +3331,9 @@ async function buildReport(F, A, C, fin, WB, live, X = {}){
       const peak = v => B[v.indexOf(Math.max(...v))], wp = peak(wv), pp = peak(pv);
       const nb = t => `<span style="white-space:nowrap">${t}</span>`, lede = wp === pp ? `The ${them} who would date you and the ${them} you’d pursue are both most often ${nb(wp)}.`
         : `The ${them} who would date you are most often ${nb(wp)}. The ${them} you’d pursue are most often ${nb(pp)}.`;
-      cards.push(card('c-age', 'groups', 'Who you match by age', `${lede} Each set of bars is a share of its own total, so the two groups can be compared even though one is far larger.`,
-        `<div class="sc-wrap"><svg viewBox="0 0 ${W} ${H}" class="sc" role="img" aria-label="${esc(lede.replace(/<[^>]+>/g, ''))}">${g}</svg></div><div class="sq-legend"><span><i class="k on"></i>Would date you and actively dating · ${fmtN(EXR.age.wouldN)}</span><span><i class="k mut"></i>You’d pursue and actively dating · ${fmtN(C.poolN)}</span></div>`));
+      const wk = B.indexOf(wp), wpn = Math.round(wv[wk] * EXR.age.wouldN);
+      cards.push(card('c-age', 'groups', 'Who you match by age', lede,
+        `<div class="sc-wrap"><svg viewBox="0 0 ${W} ${H}" class="sc" role="img" aria-label="${esc(lede.replace(/<[^>]+>/g, ''))}">${g}</svg></div><div class="sq-legend"><span><i class="k on"></i>Would date you and actively dating · ${fmtN(EXR.age.wouldN)}</span>${wp !== pp ? `<span><i class="k on"></i><span class="msi ag-ic" aria-hidden="true">${F.T === 'M' ? 'man' : 'woman'}</span>Would date you most often, ${wp} · ${fmtN(wpn)}</span>` : ''}<span><i class="k mut"></i>You’d pursue and actively dating · ${fmtN(C.poolN)}</span></div>`));
     }
   }
   // Your area against the nation: one card for the people you want, one for the people you compete with.
@@ -3466,8 +3478,8 @@ function loosenIdeas(){
     const v = el.value, nv = el.options[i - 1].value, nt = el.options[i - 1].text;
     ideas.push({key: id, kind: 'filter', label: `${txt(id)}: ${nv === 'any' ? 'no preference' : nt.charAt(0).toLowerCase() + nt.slice(1)} instead of ${el.options[i].text.charAt(0).toLowerCase() + el.options[i].text.slice(1)}`, set: () => el.value = nv, undo: () => el.value = v, apply: () => el.value = nv});
   }
-  for (const id of ['kids','wantKids','goal','smoke','vape','drink','pot','drugs','mh','hist','att']){ const el = $(id), v = el.value; if (v !== 'any') ideas.push({key: id, kind: 'filter', label: `${txt(id)}: no preference`, set: () => el.value = 'any', undo: () => el.value = v, apply: () => el.value = 'any'}); }
-  for (const [nm, name] of [['mar','marital history'],['race','race and ethnicity'],['field','field of work'],['trad','religion'],['edu','education'],['born','citizenship'],['pol','politics'],['bmi','body type'],['act','exercise frequency'],['dis','disabilities']]){
+  for (const id of ['kids','wantKids','goal','smoke','vape','pot','drugs','att']){ const el = $(id), v = el.value; if (v !== 'any') ideas.push({key: id, kind: 'filter', label: `${txt(id)}: no preference`, set: () => el.value = 'any', undo: () => el.value = v, apply: () => el.value = 'any'}); }
+  for (const [nm, name] of [['mar','marital history'],['race','race and ethnicity'],['field','field of work'],['trad','religion'],['edu','education'],['born','citizenship'],['pol','politics'],['bmi','body type'],['act','exercise frequency'],['drink','alcohol consumption'],['mh','mental health'],['hist','past sexual partners'],['dis','disabilities']]){
     const box = [...document.querySelectorAll(`input[name=${nm}]`)], was = box.map(b => b.checked);
     if (box.some(b => b.checked && b.value !== 'any')){
       const clear = () => box.forEach(b => b.checked = b.value === 'any');
@@ -3660,7 +3672,7 @@ function syncSel(){ document.querySelectorAll('.selw').forEach(w => { const s = 
 // Save codes are keyed by question id, so moved questions load where they now sit; unknown ids and retired options are skipped.
 // Version 2 (Oct 2026): adds _v. Codes without it were saved when every count assumed people actively dating,
 // so they load with "Only actively dating" checked to give the same results. Height loads into the feet and inches boxes.
-const CODE_V = 7;   // 7: field of work became 14 groups (Hourly hospitality split; General labor added)   // 6: ideal-match income is two dollar fields (minimum $0, maximum $5M) instead of a slider   // 5: education, citizenship and politics became exact pick-one-or-more; want children is yes or no   // 4 (Oct 2026): smoking split into cigarettes and vaping, marijuana split from other drugs, exact choices for drinking, mental health, attendance and past partners   // 3 (Oct 2026): body type, exercise frequency and disabilities became pick-one-or-more
+const CODE_V = 8;   // 8: alcohol, mental health and past partners became pick-one-or-more   // 7: field of work became 14 groups (Hourly hospitality split; General labor added)   // 6: ideal-match income is two dollar fields (minimum $0, maximum $5M) instead of a slider   // 5: education, citizenship and politics became exact pick-one-or-more; want children is yes or no   // 4 (Oct 2026): smoking split into cigarettes and vaping, marijuana split from other drugs, exact choices for drinking, mental health, attendance and past partners   // 3 (Oct 2026): body type, exercise frequency and disabilities became pick-one-or-more
 // A minimum income above $0 means she has a paying job: the box shows checked and locked, and your own choice is kept underneath.
 const workOwn = () => { const w = $('work'); return w.disabled ? w.dataset.own === '1' : w.checked; };
 function answersCode(){
@@ -3709,6 +3721,7 @@ function loadAnswers(code){
     if (typeof o.born === 'string'){ o['@born'] = o.born === 'us' ? ['us'] : o.born === 'cit' ? ['us', 'nat'] : undefined; if (!o['@born']) delete o['@born']; delete o.born; }
     if (typeof o.pol === 'string'){ const ps = POL_SEL[POLK(o.pol)]; if (ps) o['@pol'] = ps; delete o.pol; }
   }
+  if (!o._v || o._v < 8) for (const k of ['drink', 'mh', 'hist']) if (typeof o[k] === 'string'){ const v = o[k]; delete o[k]; if (v !== 'any') o['@' + k] = (LEGACY[k] || {})[v] || [v]; }
   $('work').disabled = false; $('f').reset();
   for (const [k, v] of Object.entries(o)){
     if (k[0] === '@'){ const box = $('f').querySelectorAll(`input[type=checkbox][name="${k.slice(1)}"]`); if (Array.isArray(v)) box.forEach(b => b.checked = v.includes(b.value)); continue; }
@@ -3992,18 +4005,23 @@ const FF_GROUPS = [
 
 function ffMed(){ const t = FFD.rows.filter(r => r[2]).map(r => r[0]).sort((a, b) => a - b); return Math.round((t[99] + t[100]) / 2); }
 // 1. Ranking: the 200 largest metros, least to most expensive, with the user's area bolded or slotted in.
-function ffRanking(me){
+function ffRanking(me, F){
+  const inc = F && F.myInc > 0 ? F.myInc : null;
   const list = FFD.rows.map((r, i) => r[2] ? i : -1).filter(i => i >= 0);
   const extra = me && !me.top; if (extra) list.push(me.i);
   list.sort((a, b) => FFD.rows[a][0] - FFD.rows[b][0]);
   const n = list.length, under = list.filter(i => FFD.rows[i][0] < 250000 && !(extra && i === me.i)).length;
-  let lined = false, items = '';
+  let lined = false, mine = !inc, items = '';
+  const incLine = () => { mine = true; items += `<li class="ff-line ff-line2" aria-hidden="true"><span>${items ? 'Affordable on your income' : 'None of these is affordable on your income'}</span></li>`; };
   list.forEach((i, k) => {
     const t = FFD.rows[i][0];
+    if (!mine && t > inc && (lined || t < 250000 || inc < 250000)) incLine();
     if (!lined && t >= 250000){ lined = true; items += `<li class="ff-line" aria-hidden="true"><span>Not affordable on $250,000</span></li>`; }
-    const mine = me && i === me.i;
-    items += `<li${mine ? ' class="ff-me" id="ffMe"' : ''}><span class="ff-rk">${k + 1}</span><span class="ff-nm" title="${ffEsc(FFD.names[i])}">${ffEsc(FFD.names[i])}${mine && extra ? ' <em>(yours)</em>' : ''}</span><span class="ff-v${t < 250000 ? ' ok' : ''}">${ffM(t)}</span></li>`;
+    if (!mine && t > inc) incLine();
+    const isMe = me && i === me.i;
+    items += `<li${isMe ? ' class="ff-me" id="ffMe"' : ''}><span class="ff-rk">${k + 1}</span><span class="ff-nm" title="${ffEsc(FFD.names[i])}">${ffEsc(FFD.names[i])}${isMe && extra ? ' <em>(yours)</em>' : ''}</span><span class="ff-v${t < 250000 ? ' ok' : ''}">${ffM(t)}</span></li>`;
   });
+  if (!mine) incLine();
   const nearNote = me && me.near ? `Your ZIP code isn’t in a metro or micro area, so these cards use the nearest one, ${ffEsc(me.name)}. ` : '';
   const where = !me ? 'Enter your ZIP code to see where your area lands.' : me.top
     ? `<b>${ffEsc(me.name)}</b> ranks <b>${list.indexOf(me.i) + 1} of 200</b> at <b>${ffM(me.total)}</b>.`
@@ -4150,10 +4168,27 @@ function ffPartner(F, me){
     <p class="ff-note">One income covering the whole floor is rare: about ${(x => x < 0.1 ? (x * 100).toFixed(1) : Math.round(x * 100))(avgShare(m => earnShare({mid: m, c: {s: ''}, s: {inc: D.incUS[P]}}, P, 'any', me.total, false)))}% of ${pw.pl} ${lo} to ${hi} nationally earn ${ffK(me.total)} or more on their own.</p></div></section>`;
 }
 
+// 5. The same budget in the closest areas: how much a move changes the floor.
+function ffNearby(F, me){
+  if (!me) return '';
+  const c0 = D.cbsa[me.i], R = Math.PI / 180, mi = (a, b) => { const x = (b.lo - a.lo) * R * Math.cos((a.la + b.la) / 2 * R), y = (b.la - a.la) * R; return 3959 * Math.hypot(x, y); };
+  const near = D.cbsa.map((c, i) => ({i, d: mi(c0, c)})).filter(o => o.i !== me.i && FFD.rows[o.i] && o.d <= 250).sort((a, b) => a.d - b.d).slice(0, 8)
+    .map(o => ({...o, name: FFD.names[o.i], t: FFD.rows[o.i][0]}));
+  if (!near.length) return '';
+  const inc = F.myInc > 0 ? F.myInc : null, best = near.reduce((a, b) => b.t < a.t ? b : a);
+  const lede = best.t < me.total ? `The same family budget in the areas closest to ${ffEsc(me.name)}. ${ffEsc(best.name)}, ${Math.round(best.d)} miles away, lowers the floor by ${ffM(me.total - best.t)}.`
+    : `The same family budget in the areas closest to ${ffEsc(me.name)}. None of them costs less.`;
+  const rows = [{i: me.i, d: 0, name: me.name, t: me.total, me: true}, ...near].sort((a, b) => a.t - b.t).map(o => {
+    const df = o.t - me.total, ok = inc && o.t <= inc;
+    return `<li${o.me ? ' class="ff-me"' : ''}><span class="ff-nm">${ffEsc(o.name)}<small>${o.me ? 'your area' : Math.round(o.d) + ' miles'}${ok ? ' · on your income' : ''}</small></span><span class="ff-v">${ffM(o.t)}</span><span class="ff-df ${df < 0 ? 'ok' : df > 0 ? 'up' : ''}">${o.me ? '' : (df < 0 ? '−' : '+') + ffK(Math.abs(df))}</span></li>`; }).join('');
+  return `<section class="rp-card ff-card c-floor" id="ffNear"><h3><span class="msi" aria-hidden="true">near_me</span>What the same life costs nearby</h3>
+    <p class="rp-cl">${lede}</p><div class="rp-body"><ol class="ff-near">${rows}</ol>
+    <p class="ff-note">Cheapest first. Areas within 250 miles, including smaller micro areas.</p></div></section>`;
+}
 function familyFloor(F){
   const me = ffArea(F);
   return `<div class="ff" id="famFloor"><div class="ff-title"><h2>The family floor</h2><p>What it takes to marry, buy a home and raise two kids today, and how few men get there.</p></div>
-    <div class="ff-grid">${ffRanking(me)}${ffGauntlet(F)}${ffBudget(me)}${ffPartner(F, me)}</div></div>`;
+    <div class="ff-grid">${ffRanking(me, F)}${ffGauntlet(F)}${ffBudget(me)}<div class="ff-col">${ffPartner(F, me)}${ffNearby(F, me)}</div></div></div>`;
 }
 function ffAfterRender(){
   const L = document.getElementById('ffList'), me = document.getElementById('ffMe');
