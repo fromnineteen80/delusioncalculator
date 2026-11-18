@@ -633,7 +633,7 @@ html:root[data-scheme="dark"] .msi{font-variation-settings:"GRAD" -25}
 :root{--ff-tax:var(--navy);--ff-save:var(--accent-ink);--ff-home:var(--accent);--ff-kids:var(--long);--ff-car:var(--fair-ink);--ff-food:var(--hi);--ff-health:var(--good);--ff-debt:var(--poor);--ff-life:var(--faint);
   --ff-p1:var(--accent-ink);--ff-p2:var(--long);--ff-p3:var(--fair-ink);--ff-ok:var(--good)}
 .ff{margin:22px 0 4px}
-.ff-title{padding:14px 0 12px;border-top:2px solid var(--navy)}
+.ff-title{padding:14px 0 12px;border-top:2px solid var(--navy)} #secNation,#secDream{border-top-width:4px}   /* matches the line above The Dating Economy (the report header's line plus its own) */
 .spon{margin:16px auto;text-align:center;width:100%;max-width:100%;box-sizing:border-box} .spon[hidden]{display:none!important}
 .spon-tag{display:block;margin:0 0 4px;font:600 10px/1.2 var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
 .spon img{display:block;max-width:100%;height:auto;margin:0 auto;border-radius:4px}
@@ -4354,7 +4354,7 @@ function ffFlowSVG(p){
     });
     // men who fall short at this step peel off under each lane
     if (k >= 3) [0, 1, 2].forEach(l => { const d = size[k][l] - size[k + 1][l]; if (d > 0){ const ya = Y[l] + s * size[k + 1][l];
-      g += band(xa, ya, s * d, xa + colW * 0.55, ya + 12, s * d, 'var(--faint)', 0.22); } });   // the same gray on every path
+      g += band(xa, ya, s * d, xa + colW * 0.55, ya + 12, s * d, 'var(--faint)', 0.06); } });   // the same light gray on every path
     [0, 1, 2].forEach(l => { const n = size[k + 1][l]; if (!n) return;
       nodes += `<rect x="${xb}" y="${Y[l]}" width="${nw}" height="${Math.max(1.2, s * n)}" fill="${lc[l]}" opacity="${op(l)}"/>`;
       labels += `<text x="${xb + nw + 4}" y="${Y[l] + 12}" class="ff-fn" fill="${lc[l]}" opacity="${op(l)}">${n}</text>`; });
