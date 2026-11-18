@@ -624,6 +624,9 @@ html:root[data-scheme="dark"] .msi{font-variation-settings:"GRAD" -25}
 .spon-rail{margin:16px 0 0} .spon-rail .spon-ph{width:300px;max-width:100%;aspect-ratio:300/250;margin:0 auto} @media (max-width:899px){ .spon-rail{display:none!important} }
 .spon-ph{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border:2px dashed var(--rule);border-radius:6px;color:var(--muted);font-size:12px;box-sizing:border-box}
 .spon-ph b{font-weight:600;color:var(--ink)}
+.spon-pair{display:flex;justify-content:center;gap:24px} .spon-pair > *{width:300px;max-width:100%;flex:none} .spon-pair img{width:300px;height:auto}
+.spon-ban .spon-pair .spon-ph{width:300px;max-width:100%;aspect-ratio:300/250;margin:0} .spon-or{margin:6px 0 0;font-size:11.5px;color:var(--muted)}
+@media (max-width:767px){ .spon-pair > :nth-child(2){display:none} }
 .spon-line{text-align:left;margin:12px 0} .spon-line p{margin:0;font-size:13px;color:var(--ink)} .spon-line .spon-tag{display:inline;margin-right:8px} .spon-line a{color:var(--accent-ink)}
 .spon-line .spon-ph{display:block;padding:8px 12px;text-align:left}
 .spon-foot{display:flex;justify-content:space-between;align-items:center;gap:8px 16px;margin:0 0 16px}
@@ -4587,8 +4590,10 @@ var ADS = {
   on: false,
   top:   {img: '', imgM: '', url: '', alt: ''},   // under the header, before the questions or report: 728×90 desktop, 320×100 phone
   rail:  {img: '', imgM: '', url: '', alt: ''},   // desktop right column, under How this works while answering: 300×250
-  econ:  {img: '', imgM: '', url: '', alt: ''},   // report, after the Dating Economy cards: 970×250 desktop, 300×250 phone
-  dream: {img: '', imgM: '', url: '', alt: ''},   // report, before The American Dream: 970×250 desktop, 300×250 phone
+  // Between report sections: either one wide banner (img: 970×250, imgM: 300×250 for phones) or two boxes side by side
+  // (pair: two 300×250 images, each with its own url and alt; phones show only the first).
+  econ:  {img: '', imgM: '', url: '', alt: '', pair: [{img: '', url: '', alt: ''}, {img: '', url: '', alt: ''}]},   // after the Dating Economy cards
+  dream: {img: '', imgM: '', url: '', alt: '', pair: [{img: '', url: '', alt: ''}, {img: '', url: '', alt: ''}]},   // before The American Dream
   bottom: {img: '', imgM: '', url: '', alt: ''},  // bottom of the page, above the footer: 728×90 desktop, 320×100 phone
   line1: {text: '', url: ''},                      // one line of sponsored text, after the Dating Economy cards
   line2: {text: '', url: ''},                      // one line of sponsored text, at the end of the report
@@ -4611,7 +4616,13 @@ function sponRender(){
       if (c.text && c.url && (live || prev)) h = `<p><span class="spon-tag">Sponsored</span><a ${ext(c.url)}>${esc(c.text)}</a></p>`;
       else if (prev) h = `<p class="spon-ph"><span class="spon-tag">Sponsored</span>One line of sponsored text goes here (${k}).</p>`;
     } else {
-      const z = SPON_SIZE[k];
+      const z = SPON_SIZE[k], pr = (c.pair || []).filter(x => x && x.img && x.url);
+      if (pr.length && (live || prev) && !(c.img && c.url)){
+        h = `<span class="spon-tag">Advertisement</span><div class="spon-pair">${pr.slice(0, 2).map(x => `<a ${ext(x.url)}><img src="${esc(x.img)}" alt="${esc(x.alt || '')}" width="300" height="250" loading="lazy"></a>`).join('')}</div>`;
+        el.innerHTML = h; el.hidden = false; return; }
+      if (prev && c.pair && !(c.img && c.url)){
+        h = `<span class="spon-tag">Advertisement</span><div class="spon-pair"><div class="spon-ph spon-ph-box"><b>Ad slot: ${k}, left</b><span>300 × 250</span></div><div class="spon-ph spon-ph-box"><b>Ad slot: ${k}, right</b><span>300 × 250, desktop only</span></div></div><p class="spon-or">or one ${z[0]} × ${z[1]} banner across (${z[2]} × ${z[3]} on phones)</p>`;
+        el.innerHTML = h; el.hidden = false; return; }
       if (c.img && c.url && (live || prev)) h = `<span class="spon-tag">Advertisement</span><a ${ext(c.url)}><picture>${c.imgM ? `<source media="(max-width:767px)" srcset="${esc(c.imgM)}">` : ''}<img src="${esc(c.img)}" alt="${esc(c.alt || '')}" width="${z[0]}" height="${z[1]}" loading="lazy"></picture></a>`;
       else if (prev) h = `<span class="spon-tag">Advertisement</span><div class="spon-ph" style="--w:${z[0]};--h:${z[1]};--wm:${z[2]};--hm:${z[3]}"><b>Ad slot: ${k}</b><span>${k === 'rail' ? `${z[0]} × ${z[1]}, desktop only` : `${z[0]} × ${z[1]} desktop · ${z[2]} × ${z[3]} phone`}</span></div>`;
     }
