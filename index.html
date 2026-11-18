@@ -108,10 +108,10 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .instr-inner::before{content:"";display:block;height:6px} .instr-inner::after{content:"";display:block;height:14px}
 .instr-inner > :last-child{margin-bottom:0} .instr-inner b{color:var(--ink)}
 @media (prefers-reduced-motion:reduce){.instr-panel{transition:none}}
-/* "Still needed" tips: under the tagline, same type, light blue; placed over the header so nothing below moves. */
-header{position:relative}
-#start{position:absolute;right:0;max-width:470px;margin:0;text-align:right;font-size:11.5px;line-height:1.4;color:var(--accent-ink);pointer-events:none;font-weight:600}
-@media (max-width:767px){ #start{position:static;min-height:2.4em;margin:6px 0 0;font-size:11.5px;pointer-events:auto} #start[hidden]{display:block!important;visibility:hidden} }
+/* "Still needed": shown in Where to look, naming the exact fields left; those fields get an accent outline. */
+#start{display:flex;gap:6px;align-items:flex-start;margin:6px 0 0;font:500 12.5px/1.4 var(--body);color:var(--accent-ink)} #start b{font-weight:700} #start[hidden]{display:none}
+#start::before{content:"";flex:none;width:7px;height:7px;margin-top:5px;border-radius:50%;background:var(--accent)}
+label.need-f select,label.need-f input,label.need-f .selw{border-color:var(--accent)!important;box-shadow:0 0 0 1px var(--accent)}
 .brand + .tagline{font:500 clamp(16px,1.9vw,19px)/1.4 var(--body);color:var(--ink);opacity:.78;margin:10px 0 0;max-width:none;text-wrap:pretty;letter-spacing:-.005em}
 h1{font:700 clamp(34px,5vw,52px)/1.02 var(--display);color:var(--ink);margin:0;letter-spacing:-.02em}
 .brand{color:inherit;text-decoration:none;cursor:pointer;display:inline-flex;align-items:baseline;gap:.26em;font-size:clamp(34px,5vw,52px);position:relative;padding-bottom:20px;max-width:100%}
@@ -785,7 +785,6 @@ a.ext{color:var(--accent-ink);text-decoration:none}
 <header>
   <a class="brand" href="./" id="brandHome" aria-label="You’re All Delusional: start over"><svg class="logo" viewBox="2 3 20 18.35" aria-hidden="true"><path class="logo-heart" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="#fff" transform="translate(12 11.6) scale(.45) translate(-12 -12)"/></svg><h1>You’re All Delusional</h1></a>
   <p class="tagline">It’s highly likely <em class="you">you</em> need a reality check about today’s dating economy.<br><em class="cta">Take our questionnaire and find out.</em></p>
-  <div class="start" id="start" hidden></div>
   <div class="instr" id="instr">
     <div class="tools">
       <button type="button" class="instr-btn" id="instrBtn" aria-expanded="false" aria-controls="instrPanel">Instructions <span class="pm" aria-hidden="true">+</span></button>
@@ -835,6 +834,7 @@ a.ext{color:var(--accent-ink);text-decoration:none}
 
     <div class="sec">
       <h3>Where to look</h3>
+      <p class="start" id="start" role="status" aria-live="polite"></p>
       <div class="pair">
         <label for="mySex">I am a<select id="mySex"><option value="">Choose</option><option value="M">Man</option><option value="F">Woman</option></select></label>
         <label for="seek">Looking for<select id="seek"><option value="">Choose</option><option value="F">Women</option><option value="M">Men</option><option value="B">Women and men</option></select></label>
@@ -2629,7 +2629,7 @@ function renderInner(active, pre){
     const me = F.mySex || 'M', other = me === 'M' ? 'F' : 'M', nm = S => S === 'M' ? 'men' : 'women';
     $('bar').innerHTML = `<div class="bgrp"><div class="num">${fmtX(singles(me))}</div><div class="txt">${F.mySex ? `Competing against other single ${nm(me)}` : `Single local ${nm(me)}`}<span class="odds">out of ${fmtX(adultsIn(A0.codes, me))} local ${nm(me)}</span></div></div>
       <div class="bgrp br"><div class="txt">Single ${nm(other)} in <b>${esc(area0)}</b><span class="odds">out of ${fmtX(adultsIn(A0.codes, other))} local ${nm(other)}</span></div><div class="num">${fmtX(singles(other))}</div></div>`;
-    $('start').hidden = !rest.length; $('start').innerHTML = rest.length ? `Still needed: ${rest.join(' and ')}.` : '';
+    needPrompt(missing);
     $('expCard').hidden = true; $('live').textContent = '';
     $('prof').innerHTML = '';
     $('cmpCard').hidden = true; $('mkt').hidden = true;
@@ -2639,14 +2639,13 @@ function renderInner(active, pre){
     const need = missing.length ? missing : ['a ZIP code in the other area'];
     const list = need.length > 1 ? need.slice(0, -1).join(', ') + ' and ' + need[need.length-1] : need[0];
     $('bar').hidden = true; $('bar').innerHTML = '';
-    $('start').hidden = false;
-    $('start').innerHTML = missing.length === 4 ? '' : `Still needed: ${list}.`;
+    needPrompt(missing, missing.length ? '' : 'a ZIP code in the other area');
     $('expCard').hidden = true; $('live').textContent = '';
     $('prof').innerHTML = '';
     $('cmpCard').hidden = true; $('mkt').hidden = true;
     return;
   }
-  $('start').hidden = true; $('bar').hidden = false; $('resultsBtn').disabled = !(F.mySex && F.T && F.T !== 'B'); { const n1 = ABOUT_KEYS.filter(k2 => F[k2] !== '' && F[k2] != null).length; $('prog1').textContent = `${n1} of ${ABOUT_KEYS.length} answered`;
+  needPrompt([]); $('bar').hidden = false; $('resultsBtn').disabled = !(F.mySex && F.T && F.T !== 'B'); { const n1 = ABOUT_KEYS.filter(k2 => F[k2] !== '' && F[k2] != null).length; $('prog1').textContent = `${n1} of ${ABOUT_KEYS.length} answered`;
   const fs = [...document.querySelectorAll('#part2 select, #part2 input[type=checkbox]:not([value]), #part2 fieldset.pills')], n2 = fs.filter(el => el.tagName === 'FIELDSET' ? !!el.querySelector('input:checked:not([value=any])') : el.type === 'checkbox' ? el.checked : el.value && el.value !== 'any' && el.selectedIndex > 0).length; $('prog2').textContent = `${n2} of ${fs.length} set`; }
   F_LAST = F;
   const L = computeAll(A.codes, F);
@@ -3974,6 +3973,17 @@ function htToParts(){ const n = +$('myHt').value; if (!n) return; HT_FT.value = 
 function htBad(){ const f = HT_FT.value, i = HT_IN.value; if (f === '' && i === '') return false; if (f === '') return true;
   if (f === '4' && i === '') return false; return $('myHt').value === ''; }
 // Whole numbers only: a decimal point ends the number and anything typed after it is ignored until a character is deleted.
+// Still needed: names the questions left in Where to look and outlines them. All four empty reads as a starting instruction.
+function needPrompt(missing, extra){
+  const NEED_F = {'who you are': ['mySex', 'I am a'], 'who you’re looking for': ['seek', 'Looking for'], 'your ZIP code': ['zip', 'My ZIP code'], 'where to search': ['mode', 'Search in']};
+  const st = $('start'); if (!st) return;
+  Object.values(NEED_F).forEach(([id]) => { const l = document.querySelector(`label[for="${id}"]`); if (l) l.classList.toggle('need-f', missing.some(m => NEED_F[m] && NEED_F[m][0] === id)); });
+  const order = ['who you are', 'who you’re looking for', 'your ZIP code', 'where to search'], names = order.filter(m => missing.includes(m)).map(m => `<b>${NEED_F[m][1]}</b>`);
+  if (extra) names.push(extra);
+  const list = names.length > 1 ? names.slice(0, -1).join(', ') + ' and ' + names[names.length - 1] : names[0];
+  st.hidden = !names.length;
+  st.innerHTML = !names.length ? '' : `<span>${missing.length === 4 ? 'Answer these four questions to see your results.' : `Still needed to see your results: ${list}.`}</span>`;
+}
 function wholeOnly(el, after){ el.addEventListener('input', e => { const raw = el.value;
   if (/^delete/.test(e.inputType || '')) el.dataset.cents = '';
   if (raw.includes('.')){ el.dataset.cents = '1'; el.value = raw.split('.')[0].replace(/\D/g, ''); }
@@ -4010,7 +4020,6 @@ function alignTagline(){
   let m = h.querySelector('.bl'); if (!m){ m = document.createElement('span'); m.className = 'bl'; m.style.cssText = 'display:inline-block;width:0;height:0;vertical-align:baseline'; h.append(m); }
   const base = m.getBoundingClientRect().top, xh = parseFloat(getComputedStyle(h).fontSize) * .48, mid = base - xh / 2;   // optical middle of the title: its lowercase letters
   const r = t.getBoundingClientRect(); t.style.transform = `translateY(${(mid - (r.top + r.height / 2)).toFixed(1)}px)`;
-  const st = document.getElementById('start'), hr = t.closest('header').getBoundingClientRect(); if (st) st.style.top = (t.getBoundingClientRect().bottom - hr.top + 6).toFixed(1) + 'px';
 }
 addEventListener('resize', alignTagline); if (document.fonts && document.fonts.ready) document.fonts.ready.then(alignTagline); alignTagline();
 
