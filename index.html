@@ -578,7 +578,7 @@ html:root[data-scheme="dark"] .msi{font-variation-settings:"GRAD" -25}
 .ff{margin:22px 0 4px}
 .ff-title{padding:14px 0 12px;border-top:2px solid var(--navy)}
 .ff-title h2{margin:0;font:700 20px/1.2 var(--display);color:var(--navy)} .ff-title p{margin:4px 0 0;font-size:11.5px;line-height:1.4;color:var(--muted)}
-.dm-card{margin:16px 0 0}
+.dm-card{margin:0}
 .dm-wrap{position:relative;margin:4px 0 0} .dm-box{height:540px;border-radius:8px;overflow:hidden;background:var(--paper);border:1px solid var(--rule)} @media (max-width:640px){.dm-box{height:300px}}
 .dm-pin{pointer-events:none} .dm-pin span{display:block;position:relative;padding:3px 8px;border-radius:999px;background:var(--navy);color:var(--sheet);font:700 11px var(--body);box-shadow:0 2px 6px rgba(0,0,0,.25);margin-bottom:6px}
 .dm-pin span::after{content:"";position:absolute;left:50%;top:100%;margin-left:-5px;border:5px solid transparent;border-top-color:var(--navy)}
@@ -3472,7 +3472,7 @@ async function buildReport(F, A, C, fin, WB, live, X = {}){
   box.classList.remove('stale');
   box.innerHTML = `${reportSummary(F, A, C, fin, WB, rows, X)}
     <nav class="rp-jump" aria-label="Jump to a card">${cards.map(c => { const m = c.match(/class="rp-card ([\w-]+)".*?<\/span>([^<]+)<\/h3>/); return m ? `<a href="#" data-to="${m[1]}">${m[2]}</a>` : ''; }).join('')}${X && X.odds ? '<a href="#" data-to="c-map">Your chances across America</a>' : ''}</nav>
-    <div class="rp-cards" id="rpCards">${cards.join('')}</div>${dmapCard(F, X)}${familyFloor(F)}`;
+    <div class="rp-cards" id="rpCards">${cards.join('')}</div>${familyFloor(F, dmapCard(F, X))}`;
   box.querySelectorAll('.rp-slot').forEach(sl => sl.dataset.adopt.split('|').forEach(sel => { const n = document.querySelector(sel); if (n && !box.contains(n)) sl.append(rpAdopt(n)); }));
   layoutCards(true); setTimeout(ffAfterRender, 350); setTimeout(dmapInit, 50); $('resultsBtn').hidden = false; REPORT_FOR = JSON.stringify(F); $('reportClose').textContent = SUM_MIN ? 'Open summary' : 'Close summary';
 }
@@ -4324,10 +4324,10 @@ function ffNearby(F, me){
     <p class="rp-cl">${lede}</p><div class="rp-body"><ol class="ff-near">${rows}</ol>
     <p class="ff-note">Cheapest first. Areas within 250 miles, including smaller micro areas.</p></div></section>`;
 }
-function familyFloor(F){
+function familyFloor(F, mapHtml = ''){
   const me = ffArea(F);
   return `<div class="ff" id="famFloor"><div class="ff-title"><h2>The family floor</h2><p>What it takes to marry, buy a home and raise two kids today, and how few men get there.</p></div>
-    <div class="ff-grid">${ffRanking(me, F)}${ffGauntlet(F)}${ffBudget(me)}<div class="ff-col">${ffPartner(F, me)}${ffNearby(F, me)}${ffSince(F, me)}</div></div></div>`;
+    <div class="ff-grid">${ffRanking(me, F)}${mapHtml}${ffGauntlet(F)}${ffBudget(me)}<div class="ff-col">${ffPartner(F, me)}${ffNearby(F, me)}${ffSince(F, me)}</div></div></div>`;
 }
 // ---------- Your chances map: every U.S. county colored by your chance in the dating economy in its metro or micro area.
 // Exact Census 2023 county boundaries (us-counties.json), drawn over an OpenFreeMap basemap with MapLibre GL. Counties outside
@@ -4371,7 +4371,7 @@ function dmapText(X){
 function dmapCard(F, X){
   if (!X || !X.odds || X.mine == null || !X.odds.get(X.mine)) return '';
   const T = dmapText(X);
-  return `<section class="rp-card c-map dm-card" id="dmap"><h3><span class="msi" aria-hidden="true">map</span>Your chances across America</h3><p class="rp-cl" id="dmapLede">${T.lede}</p>
+  return `<section class="rp-card c-map dm-card ff-wide" id="dmap"><h3><span class="msi" aria-hidden="true">map</span>Your chances across America</h3><p class="rp-cl" id="dmapLede">${T.lede}</p>
     <div class="rp-body"><div class="dm-wrap"><div class="dm-box" id="dmapBox" role="img" aria-label="Map of the United States by county, colored by your chances in the dating economy"></div>
     <button type="button" class="dm-homebtn" id="dmapHome"><span class="msi" aria-hidden="true">my_location</span>Your area</button><p class="dm-status" id="dmapStatus" hidden></p></div>
     <div class="dm-leg" id="dmapLeg" aria-hidden="true">${T.legend}</div>
