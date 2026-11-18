@@ -605,6 +605,19 @@ html:root[data-scheme="dark"] .msi{font-variation-settings:"GRAD" -25}
   --ff-p1:var(--accent-ink);--ff-p2:var(--long);--ff-p3:var(--fair-ink);--ff-ok:var(--good)}
 .ff{margin:22px 0 4px}
 .ff-title{padding:14px 0 12px;border-top:2px solid var(--navy)}
+.spon{margin:16px auto;text-align:center;width:100%;max-width:100%;box-sizing:border-box} .spon[hidden]{display:none!important}
+.spon-tag{display:block;margin:0 0 4px;font:600 10px/1.2 var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
+.spon img{display:block;max-width:100%;height:auto;margin:0 auto;border-radius:4px}
+.spon-ban .spon-ph{width:min(calc(var(--w) * 1px),100%);aspect-ratio:var(--w)/var(--h);margin:0 auto}
+@media (max-width:767px){ .spon-ban .spon-ph{width:min(calc(var(--wm) * 1px),100%);aspect-ratio:var(--wm)/var(--hm)} }
+.spon-rail{margin:16px 0 0} .spon-rail .spon-ph{width:300px;max-width:100%;aspect-ratio:300/250;margin:0 auto} @media (max-width:899px){ .spon-rail{display:none!important} }
+.spon-ph{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border:2px dashed var(--rule);border-radius:6px;color:var(--muted);font-size:12px;box-sizing:border-box}
+.spon-ph b{font-weight:600;color:var(--ink)}
+.spon-line{text-align:left;margin:12px 0} .spon-line p{margin:0;font-size:13px;color:var(--ink)} .spon-line .spon-tag{display:inline;margin-right:8px} .spon-line a{color:var(--accent-ink)}
+.spon-line .spon-ph{display:block;padding:8px 12px;text-align:left}
+.spon-foot{display:flex;justify-content:space-between;align-items:baseline;gap:8px 24px;flex-wrap:wrap;margin:0 0 14px;padding:0 0 12px;border-bottom:1px solid var(--rule);font-size:12.5px;line-height:1.4}
+.spon-foot a{color:var(--accent-ink);text-decoration:none;font-weight:600} .spon-foot a:hover{text-decoration:underline} .spon-foot .sf-r{text-align:right;margin-left:auto}
+.spon-foot .btn-arr{display:inline-block;width:6px;height:6px;border-right:1.6px solid currentColor;border-bottom:1.6px solid currentColor;transform:rotate(-45deg);margin-left:6px;vertical-align:1px}
 .ff-warn{margin:0 0 16px;padding:14px 16px;border-left:4px solid var(--poor);background:var(--poor-soft);border-radius:6px;font-size:13px;line-height:1.5;color:var(--ink)} .ff-warn p{margin:0} .ff-warn p + p{margin-top:8px} .ff-warn b{color:var(--poor)}
 .ff-title h2{margin:0;font:700 20px/1.2 var(--display);color:var(--navy)} .ff-title p{margin:4px 0 0;font-size:11.5px;line-height:1.4;color:var(--muted)}
 .dm-card{margin:0}
@@ -822,6 +835,7 @@ a.ext{color:var(--accent-ink);text-decoration:none}
   </div>
   
 </header>
+<div class="spon spon-ban" data-spon="top" hidden></div>
 
 <div class="bar" id="bar" hidden></div>
 <span id="live" class="sr" aria-live="polite" aria-atomic="true"></span>
@@ -1072,9 +1086,10 @@ a.ext{color:var(--accent-ink);text-decoration:none}
     </div>
     <p class="contact-m">For more information, email <a href="mailto:info@datingeconomycalculator.com?subject=Question%20about%20You%27re%20All%20Delusional%20Calculator">info@datingeconomycalculator.com</a>.</p></div></div></div>
   </section>
+  <div class="spon spon-rail" data-spon="rail" hidden></div>
 </div>
 </div>
-<footer class="foot"><p class="tagline-foot">It’s highly likely <em class="you">you</em> need a reality check about today’s dating economy. <em class="cta">Take our questionnaire and find out.</em></p><div class="foot-row"><p><a class="foot-mail" href="mailto:info@datingeconomycalculator.com?subject=Question%20about%20You%27re%20All%20Delusional">info@datingeconomycalculator.com</a></p></div><div class="foot-theme"><div class="swatches" role="radiogroup" aria-label="Color theme"><button type="button" class="sw" role="radio" data-p="calculator" aria-label="Calculator theme" title="Calculator" style="background:#687286"></button><button type="button" class="sw" role="radio" data-p="clay" aria-label="Clay theme" title="Clay" style="background:#c96442"></button><button type="button" class="sw" role="radio" data-p="daylight" aria-label="Daylight theme" title="Daylight" style="background:#7088a6"></button><button type="button" class="sw" role="radio" data-p="linen" aria-label="Linen theme" title="Linen" style="background:#3f7f73"></button><button type="button" class="sw" role="radio" data-p="glacier" aria-label="Glacier theme" title="Glacier" style="background:#2a9bb5"></button><button type="button" class="sw" role="radio" data-p="sage" aria-label="Sage theme" title="Sage" style="background:#7a8b5c"></button><button type="button" class="sw" role="radio" data-p="midnight" aria-label="Midnight theme" title="Midnight" style="background:#9d8cf0"></button></div><div class="modes" role="radiogroup" aria-label="Light or dark"><button type="button" role="radio" data-m="light" aria-label="Light" title="Light"><span class="msi">light_mode</span></button><button type="button" role="radio" data-m="dark" aria-label="Dark" title="Dark"><span class="msi">dark_mode</span></button><button type="button" role="radio" data-m="auto" aria-label="Match my device" title="Match my device"><span class="msi">contrast</span></button></div></div></footer>
+<footer class="foot"><nav class="spon-foot" data-spon="foot" aria-label="Partners" hidden></nav><p class="tagline-foot">It’s highly likely <em class="you">you</em> need a reality check about today’s dating economy. <em class="cta">Take our questionnaire and find out.</em></p><div class="foot-row"><p><a class="foot-mail" href="mailto:info@datingeconomycalculator.com?subject=Question%20about%20You%27re%20All%20Delusional">info@datingeconomycalculator.com</a></p></div><div class="foot-theme"><div class="swatches" role="radiogroup" aria-label="Color theme"><button type="button" class="sw" role="radio" data-p="calculator" aria-label="Calculator theme" title="Calculator" style="background:#687286"></button><button type="button" class="sw" role="radio" data-p="clay" aria-label="Clay theme" title="Clay" style="background:#c96442"></button><button type="button" class="sw" role="radio" data-p="daylight" aria-label="Daylight theme" title="Daylight" style="background:#7088a6"></button><button type="button" class="sw" role="radio" data-p="linen" aria-label="Linen theme" title="Linen" style="background:#3f7f73"></button><button type="button" class="sw" role="radio" data-p="glacier" aria-label="Glacier theme" title="Glacier" style="background:#2a9bb5"></button><button type="button" class="sw" role="radio" data-p="sage" aria-label="Sage theme" title="Sage" style="background:#7a8b5c"></button><button type="button" class="sw" role="radio" data-p="midnight" aria-label="Midnight theme" title="Midnight" style="background:#9d8cf0"></button></div><div class="modes" role="radiogroup" aria-label="Light or dark"><button type="button" role="radio" data-m="light" aria-label="Light" title="Light"><span class="msi">light_mode</span></button><button type="button" role="radio" data-m="dark" aria-label="Dark" title="Dark"><span class="msi">dark_mode</span></button><button type="button" role="radio" data-m="auto" aria-label="Match my device" title="Match my device"><span class="msi">contrast</span></button></div></div></footer>
 </div>
 
 <script>
@@ -3512,9 +3527,9 @@ async function buildReport(F, A, C, fin, WB, live, X = {}){
   box.classList.remove('stale');
   box.innerHTML = `<div class="ff-title sec-title sec-econ" id="secEcon"><h2>The Dating Economy</h2><p>Where you stand where you live: who would date you, who you compete with and your odds.</p></div>${reportSummary(F, A, C, fin, WB, rows, X)}
     <nav class="rp-jump" aria-label="Jump to a card">${cards.map(c => { const m = c.match(/class="rp-card ([\w-]+)".*?<\/span>([^<]+)<\/h3>/); return m ? `<a href="#" data-to="${m[1]}">${m[2]}</a>` : ''; }).join('')}</nav>
-    <div class="rp-cards" id="rpCards">${cards.join('')}</div>${(m => m ? `<div class="sec-nation"><div class="ff-title sec-title" id="secNation"><h2>Your Chances Nationwide</h2><p>The same you, scored in every metro and micro area in the country.</p></div>${m}</div>` : '')(dmapCard(F, X))}${familyFloor(F)}`;
+    <div class="rp-cards" id="rpCards">${cards.join('')}</div><div class="spon spon-line" data-spon="line1" hidden></div><div class="spon spon-ban" data-spon="econ" hidden></div>${(m => m ? `<div class="sec-nation"><div class="ff-title sec-title" id="secNation"><h2>Your Chances Nationwide</h2><p>The same you, scored in every metro and micro area in the country.</p></div>${m}</div>` : '')(dmapCard(F, X))}${familyFloor(F)}`;
   box.querySelectorAll('.rp-slot').forEach(sl => sl.dataset.adopt.split('|').forEach(sel => { const n = document.querySelector(sel); if (n && !box.contains(n)) sl.append(rpAdopt(n)); }));
-  layoutCards(true); setTimeout(ffAfterRender, 350); setTimeout(dmapInit, 50); $('resultsBtn').hidden = false; REPORT_FOR = JSON.stringify(F); $('reportClose').textContent = SUM_MIN ? 'Open summary' : 'Close summary';
+  layoutCards(true); setTimeout(ffAfterRender, 350); setTimeout(dmapInit, 50); sponRender(); $('resultsBtn').hidden = false; REPORT_FOR = JSON.stringify(F); $('reportClose').textContent = SUM_MIN ? 'Open summary' : 'Close summary';
 }
 // Report cards show the page's own results sections, moved in while the report is open and put back when it closes.
 const RP_MOVED = [];
@@ -4409,8 +4424,8 @@ function ffWarn(){
 }
 function familyFloor(F){
   const me = ffArea(F);
-  return `<div class="ff" id="famFloor"><div class="ff-title sec-title" id="secDream"><h2>The American Dream</h2><p>What it takes to marry, buy a home and raise two kids today, and how few men get there.</p></div>${ffWarn()}
-    <div class="ff-grid">${ffRanking(me, F)}${ffGauntlet(F)}${ffBudget(me)}<div class="ff-col">${ffPartner(F, me)}${ffNearby(F, me)}${ffSince(F, me)}</div></div></div>`;
+  return `<div class="spon spon-ban" data-spon="dream" hidden></div><div class="ff" id="famFloor"><div class="ff-title sec-title" id="secDream"><h2>The American Dream</h2><p>What it takes to marry, buy a home and raise two kids today, and how few men get there.</p></div>${ffWarn()}
+    <div class="ff-grid">${ffRanking(me, F)}${ffGauntlet(F)}${ffBudget(me)}<div class="ff-col">${ffPartner(F, me)}${ffNearby(F, me)}${ffSince(F, me)}</div></div><div class="spon spon-line" data-spon="line2" hidden></div></div>`;
 }
 // ---------- Your chances map: every U.S. county colored by your chance in the dating economy in its metro or micro area.
 // Exact Census 2023 county boundaries (us-counties.json), drawn over an OpenFreeMap basemap with MapLibre GL. Counties outside
@@ -4546,6 +4561,42 @@ function dmapLayers(map){
 // Theme change while the map is open: recolor and swap the basemap.
 new MutationObserver(() => { const m = DMAP.map; if (!m || !DMAP.data || !document.getElementById('dmapBox')) return;
   try { m.setStyle(dmapStyle()); } catch (e) {} }).observe(document.documentElement, {attributes: true, attributeFilter: ['data-scheme', 'data-palette']});
+// ---------- Sponsors and ads. Everything is off until ADS.on is true. Add ?ads=preview to the address to see every slot.
+// Banners: put image files in the ads/ folder. img is the desktop image, imgM the phone image (optional, falls back to img).
+// Text lines and the footer links are plain text with a link. Empty slots never show on the live site.
+var ADS = {
+  on: false,
+  top:   {img: '', imgM: '', url: '', alt: ''},   // under the header, before the questions or report: 728×90 desktop, 320×100 phone
+  rail:  {img: '', imgM: '', url: '', alt: ''},   // desktop right column, under How this works while answering: 300×250
+  econ:  {img: '', imgM: '', url: '', alt: ''},   // report, after the Dating Economy cards: 970×250 desktop, 300×250 phone
+  dream: {img: '', imgM: '', url: '', alt: ''},   // report, before The American Dream: 970×250 desktop, 300×250 phone
+  line1: {text: '', url: ''},                      // one line of sponsored text, after the Dating Economy cards
+  line2: {text: '', url: ''},                      // one line of sponsored text, at the end of the report
+  foot: {
+    left:  {text: 'Meet Claude, the AI for problem solvers', url: 'https://claude.ai'},
+    right: {text: 'You deserve to be happy. Get matched with a licensed therapist on BetterHelp', url: 'https://www.betterhelp.com'}
+  }
+};
+var SPON_SIZE = {top: [728, 90, 320, 100], rail: [300, 250, 300, 250], econ: [970, 250, 300, 250], dream: [970, 250, 300, 250]};
+function sponRender(){
+  const prev = /[?&]ads=preview\b/.test(location.search), live = ADS.on;
+  document.querySelectorAll('[data-spon]').forEach(el => {
+    const k = el.dataset.spon, c = ADS[k], ext = u => `href="${esc(u)}" target="_blank" rel="sponsored noopener"`;
+    let h = '';
+    if (k === 'foot'){
+      const one = (x, cls) => x && x.text && x.url ? `<a class="${cls}" ${ext(x.url)}>${esc(x.text)}<span class="btn-arr" aria-hidden="true"></span></a>` : `<span class="${cls}"></span>`;
+      if (live || prev) h = one(c.left, 'sf-l') + one(c.right, 'sf-r');
+    } else if (k.startsWith('line')){
+      if (c.text && c.url && (live || prev)) h = `<p><span class="spon-tag">Sponsored</span><a ${ext(c.url)}>${esc(c.text)}</a></p>`;
+      else if (prev) h = `<p class="spon-ph"><span class="spon-tag">Sponsored</span>One line of sponsored text goes here (${k}).</p>`;
+    } else {
+      const z = SPON_SIZE[k];
+      if (c.img && c.url && (live || prev)) h = `<span class="spon-tag">Advertisement</span><a ${ext(c.url)}><picture>${c.imgM ? `<source media="(max-width:767px)" srcset="${esc(c.imgM)}">` : ''}<img src="${esc(c.img)}" alt="${esc(c.alt || '')}" width="${z[0]}" height="${z[1]}" loading="lazy"></picture></a>`;
+      else if (prev) h = `<span class="spon-tag">Advertisement</span><div class="spon-ph" style="--w:${z[0]};--h:${z[1]};--wm:${z[2]};--hm:${z[3]}"><b>Ad slot: ${k}</b><span>${k === 'rail' ? `${z[0]} × ${z[1]}, desktop only` : `${z[0]} × ${z[1]} desktop · ${z[2]} × ${z[3]} phone`}</span></div>`;
+    }
+    el.innerHTML = h; el.hidden = !h;
+  });
+}
 function ffAfterRender(){
   const L = document.getElementById('ffList'), me = document.getElementById('ffMe');
   if (L && me && L.scrollHeight > L.clientHeight + 4) L.scrollTop = Math.max(0, me.offsetTop - L.offsetTop - L.clientHeight / 2);
@@ -4554,6 +4605,7 @@ document.addEventListener('input', e => { if (e.target.id !== 'ffFind') return;
   const q = e.target.value.trim().toLowerCase(), L = document.getElementById('ffList'); if (!L) return;
   L.classList.toggle('ff-q', !!q);
   L.querySelectorAll('li:not(.ff-line)').forEach(li => li.hidden = !!q && !li.querySelector('.ff-nm').textContent.toLowerCase().includes(q)); });
+sponRender();   // ad slots: hidden unless ADS.on, or ?ads=preview
 </script>
 
 </body>
