@@ -2904,17 +2904,21 @@ let RARE_ON = new Set(), RARE_MUT = new Set(), RANK_ABOVE = 0;
 // Rank: 5,000 competitors in order, the ones at or above you filled, then you, then those behind you.
 function rankGrid(pct, compN){
   const big = Math.round(compN), small = big >= 1 && big < 100, one = big < GRID_N, N = small ? big + 1 : one ? Math.max(gridSize(big), big + 1) : GRID_N, M = one ? big + 1 : GRID_N;   // under 100: one dot per competitor plus you
-  const above = Math.min(M - 1, Math.round((1 - pct) * (M - (one ? 1 : 0)))); RANK_ABOVE = above; RANK_M = M;
+  const above = Math.min(M - 1, Math.round((1 - pct) * (M - (one ? 1 : 0)))); RANK_ABOVE = above; RANK_M = M; RANK_PER = one ? 1 : compN / GRID_N;
   return squareGrid('rank', i => i === above ? 'you' : i < above ? 'up' : small ? 'bh' : 'off', `${above.toLocaleString()} of ${one ? fmtN(M - 1) : 'every ' + GRID_N.toLocaleString()} competitors are at or above you`, N, small ? 10 : 0);
 }
-let RANK_M = GRID_N;
+let RANK_M = GRID_N, RANK_PER = 1;
+// How many competitors one dot stands for once the grid is full: "4", "1.6", "38".
+const perDot = n => n < 10 ? String(+n.toFixed(1)) : fmtN(Math.round(n));
 // Hover or tap a square to read it.
 function gridRead(e){
   const svg = e.target.closest('svg.sq'); if (!svg) return;
   const N = +svg.dataset.n || GRID_N, cols = +svg.dataset.cols || GRID_COLS, b = svg.getBoundingClientRect(), x = (e.clientX - b.left) / b.width * cols, y = (e.clientY - b.top) / b.height * Math.ceil(N / cols);
   if (x < 0 || y < 0 || x >= cols || y >= Math.ceil(N / cols)) return;
   const i = Math.floor(y) * cols + Math.floor(x), out = svg.parentElement.querySelector('.sq-read'); if (!out) return;
-  if (svg.dataset.kind === 'rank'){ const M = RANK_M; out.textContent = i >= M ? '' : i === RANK_ABOVE ? `You: number ${(i + 1).toLocaleString()} of ${M.toLocaleString()}` : `Competitor ${(i + 1).toLocaleString()} of ${M.toLocaleString()}: ${i < RANK_ABOVE ? 'at or above you' : 'behind you'}`; }
+  if (svg.dataset.kind === 'rank'){ const M = RANK_M, k = RANK_PER;
+    out.textContent = i >= M ? '' : k <= 1 ? (i === RANK_ABOVE ? `You: number ${(i + 1).toLocaleString()} of ${M.toLocaleString()}` : `Competitor ${(i + 1).toLocaleString()} of ${M.toLocaleString()}: ${i < RANK_ABOVE ? 'at or above you' : 'behind you'}`)
+      : i === RANK_ABOVE ? `You: about number ${fmtN(Math.round(i * k) + 1)} of ${fmtN(Math.round(M * k))}` : `Dot ${(i + 1).toLocaleString()} of ${M.toLocaleString()}, about ${perDot(k)} competitors: ${i < RANK_ABOVE ? 'at or above you' : 'behind you'}`; }
   else { const R = RARE_INFO || {n1: 0, n2: 0}; out.textContent = i < R.n1 ? `Dot ${(i + 1).toLocaleString()}: ${R.them} who ${R.l1}` : i < R.n2 ? `Dot ${(i + 1).toLocaleString()}: ${R.them} who ${R.l2}` : `Dot ${(i + 1).toLocaleString()}: other single local ${R.them}`; }
 }
 let F_LAST = {T: 'F'};
@@ -3386,7 +3390,7 @@ async function buildReport(F, A, C, fin, WB, live, X = {}){
         + P(`${fin >= 1 ? fmtN(fin) : 'None'} of them ${Math.round(fin) === 1 ? 'is also one of the' : 'are also'} ${them} you’d pursue.`, 'These are your mutual matches.')
         + gapLesson() : '');
     cards.unshift(card('c-glance', 'insights', 'Your results at a glance', `What your answers mean in ${area}: first the ${them} you’d pursue, then the ${them} who would date you.`, body)); }
-  if (C.answered) cards.splice(1, 0, card('c-rank', 'leaderboard', 'Where you rank', `${Math.round(C.compN) < GRID_N ? 'Each dot is one of the' : 'The 2,500 dots stand for the'} ${fmtN(C.compN)} single ${you} competing against you for the ${them} you want, ranked by appeal on the questions you answered.${YOU_PART ? ' Below the grid, the answers that move your chances most, in percent.' : ''}`, slot('#mktBody .grids .gcol:not(.rare)') + YOU_PART));
+  if (C.answered) cards.splice(1, 0, card('c-rank', 'leaderboard', 'Where you rank', `${Math.round(C.compN) < GRID_N ? 'Each dot is one of the' : `Each dot stands for about ${perDot(C.compN / GRID_N)} of the`} ${fmtN(C.compN)} single ${you} competing against you for the ${them} you want, ranked by appeal on the questions you answered.${YOU_PART ? ' Below the grid, the answers that move your chances most, in percent.' : ''}`, slot('#mktBody .grids .gcol:not(.rare)') + YOU_PART));
   cards.splice(C.answered ? 2 : 1, 0, card('c-exp', 'filter_alt', 'Your expectations', (document.querySelector('#mktBody .mutual .ghead') || {}).innerHTML || '', slot('#mktBody .gcol.rare')));
   // Your competition: from every single person of your sex and orientation here down to the ones who outscore you.
   if (F.T !== 'B' && C.compN >= 1){
@@ -4051,6 +4055,7 @@ HDR.forEach(([b]) => $(b).addEventListener('click', () => {
 }));
 $('mktBody').addEventListener('mousemove', gridRead);
 $('mktBody').addEventListener('click', gridRead);
+$('reportBody').addEventListener('mousemove', gridRead); $('reportBody').addEventListener('click', gridRead);   // the grids live in the report cards once it is built
 // "Open to dating someone like you": slides open and closed like the other sections.
 $('prof').addEventListener('click', e => { const b = e.target.closest('.cm-sum'); if (!b) return; const w = b.parentNode, on = !w.classList.contains('open'); w.classList.toggle('open', on); b.setAttribute('aria-expanded', String(on)); });
 $('showSrc').addEventListener('change', e => $('prof').classList.toggle('show', e.target.checked));
