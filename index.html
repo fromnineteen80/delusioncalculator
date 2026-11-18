@@ -471,6 +471,7 @@ figure{margin:0}
 .grid:not(.intro) .about-done{display:none}
 .about-done,.q-done{display:block;width:100%;margin:4px 0 20px}
 .grid.done .done-btn{display:none}
+.done-btn .btn-arr{display:inline-block;width:7px;height:7px;border-right:1.7px solid currentColor;border-bottom:1.7px solid currentColor;transform:rotate(-45deg);margin-left:2px}   /* the header links’ chevron, pointing right */
 .done-btn{align-self:stretch;height:44px;border:1px solid var(--rule);border-radius:8px;background:var(--sheet);color:var(--navy);font:600 13px var(--body);cursor:pointer}
 .done-btn:hover,.hd-done:hover{border-color:var(--muted)}
 /* Done in each section header, left of the chevron; the full-width Finished buttons stay at the bottom on phones only. */
@@ -696,7 +697,7 @@ html:root[data-scheme="dark"] .msi{font-variation-settings:"GRAD" -25}
 .qtab:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
 body.qtabbed .part.tab-off{display:none}
 body.qtabbed .part-head{cursor:default} body.qtabbed .part-head .pm,body.qtabbed .part-head .hd-done{display:none}
-body.qtabbed .grid:not(.done) .about-done,body.qtabbed .grid:not(.done) .q-done{display:block!important}
+body.qtabbed .grid:not(.done) .about-done,body.qtabbed .grid:not(.done) .q-done{display:flex!important;align-items:center;justify-content:center;gap:6px}
 body.qtabbed .about-done,body.qtabbed .q-done{height:46px;margin:8px 0 20px;background:var(--navy);border-color:var(--navy);color:var(--sheet);font-size:14px}
 body.qtabbed .about-done:hover,body.qtabbed .q-done:hover{opacity:.9}
 body.qtabbed .grid.done .part{display:none}
@@ -901,7 +902,7 @@ a.ext{color:var(--accent-ink);text-decoration:none}
       <label for="myMh">Mental health<select id="myMh"><option value="">Skip</option><option value="none">No diagnosis</option><option value="dep">History of depression</option><option value="smi">Serious mental illness</option></select></label>
       <label for="myDis">Disabilities<select id="myDis"><option value="">Skip</option><option value="none">No disability</option><option value="mob">Difficulty walking or climbing stairs</option><option value="other">Another disability</option></select></label>
     </div>
-    <button type="button" class="done-btn about-done" id="aboutDone">Save and go to Your ideal match</button>
+    <button type="button" class="done-btn about-done" id="aboutDone">Your ideal match is next<span class="btn-arr" aria-hidden="true"></span></button>
   </div></div>
   </section>
 
