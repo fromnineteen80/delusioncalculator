@@ -293,7 +293,7 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
 #rpProg.float{position:fixed;left:var(--pcx,50%);top:var(--pcy,50%);transform:translate(-50%,-50%);z-index:60;width:min(340px,calc(100vw - 32px));padding:18px 20px;gap:14px;
   background:var(--sheet);border:1px solid var(--rule);border-radius:12px;box-shadow:0 18px 48px rgba(10,16,30,.22),0 2px 6px rgba(10,16,30,.08);animation:pfIn .18s ease-out}
 #rpProg.float svg{width:44px;height:44px} #rpProg.float b{font-size:14px} #rpProg.float span{white-space:normal}
-body:not(.rv) #bar{display:none}   /* the summary bar belongs to the report; the questions have their own step-by-step results */
+body:not(.rv) #bar{display:none} .grid.done .qtabs{display:none}   /* in the report, Edit is the way back to the questions */   /* the summary bar belongs to the report; the questions have their own step-by-step results */
 #runOv{position:fixed;inset:0;z-index:80;display:grid;place-items:center;padding:16px;background:color-mix(in srgb,var(--paper) 88%,transparent);
   -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);opacity:0;transition:opacity .22s ease}
 #runOv.on{opacity:1} body.rv-wait{overflow:hidden} body.rv-wait #rpProg.float{visibility:hidden}
