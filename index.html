@@ -624,7 +624,6 @@ html:root[data-scheme="dark"] .msi{font-variation-settings:"GRAD" -25}
 .sf-more{display:inline-block;max-width:0;overflow:hidden;opacity:0;font-weight:500;transition:max-width .35s ease,opacity .25s ease,margin .35s ease;vertical-align:bottom}
 .sf-pill:hover .sf-more,.sf-pill:focus-visible .sf-more{max-width:460px;opacity:1} .sf-pill:hover .sf-pre,.sf-pill:focus-visible .sf-pre{margin-right:.32em}
 .sf-pill:hover,.sf-pill:focus-visible{background:var(--track);outline:none}
-.sf-pill .btn-arr{display:inline-block;width:6px;height:6px;border-right:1.6px solid currentColor;border-bottom:1.6px solid currentColor;transform:rotate(-45deg);margin-left:7px}
 @media (hover:none){ .sf-pill .sf-more{display:none} }
 @media (prefers-reduced-motion:reduce){ .sf-more{transition:none} }
 .ff-warn{margin:0 0 16px;padding:14px 16px;border-left:4px solid var(--poor);background:var(--poor-soft);border-radius:6px;font-size:13px;line-height:1.5;color:var(--ink)} .ff-warn p{margin:0} .ff-warn p + p{margin-top:8px} .ff-warn b{color:var(--poor)}
@@ -4596,7 +4595,7 @@ function sponRender(){
     const k = el.dataset.spon, c = ADS[k], ext = u => `href="${esc(u)}" target="_blank" rel="sponsored noopener"`;
     let h = '';
     if (k === 'foot'){
-      const one = (x, cls) => x && x.label && x.url ? `<a class="sf-pill ${cls}" ${ext(x.url)} aria-label="${esc([x.pre, x.label].filter(Boolean).join(' ') + (x.post || ''))}">${x.pre ? `<span class="sf-more sf-pre">${esc(x.pre)}</span>` : ''}<b>${esc(x.label)}</b>${x.post ? `<span class="sf-more sf-post">${esc(x.post)}</span>` : ''}<span class="btn-arr" aria-hidden="true"></span></a>` : `<span class="${cls}"></span>`;
+      const one = (x, cls) => x && x.label && x.url ? `<a class="sf-pill ${cls}" ${ext(x.url)} aria-label="${esc([x.pre, x.label].filter(Boolean).join(' ') + (x.post || ''))}">${x.pre ? `<span class="sf-more sf-pre">${esc(x.pre)}</span>` : ''}<b>${esc(x.label)}</b>${x.post ? `<span class="sf-more sf-post">${esc(x.post)}</span>` : ''}</a>` : `<span class="${cls}"></span>`;
       if (live || prev) h = one(c.left, 'sf-l') + one(c.right, 'sf-r');
     } else if (k.startsWith('line')){
       if (c.text && c.url && (live || prev)) h = `<p><span class="spon-tag">Sponsored</span><a ${ext(c.url)}>${esc(c.text)}</a></p>`;
