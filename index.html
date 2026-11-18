@@ -615,9 +615,15 @@ html:root[data-scheme="dark"] .msi{font-variation-settings:"GRAD" -25}
 .spon-ph b{font-weight:600;color:var(--ink)}
 .spon-line{text-align:left;margin:12px 0} .spon-line p{margin:0;font-size:13px;color:var(--ink)} .spon-line .spon-tag{display:inline;margin-right:8px} .spon-line a{color:var(--accent-ink)}
 .spon-line .spon-ph{display:block;padding:8px 12px;text-align:left}
-.spon-foot{display:flex;justify-content:space-between;align-items:baseline;gap:8px 24px;flex-wrap:wrap;margin:0 0 14px;padding:0 0 12px;border-bottom:1px solid var(--rule);font-size:12.5px;line-height:1.4}
-.spon-foot a{color:var(--accent-ink);text-decoration:none;font-weight:600} .spon-foot a:hover{text-decoration:underline} .spon-foot .sf-r{text-align:right;margin-left:auto}
-.spon-foot .btn-arr{display:inline-block;width:6px;height:6px;border-right:1.6px solid currentColor;border-bottom:1.6px solid currentColor;transform:rotate(-45deg);margin-left:6px;vertical-align:1px}
+.spon-foot{display:flex;justify-content:space-between;align-items:center;gap:8px 16px;margin:0 0 16px}
+.sf-pill{display:inline-flex;align-items:center;gap:0;max-width:100%;padding:6px 12px;border-radius:999px;background:var(--accent-soft);color:var(--accent-ink);font:600 12.5px/1.2 var(--body);text-decoration:none;white-space:nowrap;transition:background .15s}
+.sf-pill b{font-weight:700} .sf-pill.sf-r{margin-left:auto}
+.sf-more{display:inline-block;max-width:0;overflow:hidden;opacity:0;font-weight:500;transition:max-width .35s ease,opacity .25s ease,margin .35s ease;vertical-align:bottom}
+.sf-pill:hover .sf-more,.sf-pill:focus-visible .sf-more{max-width:460px;opacity:1} .sf-pill:hover .sf-pre,.sf-pill:focus-visible .sf-pre{margin-right:.32em}
+.sf-pill:hover,.sf-pill:focus-visible{background:var(--track);outline:none}
+.sf-pill .btn-arr{display:inline-block;width:6px;height:6px;border-right:1.6px solid currentColor;border-bottom:1.6px solid currentColor;transform:rotate(-45deg);margin-left:7px}
+@media (hover:none){ .sf-pill .sf-more{display:none} }
+@media (prefers-reduced-motion:reduce){ .sf-more{transition:none} }
 .ff-warn{margin:0 0 16px;padding:14px 16px;border-left:4px solid var(--poor);background:var(--poor-soft);border-radius:6px;font-size:13px;line-height:1.5;color:var(--ink)} .ff-warn p{margin:0} .ff-warn p + p{margin-top:8px} .ff-warn b{color:var(--poor)}
 .ff-title h2{margin:0;font:700 20px/1.2 var(--display);color:var(--navy)} .ff-title p{margin:4px 0 0;font-size:11.5px;line-height:1.4;color:var(--muted)}
 .dm-card{margin:0}
@@ -1089,6 +1095,7 @@ a.ext{color:var(--accent-ink);text-decoration:none}
   <div class="spon spon-rail" data-spon="rail" hidden></div>
 </div>
 </div>
+<div class="spon spon-ban spon-bottom" data-spon="bottom" hidden></div>
 <footer class="foot"><nav class="spon-foot" data-spon="foot" aria-label="Partners" hidden></nav><p class="tagline-foot">It’s highly likely <em class="you">you</em> need a reality check about today’s dating economy. <em class="cta">Take our questionnaire and find out.</em></p><div class="foot-row"><p><a class="foot-mail" href="mailto:info@datingeconomycalculator.com?subject=Question%20about%20You%27re%20All%20Delusional">info@datingeconomycalculator.com</a></p></div><div class="foot-theme"><div class="swatches" role="radiogroup" aria-label="Color theme"><button type="button" class="sw" role="radio" data-p="calculator" aria-label="Calculator theme" title="Calculator" style="background:#687286"></button><button type="button" class="sw" role="radio" data-p="clay" aria-label="Clay theme" title="Clay" style="background:#c96442"></button><button type="button" class="sw" role="radio" data-p="daylight" aria-label="Daylight theme" title="Daylight" style="background:#7088a6"></button><button type="button" class="sw" role="radio" data-p="linen" aria-label="Linen theme" title="Linen" style="background:#3f7f73"></button><button type="button" class="sw" role="radio" data-p="glacier" aria-label="Glacier theme" title="Glacier" style="background:#2a9bb5"></button><button type="button" class="sw" role="radio" data-p="sage" aria-label="Sage theme" title="Sage" style="background:#7a8b5c"></button><button type="button" class="sw" role="radio" data-p="midnight" aria-label="Midnight theme" title="Midnight" style="background:#9d8cf0"></button></div><div class="modes" role="radiogroup" aria-label="Light or dark"><button type="button" role="radio" data-m="light" aria-label="Light" title="Light"><span class="msi">light_mode</span></button><button type="button" role="radio" data-m="dark" aria-label="Dark" title="Dark"><span class="msi">dark_mode</span></button><button type="button" role="radio" data-m="auto" aria-label="Match my device" title="Match my device"><span class="msi">contrast</span></button></div></div></footer>
 </div>
 
@@ -4570,21 +4577,23 @@ var ADS = {
   rail:  {img: '', imgM: '', url: '', alt: ''},   // desktop right column, under How this works while answering: 300×250
   econ:  {img: '', imgM: '', url: '', alt: ''},   // report, after the Dating Economy cards: 970×250 desktop, 300×250 phone
   dream: {img: '', imgM: '', url: '', alt: ''},   // report, before The American Dream: 970×250 desktop, 300×250 phone
+  bottom: {img: '', imgM: '', url: '', alt: ''},  // bottom of the page, above the footer: 728×90 desktop, 320×100 phone
   line1: {text: '', url: ''},                      // one line of sponsored text, after the Dating Economy cards
   line2: {text: '', url: ''},                      // one line of sponsored text, at the end of the report
   foot: {
-    left:  {text: 'Meet Claude, the AI for problem solvers', url: 'https://claude.ai'},
-    right: {text: 'You deserve to be happy. Get matched with a licensed therapist on BetterHelp', url: 'https://www.betterhelp.com'}
+    // Each pill shows its label; on hover, pre and post fill in around it to make one line.
+    left:  {label: 'Claude', pre: 'Meet', post: ', the AI for problem solvers', url: 'https://claude.ai'},
+    right: {label: 'BetterHelp', pre: 'You deserve to be happy. Get matched with a licensed therapist on', post: '', url: 'https://www.betterhelp.com'}
   }
 };
-var SPON_SIZE = {top: [728, 90, 320, 100], rail: [300, 250, 300, 250], econ: [970, 250, 300, 250], dream: [970, 250, 300, 250]};
+var SPON_SIZE = {top: [728, 90, 320, 100], bottom: [728, 90, 320, 100], rail: [300, 250, 300, 250], econ: [970, 250, 300, 250], dream: [970, 250, 300, 250]};
 function sponRender(){
   const prev = /[?&]ads=preview\b/.test(location.search), live = ADS.on;
   document.querySelectorAll('[data-spon]').forEach(el => {
     const k = el.dataset.spon, c = ADS[k], ext = u => `href="${esc(u)}" target="_blank" rel="sponsored noopener"`;
     let h = '';
     if (k === 'foot'){
-      const one = (x, cls) => x && x.text && x.url ? `<a class="${cls}" ${ext(x.url)}>${esc(x.text)}<span class="btn-arr" aria-hidden="true"></span></a>` : `<span class="${cls}"></span>`;
+      const one = (x, cls) => x && x.label && x.url ? `<a class="sf-pill ${cls}" ${ext(x.url)} aria-label="${esc([x.pre, x.label].filter(Boolean).join(' ') + (x.post || ''))}">${x.pre ? `<span class="sf-more sf-pre">${esc(x.pre)}</span>` : ''}<b>${esc(x.label)}</b>${x.post ? `<span class="sf-more sf-post">${esc(x.post)}</span>` : ''}<span class="btn-arr" aria-hidden="true"></span></a>` : `<span class="${cls}"></span>`;
       if (live || prev) h = one(c.left, 'sf-l') + one(c.right, 'sf-r');
     } else if (k.startsWith('line')){
       if (c.text && c.url && (live || prev)) h = `<p><span class="spon-tag">Sponsored</span><a ${ext(c.url)}>${esc(c.text)}</a></p>`;
