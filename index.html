@@ -772,6 +772,8 @@ body.qtabbed .part-head{padding:14px 0 12px} body.qtabbed .part-head .step,body.
 #report:not(:has(.rp-cards)) .rp-key{display:none}
 #report .card-head .rp-close{margin-top:-2px;height:28px;padding:0 12px;border:1px solid var(--rule);border-radius:6px;background:var(--sheet);color:var(--navy);font:600 13px var(--body);align-self:flex-start}
 #report .card-head .rp-close + .rp-close{margin-left:8px}
+@media (min-width:768px){#report .card-head{align-items:center}} #report .card-head .rp-act{display:flex;flex-direction:column;align-items:flex-end;gap:10px} #report .card-head .rp-act .rp-key{margin:0;justify-content:flex-end} #report .card-head .rp-act .rp-close{align-self:auto;margin:0}   /* Open summary with the color key right under it, right-aligned */
+@media (max-width:767px){#report .card-head .rp-act{flex:1 1 100%;align-items:flex-start} #report .card-head .rp-act .rp-key{justify-content:flex-start}}
 #report .card-head #reportClose{background:var(--accent);border-color:var(--accent);color:var(--sheet)}
 @media (min-width:1662px){ .part{padding-left:32px;padding-right:32px} }
 body.rv .part{padding-left:18px}   /* results page: same left padding as the report and step by step cards, so the icons line up */
@@ -1059,7 +1061,7 @@ body.rv .part{padding-left:18px}   /* results page: same left padding as the rep
 </form>
 
   <section class="card" id="report" hidden>
-    <div class="card-head"><div class="hgrp"><span class="hstep" aria-hidden="true"><span class="msi">leaderboard</span></span><div><h2>Your report</h2><p>A deep dive on your identity and dating preferences.</p><div class="rp-key" aria-label="Show cards by group"><button type="button" data-g="m" aria-pressed="false"><i class="k-m"></i>Finding a match</button><button type="button" data-g="c" aria-pressed="false"><i class="k-c"></i>Your competition</button><button type="button" data-g="o" aria-pressed="false"><i class="k-o"></i>Overview and deep dive</button></div></div></div><button type="button" class="rp-close" id="reportClose">Close report</button></div>
+    <div class="card-head"><div class="hgrp"><span class="hstep" aria-hidden="true"><span class="msi">leaderboard</span></span><div><h2>Your report</h2><p>A deep dive on your identity and dating preferences.</p></div></div><div class="rp-act"><button type="button" class="rp-close" id="reportClose">Close report</button><div class="rp-key" aria-label="Show cards by group"><button type="button" data-g="m" aria-pressed="false"><i class="k-m"></i>Finding a match</button><button type="button" data-g="c" aria-pressed="false"><i class="k-c"></i>Your competition</button><button type="button" data-g="o" aria-pressed="false"><i class="k-o"></i>Overview and deep dive</button></div></div></div>
     <div id="reportBody"><p class="note">Working out what shapes your results…</p></div>
   </section>
 <div class="out">
