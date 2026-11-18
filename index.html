@@ -92,7 +92,9 @@ body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;bac
 .save-row textarea::placeholder,.save-row input::placeholder{font-family:var(--body);font-size:13px;color:var(--muted)}
 .save-fld{flex:1;min-width:0;display:block;background:var(--paper);border:1px solid var(--rule);border-radius:6px;padding:8px 10px;cursor:text}
 .save-fld:focus-within{border-color:var(--accent)}
-.save .save-fld textarea{display:block;width:100%;height:44px;min-height:0;padding:0;border:0;border-radius:0;background:none;white-space:normal;overflow:hidden;word-break:break-all;line-height:22px}
+.save .save-fld textarea{display:block;width:100%;height:40px;min-height:0;padding:0;border:0;border-radius:0;background:none;white-space:normal;overflow:hidden;word-break:break-all;font-size:11.5px;line-height:20px}
+/* Phones: 16px keeps iPhone from zooming in when the box is tapped; scaling draws it at the same 11.5px as desktop. */
+@media (pointer:coarse){ .save .save-fld{overflow:hidden} .save .save-fld textarea{font-size:16px;line-height:27.83px;height:55.65px;width:139.13%;transform:scale(.71875);transform-origin:0 0;margin:0 0 -15.65px} }
 .save .save-fld textarea:placeholder-shown{word-break:normal}
 .save-row textarea:placeholder-shown{word-break:normal;overflow-wrap:break-word}
 .save-act{flex:none;align-self:center;width:72px;height:40px;border:1px solid var(--rule);background:var(--sheet);color:var(--navy);border-radius:6px;font:600 13px var(--body);cursor:pointer;padding:0}
