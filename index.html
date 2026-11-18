@@ -2837,7 +2837,7 @@ function renderInner(active, pre){
     if (brkAt < 0 || i < brkAt) return start > 0 ? l.after / start * 100 : 0;
     const ref = DL[brkAt].after; return ref > 0 ? BRK_W * l.after / ref : 0;
   });
-  $('prof').innerHTML = (two ? `<li class="two hd"><div></div><div class="n">Local<br>single<br>${w.pl}</div><div class="n">And<br>actively<br>dating</div></li>` : '') + DL.map((l, i) => {
+  $('prof').innerHTML = (two ? `<li class="two hd"><div></div><div class="n">Local<br>single<br>${w.pl}</div><div class="n">Actively<br>dating<br>${w.pl}</div></li>` : '') + DL.map((l, i) => {
     const wd = l.after > 0 ? Math.min(100, Math.max(1, widths[i])) : 0;
     return `<li class="${l.ctx ? 'ctx' : i === DL.length - 1 && !l.start ? 'final' : ''}${two ? ' two' : ''}${i >= DL.length - 2 && !l.ctx && !l.start ? ' end' : ''}">
       <div><div class="t">${esc(({'Open to dating you': 'Mutual matches', 'Not in a relationship': 'You’d pursue', 'Actively dating': 'You’d pursue and actively dating', 'Active first': 'Actively dating'})[l.title] || l.title)}</div>${l.crit.length > 70 && l.title === 'Open to dating you' ? `<div class="crit crit-more"><button type="button" class="cm-sum" aria-expanded="false">${cap0(w.pl)} you’d pursue who would also date you</button><div class="cm-body"><span>${esc(`Local single ${w.pl} who ${!two && L.some(x => x.title === 'Actively dating') ? 'are actively dating and would be o' : 'would be o'}` + l.crit.slice(1))}</span></div></div>` : `<div class="crit">${esc(l.crit)}</div>`}${l.note ? `<div class="note">${esc(l.note)}</div>` : ''}</div>
