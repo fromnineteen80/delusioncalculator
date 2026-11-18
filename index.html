@@ -285,6 +285,10 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
 
 /* results */
 .out{display:flex;flex-direction:column;gap:16px;min-width:0}
+.out-more{display:none;position:fixed;height:0;z-index:3}
+.out-more::before{content:"";position:absolute;left:0;right:0;bottom:0;height:64px;background:linear-gradient(to bottom,transparent,var(--sheet) 85%);pointer-events:none;border-radius:0 0 8px 8px}
+.out-more button{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 14px;border:1px solid var(--rule);border-radius:15px;background:var(--sheet);color:var(--navy);font:600 12px var(--body);box-shadow:0 2px 8px rgba(0,0,0,.08);cursor:pointer;white-space:nowrap}
+.out-more button .msi{font-size:16px}
 .card{background:var(--sheet);border:1px solid var(--rule);border-radius:8px;padding:16px 18px;min-width:0}
 .card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px 16px;flex-wrap:wrap;margin-bottom:6px}
 .card h2{font:700 20px/1.2 var(--display);color:var(--navy);margin:0}
@@ -763,7 +767,11 @@ body.qtabbed .grid.done .qtab:hover{color:var(--navy);background:var(--accent-so
 body.qtabbed .part-head{padding:14px 0 12px} body.qtabbed .part-head .step,body.qtabbed .part-head h2{display:none} body.qtabbed .part-head p{margin:0}
 @media (min-width:901px){
   body.qtabbed .grid:not(.done){grid-template-columns:minmax(0,1.05fr) minmax(0,1fr)}
-  body.qtabbed .grid:not(.done) .out{position:sticky;top:0;max-height:100vh;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}
+  body.qtabbed .grid:not(.done) .out{position:sticky;top:0;max-height:100vh;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:color-mix(in srgb,var(--faint) 70%,transparent) transparent}
+  /* The results column scrolls on its own: a scrollbar that always shows, and a "More below" cue while there is more to see. */
+  body.qtabbed .grid:not(.done) .out::-webkit-scrollbar{width:8px} body.qtabbed .grid:not(.done) .out::-webkit-scrollbar-track{background:transparent}
+  body.qtabbed .grid:not(.done) .out::-webkit-scrollbar-thumb{background:color-mix(in srgb,var(--faint) 70%,transparent);border-radius:8px}
+  body.qtabbed .grid:not(.done) .out.more .out-more{display:block}
   body.qtabbed .grid:not(.done) .parts .qtabs{position:sticky;top:0;z-index:6;box-shadow:0 -12px 0 4px var(--paper),0 6px 0 4px var(--paper)}
 }
 @media (min-width:1662px){ body.qtabbed .grid:not(.done){grid-template-columns:minmax(0,1.05fr) minmax(0,1fr)} }
@@ -3827,6 +3835,20 @@ function showReport(){
   $('editBtn').hidden = false; PARTS.forEach((P, i) => setPart(i, false)); GRID.classList.remove('intro'); GRID.classList.add('done'); document.body.classList.add('rv');
   $('report').hidden = false; layoutCards(true); $('resultsBtn').setAttribute('aria-pressed', 'true'); $('resultsBtn').querySelector('.pm').textContent = '–';
 }
+// The results column scrolls inside itself beside the questions: show "More below" while it has more to see.
+{ const out = document.querySelector('.out'); if (out){
+  out.insertAdjacentHTML('beforeend', '<div class="out-more"><button type="button" tabindex="-1"><span class="msi" aria-hidden="true">arrow_downward</span>More below</button></div>');
+  // The cue sits on the screen at the bottom of the visible part of the column, whether the rest is below the screen or inside the column.
+  const cue = out.lastElementChild, below = () => { const r = out.getBoundingClientRect(); return r.bottom - innerHeight; };
+  const upd = () => { const on = getComputedStyle(out).overflowY === 'auto' && (out.scrollHeight - out.scrollTop - out.clientHeight > 8 || below() > 8);
+    out.classList.toggle('more', on); if (!on) return; const r = out.getBoundingClientRect();
+    cue.style.left = r.left + 'px'; cue.style.width = r.width + 'px'; cue.style.top = Math.min(r.bottom, innerHeight) + 'px'; };
+  out.addEventListener('scroll', upd, {passive: true}); addEventListener('resize', upd); addEventListener('scroll', upd, {passive: true});
+  if (window.ResizeObserver){ const ro = new ResizeObserver(upd); ro.observe(out); [...out.children].forEach(c => ro.observe(c)); }
+  new MutationObserver(upd).observe(out, {childList: true, subtree: true});
+  out.querySelector('.out-more button').addEventListener('click', () => { const b = below();
+    if (b > 8) scrollBy({top: b + 8, behavior: 'smooth'}); else out.scrollBy({top: out.clientHeight * .7, behavior: 'smooth'}); });
+  setTimeout(upd, 500); } }
 // Results menu: the three sections of the report. Picking one opens the report if needed, then slides the page down to it.
 { const btn = $('resCaret'), menu = $('resMenu');
   const close = () => { menu.hidden = true; btn.setAttribute('aria-expanded', 'false'); };
