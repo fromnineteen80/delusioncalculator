@@ -30,7 +30,7 @@
 <body>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,500,0,-25..0&icon_names=account_balance_wallet,arrow_downward,arrow_forward,balance,bookmark,contrast,dark_mode,diversity_3,favorite,filter_alt,groups,history,home,hourglass,info_i,insights,leaderboard,light_mode,location_city,man,map,more_horiz,my_location,near_me,percent,person,route,scatter_plot,search,star,swords,trending_up,tune,woman&display=block">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,500,0,-25..0&icon_names=account_balance_wallet,arrow_downward,arrow_forward,balance,bookmark,contrast,dark_mode,diversity_3,favorite,filter_alt,groups,history,home,hourglass,info_i,insights,ios_share,leaderboard,light_mode,location_city,man,map,more_horiz,my_location,near_me,percent,person,route,scatter_plot,search,star,swords,trending_up,tune,woman&display=block">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
 /* Layout: federal statistical brief. Sticky result bar on top; questionnaire left, tabulated profile right; single column on phones. */
@@ -78,6 +78,21 @@ body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;bac
 @media (min-width:768px){.save{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px} .save-col + .save-col{border-left:1px solid var(--rule);padding-left:28px}}
 @media (max-width:767.98px){.save-col + .save-col{border-top:1px solid var(--rule);padding-top:18px}}
 .save-col{display:flex;flex-direction:column;gap:12px;min-width:0}
+.shr-card{background:var(--sheet);border:1px solid var(--rule);border-radius:8px;padding:16px 18px;margin:4px 0 6px}
+.shr-grid{display:flex;gap:14px;margin:14px 0 2px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.shr-t{flex:none;width:108px;display:flex;flex-direction:column;gap:6px;align-items:stretch;padding:0;border:0;background:none;cursor:pointer;text-align:left;color:var(--ink)}
+.shr-im{display:block;width:108px;aspect-ratio:9/16;border-radius:8px;border:1px solid var(--rule);overflow:hidden;background:var(--paper);position:relative;transition:transform .15s,box-shadow .15s}
+.shr-im img{display:block;width:100%;height:100%;object-fit:cover}
+.shr-t:hover .shr-im,.shr-t:focus-visible .shr-im{transform:translateY(-2px);box-shadow:0 6px 16px rgba(10,16,30,.18)} .shr-t:focus-visible{outline:none}
+.shr-l{font:600 12px/1.3 var(--body)}
+.shr-sp{position:absolute;inset:0;margin:auto;width:22px;height:22px;border-radius:50%;border:2.5px solid var(--track);border-top-color:var(--accent);animation:rpspin 1s linear infinite}
+#shrOv{position:fixed;inset:0;z-index:90;display:grid;place-items:center;padding:16px;background:color-mix(in srgb,var(--paper) 86%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);opacity:0;transition:opacity .2s}
+#shrOv.on{opacity:1}
+.shr-box{display:flex;flex-direction:column;align-items:center;gap:12px;max-width:min(440px,100%);background:var(--sheet);border:1px solid var(--rule);border-radius:12px;padding:16px;box-shadow:0 18px 48px rgba(10,16,30,.22)}
+.shr-full{display:block;max-height:min(68vh,780px);max-width:100%;height:auto;border-radius:8px;border:1px solid var(--rule);-webkit-touch-callout:default;user-select:auto}
+.shr-how{margin:0;font-size:12.5px;line-height:1.45;color:var(--ink);text-align:center;max-width:380px}
+.shr-act{display:flex;gap:8px;align-items:center} .shr-act .save-act{width:auto;padding:0 16px}
+.shr-x{background:none;border:0;font:600 13px var(--body);color:var(--accent-ink);cursor:pointer;padding:8px 10px}
 .ins{background:var(--sheet);border:1px solid var(--rule);border-radius:8px;margin:4px 0 6px;display:grid;grid-template-columns:minmax(0,1fr)}
 .ins-i{padding:16px 18px;min-width:0} .ins-i + .ins-i{border-top:1px solid var(--rule)}
 .ins .save-hd p{font-size:12.5px;line-height:1.5;color:var(--ink);opacity:.85;margin-top:4px}
@@ -830,6 +845,7 @@ body.rv .part{padding-left:18px}   /* results page: same left padding as the rep
           <button type="button" role="menuitem" data-sec="secNation"><span class="msi" aria-hidden="true">map</span><span><b>Your Chances Nationwide</b><small>Every county, scored based on your answers</small></span></button>
           <button type="button" role="menuitem" data-sec="secDream"><span class="msi" aria-hidden="true">home</span><span><b>The American Dream</b><small>What a family of four takes, and how few men get there</small></span></button>
         </div></span>
+      <button type="button" class="instr-btn" id="shareBtn" aria-expanded="false" aria-controls="sharePanel" hidden>Share <span class="pm" aria-hidden="true">+</span></button>
       <button type="button" class="instr-btn" id="saveBtn" aria-expanded="false" aria-controls="savePanel">Save <span class="pm" aria-hidden="true">+</span></button>
       <button type="button" class="instr-btn contact-btn" id="contactBtn" aria-expanded="false" aria-controls="contactPanel">Contact <span class="pm" aria-hidden="true">+</span></button>
     </div>
@@ -853,6 +869,10 @@ body.rv .part{padding-left:18px}   /* results page: same left padding as the rep
         </div>
         <p class="save-msg" id="saveMsg" aria-live="polite"></p>
       </div>
+    </div></div>
+    <div class="instr-panel" id="sharePanel"><div class="instr-inner">
+      <div class="shr-card"><div class="save-hd"><span class="hstep" aria-hidden="true"><span class="msi">ios_share</span></span><div><h3>Share your results</h3><p>Story-size images of your report. Tap one to open it full size and save it.</p></div></div>
+      <div class="shr-grid" id="shrGrid"></div></div>
     </div></div>
     <div class="instr-panel contact-panel" id="contactPanel"><div class="instr-inner"><p class="contact-p">For more information, email <a href="mailto:info@datingeconomycalculator.com?subject=Question%20about%20You%27re%20All%20Delusional%20Calculator">info@datingeconomycalculator.com</a>.</p></div></div>
   </div>
@@ -1034,7 +1054,7 @@ body.rv .part{padding-left:18px}   /* results page: same left padding as the rep
 </form>
 
   <section class="card" id="report" hidden>
-    <div class="card-head"><div class="hgrp"><span class="hstep" aria-hidden="true"><span class="msi">leaderboard</span></span><div><h2>Your report</h2><p>A deep dive on your identity and dating preferences.</p><div class="rp-key" aria-label="Show cards by group"><button type="button" data-g="m" aria-pressed="false"><i class="k-m"></i>Finding a match</button><button type="button" data-g="c" aria-pressed="false"><i class="k-c"></i>Your competition</button><button type="button" data-g="o" aria-pressed="false"><i class="k-o"></i>Overview and deep dive</button></div></div></div><button type="button" class="rp-close story-btn" data-kind="ig" hidden>Save for Instagram</button><button type="button" class="rp-close story-btn" data-kind="tt" hidden>Save for TikTok</button><button type="button" class="rp-close" id="reportClose">Close report</button></div>
+    <div class="card-head"><div class="hgrp"><span class="hstep" aria-hidden="true"><span class="msi">leaderboard</span></span><div><h2>Your report</h2><p>A deep dive on your identity and dating preferences.</p><div class="rp-key" aria-label="Show cards by group"><button type="button" data-g="m" aria-pressed="false"><i class="k-m"></i>Finding a match</button><button type="button" data-g="c" aria-pressed="false"><i class="k-c"></i>Your competition</button><button type="button" data-g="o" aria-pressed="false"><i class="k-o"></i>Overview and deep dive</button></div></div></div><button type="button" class="rp-close" id="rpShare">Share images</button><button type="button" class="rp-close" id="reportClose">Close report</button></div>
     <div id="reportBody"><p class="note">Working out what shapes your results…</p></div>
   </section>
 <div class="out">
@@ -3553,7 +3573,7 @@ async function buildReport(F, A, C, fin, WB, live, X = {}){
     <nav class="rp-jump" aria-label="Jump to a card">${cards.map(c => { const m = c.match(/class="rp-card ([\w-]+)".*?<\/span>([^<]+)<\/h3>/); return m ? `<a href="#" data-to="${m[1]}">${m[2]}</a>` : ''; }).join('')}</nav>
     <div class="rp-cards" id="rpCards">${cards.join('')}</div><div class="spon spon-line" data-spon="line1" hidden></div><div class="spon spon-ban" data-spon="econ" hidden></div>${(m => m ? `<div class="sec-nation"><div class="ff-title sec-title" id="secNation"><h2>Your Chances Nationwide</h2><p>The same you, scored in every metro and micro area in the country.</p></div>${m}</div>` : '')(dmapCard(F, X))}${familyFloor(F)}`;
   box.querySelectorAll('.rp-slot').forEach(sl => sl.dataset.adopt.split('|').forEach(sel => { const n = document.querySelector(sel); if (n && !box.contains(n)) sl.append(rpAdopt(n)); }));
-  layoutCards(true); setTimeout(ffAfterRender, 350); setTimeout(dmapInit, 50); sponRender(); $('resultsBtn').hidden = false; REPORT_FOR = JSON.stringify(F); $('reportClose').textContent = SUM_MIN ? 'Open summary' : 'Close summary';
+  layoutCards(true); setTimeout(ffAfterRender, 350); setTimeout(dmapInit, 50); sponRender(); $('resultsBtn').hidden = false; $('shareBtn').hidden = false; REPORT_FOR = JSON.stringify(F); $('reportClose').textContent = SUM_MIN ? 'Open summary' : 'Close summary';
 }
 // Report cards show the page's own results sections, moved in while the report is open and put back when it closes.
 const RP_MOVED = [];
@@ -4000,11 +4020,12 @@ $('loadCode').addEventListener('paste', () => setTimeout(tryLoad, 0));
   const tog = () => { const open = !M.classList.contains('open'); M.classList.toggle('open', open); H.setAttribute('aria-expanded', String(open)); H.querySelector('.pm').textContent = open ? '–' : '+'; B.inert = !open; };
   H.addEventListener('click', tog); H.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); tog(); } }); }
 // Header panels work as one group: opening one closes whichever is open.
-const HDR = [['instrBtn', 'instrPanel'], ['saveBtn', 'savePanel'], ['contactBtn', 'contactPanel']];
+const HDR = [['instrBtn', 'instrPanel'], ['shareBtn', 'sharePanel'], ['saveBtn', 'savePanel'], ['contactBtn', 'contactPanel']];
 HDR.forEach(([b]) => $(b).addEventListener('click', () => {
   const open = $(b).getAttribute('aria-expanded') !== 'true';
   HDR.forEach(([b2, p2]) => { const on = b2 === b && open; $(b2).setAttribute('aria-expanded', String(on)); $(p2).classList.toggle('open', on); $(b2).querySelector('.pm').textContent = on ? '–' : '+'; });
   if (open && b === 'saveBtn'){ refreshCode(); fitBox($('loadCode')); }
+  if (open && b === 'shareBtn') shrBuild();
 }));
 $('mktBody').addEventListener('mousemove', gridRead);
 $('mktBody').addEventListener('click', gridRead);
@@ -4639,6 +4660,167 @@ document.addEventListener('input', e => { if (e.target.id !== 'ffFind') return;
   const q = e.target.value.trim().toLowerCase(), L = document.getElementById('ffList'); if (!L) return;
   L.classList.toggle('ff-q', !!q);
   L.querySelectorAll('li:not(.ff-line)').forEach(li => li.hidden = !!q && !li.querySelector('.ff-nm').textContent.toLowerCase().includes(q)); });
+// ---------- Share images: five 1080 × 1920 story images built from the report, shown in the Share card as thumbnails.
+// Tapping one opens it full size with save instructions for the device (right-click on a computer, press and hold on iPhone).
+const SHR_SAFE = [140, 130, 400, 60];   // top, right, bottom, left: TikTok's safe area, the stricter of TikTok and Instagram
+function shrBase(){
+  const [F, A, C, fin, WB] = LAST_JOB.args;
+  const W = 1080, H = 1920, cv = document.createElement('canvas'); cv.width = W; cv.height = H; const g = cv.getContext('2d');
+  const col = {paper: themeColor('paper', '#f2f3f6'), ink: themeColor('ink', '#1a2233'), muted: themeColor('muted', '#596377'), navy: themeColor('navy', '#1e2b45'),
+    accent: themeColor('accent', '#6f95c2'), track: themeColor('track', '#dfe3ea'), rule: themeColor('rule', '#dde1e8'), good: themeColor('good', '#17663b'), poor: themeColor('poor', '#a3221a')};
+  const serif = '"Source Serif 4", Georgia, serif', sans = '"Public Sans", system-ui, sans-serif', L = 90, R = 990;
+  const area = (A.label || shortName(D.cbsa[A.codes[0]].n)).replace(/^([^,]+, [A-Z]{2}).*$/, '$1');
+  g.fillStyle = col.paper; g.fillRect(0, 0, W, H);
+  g.fillStyle = col.ink; g.font = `700 52px ${serif}`; const tt = 'You’re All Delusional'; g.fillText(tt, L, 150);
+  g.fillStyle = col.accent; g.fillRect(L, 176, g.measureText(tt).width, 5);
+  { const HP = new Path2D('M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'), k = 1.6;
+    g.save(); g.translate(L, 236 - 21.35 * k); g.scale(k, k); g.fillStyle = col.accent; g.fill(HP); g.translate(12, 11.6); g.scale(.45, .45); g.translate(-12, -12); g.fillStyle = '#fff'; g.fill(HP); g.restore(); }
+  g.fillStyle = col.muted; g.font = `500 32px ${sans}`; g.fillText(area, L + 46, 236);
+  // Lay the drawn content (y 290 to end) into the open space under the header, a little above center, with the domain at the foot.
+  const finish = end => { const out = document.createElement('canvas'); out.width = W; out.height = H; const o = out.getContext('2d'), top = 290, bot = 1780, ch = Math.min(end, bot) - top;
+    o.fillStyle = col.paper; o.fillRect(0, 0, W, H); o.drawImage(cv, 0, 0, W, top, 0, 0, W, top);
+    o.drawImage(cv, 0, top, W, ch, 0, top + Math.max(0, (bot - top - ch) * .42), W, ch);
+    o.fillStyle = col.muted; o.font = `500 28px ${sans}`; o.fillText('datingeconomycalculator.com', L, 1840); return out; };
+  // wrapped text, returns the y after the last line
+  const wrap = (txt, x, y, maxW, font, color, lh) => { g.font = font; g.fillStyle = color; const words = String(txt).split(' '); let line = '';
+    for (const w of words){ const t = line ? line + ' ' + w : w; if (g.measureText(t).width > maxW && line){ g.fillText(line, x, y); y += lh; line = w; } else line = t; }
+    if (line){ g.fillText(line, x, y); y += lh; } return y; };
+  return {cv, finish, g, col, serif, sans, L, R, W, H, area, F, A, C, fin, WB, wrap, them: F.T === 'M' ? 'men' : F.T === 'F' ? 'women' : 'people', you: F.mySex === 'M' ? 'men' : 'women'};
+}
+// Draw an SVG already on the page onto the canvas: paths, shapes, lines and text, with their computed colors and fonts.
+function shrSvg(svg, g, x, y, w){
+  const vb = svg.viewBox && svg.viewBox.baseVal && svg.viewBox.baseVal.width ? svg.viewBox.baseVal : {x: 0, y: 0, width: svg.getBBox().width, height: svg.getBBox().height};
+  const k = w / vb.width, root = svg.getScreenCTM(); if (!root) return 0; const inv = root.inverse();
+  g.save(); g.translate(x, y); g.scale(k, k); g.translate(-vb.x, -vb.y);
+  const paint = (el, draw) => { const cs = getComputedStyle(el); if (cs.display === 'none' || cs.visibility === 'hidden') return;
+    const m = inv.multiply(el.getScreenCTM()); g.save(); g.transform(m.a, m.b, m.c, m.d, m.e, m.f);
+    const op = (+cs.opacity || 1); const fill = cs.fill, stroke = cs.stroke;
+    if (fill && fill !== 'none' && !fill.startsWith('url')){ g.globalAlpha = op * (+cs.fillOpacity || 1); g.fillStyle = fill; draw('fill'); }
+    if (stroke && stroke !== 'none' && !stroke.startsWith('url') && parseFloat(cs.strokeWidth) > 0){ g.globalAlpha = op * (+cs.strokeOpacity || 1); g.strokeStyle = stroke; g.lineWidth = parseFloat(cs.strokeWidth);
+      g.lineCap = cs.strokeLinecap || 'butt'; g.lineJoin = cs.strokeLinejoin || 'miter'; const da = cs.strokeDasharray; g.setLineDash(da && da !== 'none' ? da.split(/[ ,]+/).map(parseFloat).filter(v => !isNaN(v)) : []); draw('stroke'); }
+    g.restore(); };
+  for (const el of svg.querySelectorAll('path,circle,ellipse,rect,line,polyline,polygon,text')){
+    if (el.closest('defs,clipPath,mask,pattern')) continue;
+    const a = n => +el.getAttribute(n) || 0, tag = el.tagName.toLowerCase();
+    if (tag === 'text'){
+      const cs = getComputedStyle(el); if (cs.display === 'none') continue;
+      let idx = 0; const walk = node => { for (const ch of node.childNodes){
+        if (ch.nodeType === 3){ const t = ch.textContent.replace(/\s+/g, ' '); const n = t.length; if (t.trim() && n){ try {
+            const p = el.getStartPositionOfChar(idx), host = ch.parentNode, hs = getComputedStyle(host), m = inv.multiply(el.getScreenCTM());
+            g.save(); g.transform(m.a, m.b, m.c, m.d, m.e, m.f); g.font = `${hs.fontStyle} ${hs.fontWeight} ${hs.fontSize} ${hs.fontFamily}`; g.fillStyle = hs.fill && hs.fill !== 'none' ? hs.fill : hs.color;
+            g.globalAlpha = +hs.opacity || 1; g.textAlign = 'left'; g.textBaseline = 'alphabetic'; g.fillText(t.trim() === t ? t : t.replace(/^\s+/, ''), p.x + (t.match(/^\s+/) ? g.measureText(' ').width : 0), p.y); g.restore(); } catch (e) {} }
+          idx += n; }
+        else if (ch.nodeType === 1) walk(ch); } };
+      walk(el); continue; }
+    paint(el, mode => { const P = new Path2D();
+      if (tag === 'path') P.addPath(new Path2D(el.getAttribute('d') || ''));
+      else if (tag === 'circle') P.arc(a('cx'), a('cy'), a('r'), 0, Math.PI * 2);
+      else if (tag === 'ellipse') P.ellipse(a('cx'), a('cy'), a('rx'), a('ry'), 0, 0, Math.PI * 2);
+      else if (tag === 'rect'){ const rx = a('rx'); if (P.roundRect) P.roundRect(a('x'), a('y'), a('width'), a('height'), rx); else P.rect(a('x'), a('y'), a('width'), a('height')); }
+      else if (tag === 'line'){ P.moveTo(a('x1'), a('y1')); P.lineTo(a('x2'), a('y2')); }
+      else { const pts = (el.getAttribute('points') || '').trim().split(/[\s,]+/).map(Number); for (let i = 0; i + 1 < pts.length; i += 2) i ? P.lineTo(pts[i], pts[i + 1]) : P.moveTo(pts[i], pts[i + 1]); if (tag === 'polygon') P.closePath(); }
+      mode === 'fill' ? g.fill(P) : g.stroke(P); });
+  }
+  g.restore(); return vb.height * k;
+}
+// Fit the drawn story into the safe area so app buttons and captions don't cover it.
+function shrFrame(src){
+  const [t, r, b, l] = SHR_SAFE, W = 1080, H = 1920, out = document.createElement('canvas'); out.width = W; out.height = H; const g = out.getContext('2d');
+  const paper = themeColor('paper', '#f2f3f6'), dot = themeColor('track', '#c8ced9'); g.fillStyle = paper; g.fillRect(0, 0, W, H);
+  for (let y = 5.5; y < H; y += 11) for (let x = 5.5; x < W; x += 11){ g.fillStyle = dot; g.beginPath(); g.arc(x, y, 1.6, 0, Math.PI * 2); g.fill(); }
+  const pad = 40, bx = 80, by = 90, bw = 920, bh = 1790, k = Math.min(1, (W - l - r - 2 * pad) / bw, (H - t - b - 2 * pad) / bh), w = bw * k, h = bh * k;
+  g.fillStyle = paper; g.beginPath(); g.roundRect(l, t, W - l - r, H - t - b, 28); g.fill();
+  g.drawImage(src, bx, by, bw, bh, l + (W - l - r - w) / 2, t + (H - t - b - h) / 2, w, h);
+  return out;
+}
+const SHR_KINDS = [
+  ['grid', 'My dating market', () => storyContent(62)],
+  ['bell', 'My mutual matches', () => { const S = shrBase(), {g, col, serif, sans, L, wrap, F, A, fin, WB, them} = S;
+    const svg = document.querySelector('.rp-card.c-bell svg'); if (!svg) return null;
+    let y = wrap(`${fin >= 1 ? fmtN(fin) : 'No'} single ${them} would mutually match with me`, L, 360, 900, `700 60px ${serif}`, col.ink, 72);
+    y = wrap(`Every local ${them === 'men' ? 'man' : 'woman'} filtered down to the ones I’d pursue, meeting every ${F.mySex === 'M' ? 'man' : 'woman'} I’m up against.`, L, y + 6, 900, `500 32px ${sans}`, col.muted, 44);
+    const h = shrSvg(svg, g, L - 10, y + 30, 920);
+    g.fillStyle = col.muted; g.font = `500 28px ${sans}`;
+    g.fillText(`${fmtN(adultsIn(A.codes, 'M'))} local men · ${fmtN(adultsIn(A.codes, 'F'))} local women`, L, Math.min(1760, y + 60 + h));
+    return S.finish(y + 80 + h); }],
+  ['me', 'Me and my market', () => { const S = shrBase(), {g, col, serif, sans, L, R, wrap, F, C, fin, area, them, you} = S, X = LAST_JOB.args[5] || {};
+    const me = F.mySex === 'M' ? 'man' : 'woman';
+    let y = wrap(`${F.myAge ? `A ${F.myAge}-year-old ${me}` : `A single ${me}`} in ${area}, looking for ${them}`, L, 360, 900, `700 60px ${serif}`, col.ink, 72);
+    y += 40; g.fillStyle = col.accent; g.fillRect(L, y - 10, 900, 3);
+    g.fillStyle = col.muted; g.font = `600 26px ${sans}`; g.fillText('WHAT I’M ASKING FOR', L, y + 40); y += 92;
+    const wants = [...document.querySelectorAll('.rp-card.c-want .wr')].map(li => { const t = li.querySelector('.wr-t'), v = li.querySelector('.wr-s'); return (t ? t.textContent : '') + (v ? ': ' + v.textContent : ''); }).filter(Boolean).slice(0, 6);
+    if (!wants.length) wants.push(`Nothing beyond wanting ${them}`);
+    for (const w of wants){ g.fillStyle = col.accent; g.beginPath(); g.arc(L + 9, y - 11, 7, 0, Math.PI * 2); g.fill(); y = wrap(w, L + 36, y, 860, `500 34px ${sans}`, col.ink, 46) + 10; }
+    y += 30; g.fillStyle = col.accent; g.fillRect(L, y - 10, 900, 3); y += 70;
+    const stat = (n, lab) => { g.fillStyle = col.ink; g.font = `700 76px ${serif}`; g.fillText(n, L, y); const nw = g.measureText(n).width; wrap(lab, L + nw + 28, y - 30, 900 - nw - 28, `500 30px ${sans}`, col.muted, 40); y += 130; };
+    stat(`${chanceTxt(C.chance)}/100`, 'my chances in the dating economy');
+    if (C.answered) stat(`${Math.round(C.pct * 100)}%`, `of the ${you} competing for the same ${them} I outrank`);
+    stat(fin >= 1 ? fmtN(fin) : '0', 'mutual matches where I live');
+    if (X.ranked && X.ranked[0] && X.ranked[0].i !== X.mine){ const o = X.odds && X.odds.get(X.ranked[0].i); if (o) stat(`${chanceTxt(o.chance)}/100`, `in ${shortName(D.cbsa[X.ranked[0].i].n)}, my best metro`); }
+    return S.finish(y - 50); }],
+  ['floor', 'My family floor', () => { const S = shrBase(), {g, col, serif, sans, L, wrap, F} = S, me = ffArea(F); if (!me) return null;
+    g.fillStyle = col.ink; g.font = `700 150px ${serif}`; g.fillText(ffM(me.total), L, 470);
+    let y = wrap(`is what a married couple with two kids needs to earn in ${me.name} to buy a home and cover a basic family budget.`, L, 540, 900, `500 36px ${sans}`, col.ink, 50);
+    const list = FFD.rows.map((r, i) => r[2] ? i : -1).filter(i => i >= 0); if (!me.top) list.push(me.i); list.sort((a, b) => FFD.rows[a][0] - FFD.rows[b][0]);
+    y = wrap(`${me.top ? `Ranks ${list.indexOf(me.i) + 1} of the 200 largest metros.` : `Would rank ${list.indexOf(me.i) + 1} of the 200 largest metros.`} The middle-class ceiling for a family of four is about ${ffM(FF_MIDTOP)}.`, L, y + 14, 900, `500 30px ${sans}`, col.muted, 42);
+    y += 50; const cs = getComputedStyle(document.documentElement);
+    const groups = FF_GROUPS.map(([nm, c, items]) => [nm, cs.getPropertyValue(c.slice(4, -1)).trim() || col.accent, items.reduce((s, [k]) => s + (me.L[k] || 0), 0)]).filter(x => x[2] > 0);
+    const mx = Math.max(...groups.map(x => x[2]));
+    for (const [nm, c, v] of groups){ g.fillStyle = col.ink; g.font = `600 30px ${sans}`; g.fillText(nm, L, y); g.textAlign = 'right'; g.fillText(ffM(v), L + 900, y); g.textAlign = 'left';
+      g.fillStyle = col.track; g.fillRect(L, y + 16, 900, 18); g.fillStyle = c; g.fillRect(L, y + 16, Math.max(6, v / mx * 900), 18); y += 86; }
+    if (FFD.t19 && FFD.t19[me.i]){ const up = Math.round((me.total / FFD.t19[me.i] - 1) * 100); y += 10;
+      y = wrap(`Up ${up}% since 2019. The typical full-time paycheck rose ${Math.round(FF_WAGE * 100)}%.`, L, y, 900, `700 40px ${serif}`, col.poor, 54); }
+    return S.finish(y); }],
+  ['gauntlet', 'The American Dream Gauntlet', () => { const S = shrBase(), {g, col, serif, sans, L, wrap, F} = S;
+    const svg = document.querySelector('#ffGauntlet .ff-flow svg, #ffGauntlet svg'); if (!svg) return null;
+    g.fillStyle = col.ink; g.font = `700 150px ${serif}`; g.fillText('51', L, 470); const nw = g.measureText('51').width;
+    wrap('of 1,000 men make it', L + nw + 30, 430, 900 - nw - 30, `700 52px ${serif}`, col.ink, 60);
+    let y = wrap('Married by 37, two kids, a home near good jobs and $250,000 a year between them. 949 men fall short.', L, 560, 900, `500 34px ${sans}`, col.muted, 48);
+    const h = shrSvg(svg, g, L - 10, y + 30, 920); y += h + 90;
+    const p = ffPath(F); if (p >= 0) y = wrap(`My path: ${FF_PATHS[p][0].toLowerCase()}, where ${FF_PATHS[p][3]} of ${FF_PATHS[p][2]} men make it.`, L, Math.min(y, 1730), 900, `700 38px ${serif}`, col.ink, 50);
+    return S.finish(y); }]
+];
+let SHR_CACHE = {key: '', imgs: {}};
+async function shrMake(kind){
+  const key = LAST_JOB ? LAST_JOB.key + '|' + document.documentElement.dataset.palette + document.documentElement.dataset.scheme : '';
+  if (SHR_CACHE.key !== key) SHR_CACHE = {key, imgs: {}};
+  if (SHR_CACHE.imgs[kind]) return SHR_CACHE.imgs[kind];
+  if (document.fonts && document.fonts.ready) await document.fonts.ready;
+  const k = SHR_KINDS.find(x => x[0] === kind); let c = null; try { c = k && k[2](); } catch (e) { console.error(e); }
+  if (!c) return null; const out = shrFrame(c), url = out.toDataURL('image/png');
+  const th = document.createElement('canvas'); th.width = 216; th.height = 384; th.getContext('2d').drawImage(out, 0, 0, 216, 384);
+  return (SHR_CACHE.imgs[kind] = {url, thumb: th.toDataURL('image/png'), canvas: out});
+}
+async function shrBuild(){
+  const grid = $('shrGrid'); if (!grid || !LAST_JOB) return;
+  grid.innerHTML = SHR_KINDS.map(([k, lab]) => `<button type="button" class="shr-t" data-k="${k}"><span class="shr-im"><span class="shr-sp"></span></span><span class="shr-l">${lab}</span></button>`).join('');
+  for (const [k] of SHR_KINDS){ const r = await shrMake(k), b = grid.querySelector(`[data-k="${k}"]`); if (!b) continue;
+    if (!r) { b.remove(); continue; } b.querySelector('.shr-im').innerHTML = `<img src="${r.thumb}" alt="">`; }
+}
+const SHR_IOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+async function shrOpen(kind){
+  const r = await shrMake(kind); if (!r) return; const lab = (SHR_KINDS.find(x => x[0] === kind) || [])[1] || 'Image';
+  const touch = matchMedia('(pointer: coarse)').matches;
+  const how = SHR_IOS ? 'Press and hold the image, then tap <b>Save to Photos</b>. Or tap Share to send it straight to Instagram, TikTok or Messages.'
+    : touch ? 'Press and hold the image to save it, or tap Download.' : 'Right-click the image and choose <b>Save Image As</b>, or click Download.';
+  let ov = $('shrOv'); if (ov) ov.remove(); ov = document.createElement('div'); ov.id = 'shrOv'; ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-modal', 'true'); ov.setAttribute('aria-label', lab);
+  ov.innerHTML = `<div class="shr-box"><img class="shr-full" src="${r.url}" alt="${esc(lab)}, a story image of your results"><p class="shr-how">${how}</p>
+    <div class="shr-act">${touch && navigator.canShare ? '<button type="button" class="save-act shr-share">Share</button>' : ''}<button type="button" class="save-act shr-dl">Download</button><button type="button" class="shr-x">Close</button></div></div>`;
+  document.body.appendChild(ov); requestAnimationFrame(() => ov.classList.add('on'));
+  const close = () => { ov.classList.remove('on'); setTimeout(() => ov.remove(), 200); document.removeEventListener('keydown', esc1); };
+  const esc1 = e => { if (e.key === 'Escape') close(); }; document.addEventListener('keydown', esc1);
+  ov.addEventListener('click', e => { if (e.target === ov || e.target.closest('.shr-x')) close(); });
+  const name = `youre-all-delusional-${kind}.png`, blob = () => new Promise(res => r.canvas.toBlob(res, 'image/png'));
+  ov.querySelector('.shr-dl').addEventListener('click', async () => { const b = await blob();
+    if (DL){ try { await DL.save({filename: name, data: b}); return; } catch (e) {} }
+    const a = document.createElement('a'), u = URL.createObjectURL(b); a.href = u; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 4000); });
+  const sh = ov.querySelector('.shr-share'); if (sh) sh.addEventListener('click', async () => { const f = new File([await blob()], name, {type: 'image/png'});
+    if (navigator.canShare({files: [f]})) try { await navigator.share({files: [f]}); } catch (e) {} });
+  ov.querySelector('.shr-x').focus();
+}
+document.addEventListener('click', e => { const t = e.target.closest('.shr-t'); if (t) shrOpen(t.dataset.k); });
+
+$('rpShare').addEventListener('click', () => { const b = $('shareBtn'); if (b.getAttribute('aria-expanded') !== 'true') b.click(); else shrBuild(); b.scrollIntoView({behavior: 'smooth', block: 'start'}); });
 sponRender();   // ad slots: hidden unless ADS.on, or ?ads=preview
 </script>
 
