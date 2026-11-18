@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,500,0,-25..0&icon_names=account_balance_wallet,arrow_downward,arrow_forward,balance,bookmark,contrast,dark_mode,diversity_3,favorite,filter_alt,groups,history,hourglass,info_i,insights,leaderboard,light_mode,location_city,man,more_horiz,near_me,percent,person,route,scatter_plot,search,star,swords,trending_up,tune,woman&display=block">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,500,0,-25..0&icon_names=account_balance_wallet,arrow_downward,arrow_forward,balance,bookmark,contrast,dark_mode,diversity_3,favorite,filter_alt,groups,history,hourglass,info_i,insights,leaderboard,light_mode,location_city,man,map,more_horiz,my_location,near_me,percent,person,route,scatter_plot,search,star,swords,trending_up,tune,woman&display=block">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
 /* Layout: federal statistical brief. Sticky result bar on top; questionnaire left, tabulated profile right; single column on phones. */
@@ -578,6 +578,21 @@ html:root[data-scheme="dark"] .msi{font-variation-settings:"GRAD" -25}
 .ff{margin:22px 0 4px}
 .ff-title{padding:14px 0 12px;border-top:2px solid var(--navy)}
 .ff-title h2{margin:0;font:700 20px/1.2 var(--display);color:var(--navy)} .ff-title p{margin:4px 0 0;font-size:11.5px;line-height:1.4;color:var(--muted)}
+.dm-card{margin:16px 0 0}
+.dm-wrap{position:relative;margin:4px 0 0} .dm-box{height:540px;border-radius:8px;overflow:hidden;background:var(--paper);border:1px solid var(--rule)} @media (max-width:640px){.dm-box{height:300px}}
+.dm-pin{pointer-events:none} .dm-pin span{display:block;position:relative;padding:3px 8px;border-radius:999px;background:var(--navy);color:var(--sheet);font:700 11px var(--body);box-shadow:0 2px 6px rgba(0,0,0,.25);margin-bottom:6px}
+.dm-pin span::after{content:"";position:absolute;left:50%;top:100%;margin-left:-5px;border:5px solid transparent;border-top-color:var(--navy)}
+.dm-status{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);margin:0;padding:5px 12px;border-radius:999px;background:var(--sheet);border:1px solid var(--rule);font:600 12px var(--body);color:var(--navy);box-shadow:0 2px 8px rgba(0,0,0,.12);white-space:nowrap}
+.dm-box.dm-err{display:grid;place-items:center;color:var(--muted);font-size:13px}
+.dm-homebtn{position:absolute;left:10px;top:10px;display:flex;align-items:center;gap:4px;height:30px;padding:0 10px 0 8px;border:1px solid var(--rule);border-radius:6px;background:var(--sheet);color:var(--navy);font:600 12.5px var(--body);cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.12)} .dm-homebtn .msi{font-size:16px}
+.dm-leg{margin:12px 0 0;max-width:560px} .dm-ramp{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:2px;height:14px} .dm-ramp span{position:relative;border-radius:2px}
+.dm-you{position:absolute;left:50%;bottom:calc(100% + 3px);transform:translateX(-50%);font:700 10.5px var(--body);font-style:normal;color:var(--navy);white-space:nowrap} .dm-you::after{content:"";position:absolute;left:50%;top:100%;margin-left:-4px;border:4px solid transparent;border-top-color:var(--navy)}
+.dm-ramp:has(.dm-you){margin-top:18px}
+.dm-ticks{display:flex;justify-content:space-between;font:500 11px var(--mono);color:var(--muted);margin:4px 0 0}
+.dm-keys{display:flex;flex-wrap:wrap;gap:6px 16px;margin:10px 0 0;font-size:12px;color:var(--muted)} .dm-keys span{display:flex;align-items:center;gap:6px}
+.dm-k{width:14px;height:14px;border-radius:3px;display:inline-block} .dm-home{border:2px solid var(--navy)} .dm-rural{background:var(--track)} .dm-zero{background:repeating-linear-gradient(-45deg,var(--poor) 0 1.5px,transparent 1.5px 5px);border:1px solid var(--rule)}
+.dm-pop .maplibregl-popup-content{background:var(--sheet);color:var(--ink);border:1px solid var(--rule);border-radius:8px;padding:8px 10px;font:12.5px/1.4 var(--body);box-shadow:0 6px 18px rgba(0,0,0,.15)}
+.dm-pop .maplibregl-popup-tip{display:none} .dm-pop b{display:block;font-weight:700} .dm-pop span{display:block;color:var(--muted)} .dm-pop em{display:block;font-style:normal;font-weight:600;color:var(--navy);margin-top:2px}
 .ff-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;align-items:start}
 @media (min-width:980px){.ff-grid{grid-template-columns:repeat(2,minmax(0,1fr))} .ff-wide{grid-column:1/-1}}
 .rp-card.c-floor{border-top-color:var(--navy)}
@@ -1000,10 +1015,12 @@ a.ext{color:var(--accent-ink);text-decoration:none}
       <p><b>Known limits.</b> Same-sex daters are judged by the preferences of the sex judging them (Bailey 1994); height has no effect for them because no study gives a usable figure for same-sex height preferences. The straight, gay and lesbian counts in the top bar include bisexual people. Puerto Rico and other territories aren’t covered. Alaska uses its statewide vote. Seven Connecticut metro areas use state religion rates because their boundaries changed after the 2020 Religion Census. Middle Eastern or North African isn’t a Census race category yet. Height, past partners and children aren’t published locally. The weight refusal figure is from 1998, validated against 2022–2023 surveys. The yearly relationship rates come from a small follow-up study. Sex is limited to the two categories the Census publishes.</p>
       <p><b>Fixes coming.</b> Counties with prisons, military barracks, college dorms and nursing homes count those residents among local singles, so their counts run slightly high until we remove people living in group quarters. Serious mental illness, disability and felony records rest on state rates and few studies; we will add local and measured sources as they appear. The strength of the four aiming-high rules and the BMI and exercise overlap are our estimates, to be replaced with measured figures. Traits outside the Census and CDC records are linked only where noted above; the rest are multiplied as independent until measured overlaps are added. Long reports take a few seconds to build, and we are making them faster.</p>
       <p><b>What this is.</b> An estimate of scale built from public data, not a list of real people.</p>
+      <p><b>Your chances across America.</b> The map scores your same answers in all 925 metro and micro areas and colors every county in an area by your chance in the dating economy there. Counties outside any metro or micro area are gray. The colors are set to your own results: seven steps from red to green, each holding about the same number of areas, so the map shows where you’d do better or worse whether your chances run high or low everywhere. Metro areas use the same scoring as the Best 10 and Worst 10 lists; micro areas are scored after the report opens.</p>
       <p><b>The family floor.</b> Each area’s floor is the household income a married couple with two kids, ages 1 and 4, needs to cover one budget after taxes: a typical 4-bedroom home with 10% down at 7.2% for 30 years, mortgage insurance, property tax, home insurance and 1% a year in upkeep; daycare for two; two cars; groceries, dining out and household goods scaled to local prices; health and life insurance; student loans; minimum payments on the typical household’s credit card balance; vacation and celebrations; an emergency fund; and 15% of pay to retirement, up to the 401(k) limit. Taxes use 2026 federal rules, state and county income taxes from PolicyEngine, typical local wage taxes in Ohio (2%), Pennsylvania (1%), Kentucky (1%) and Maryland counties (3%), but not a single city’s rate such as New York City’s or Philadelphia’s, since home values cover the whole metro, and Social Security and Medicare. Home values are Zillow’s typical 4-bedroom value for the metro; for 69 areas Zillow doesn’t cover, mostly micro areas, the state’s 4-bedroom value is scaled by the area’s median home value. Insurance, daycare, gas and electric use state figures. The 200 largest metros are ranked by 2025 population. The 2019 comparison reruns the same budget for the same month of 2019 with Zillow’s 2019 value and Freddie Mac’s 2019 average rate of 3.9%; every other cost and the tax brackets move back by the Consumer Price Index.</p>
       <p><b>The American Dream Gauntlet.</b> Start with 1,000 men turning 37 and apply the published share who clear each step to the men still in the running. Three steps combine more than one published figure: out-earning the women he’d marry, marrying by 37, and earning $250,000 together. Men who reach these milestones after 37 aren’t counted. Your path uses your education and income: a bachelor’s degree and earnings above the $72,436 median for women with one puts you on the career-growth path.</p>
       <p><b>Sources.</b></p>
       <ul class="srclist">
+        <li><b>Map:</b> Census Bureau 2023 cartographic boundary files, counties at 1:5,000,000; Census 2023 metro and micro area delineations (county to area); basemap from OpenFreeMap, © OpenStreetMap contributors, drawn with MapLibre GL.</li>
         <li><b>Family floor budget:</b> Zillow Home Value Index, 4-bedroom homes, metro and state, October 2026; Census ACS 2020–2024 tables B25103 and B25077 (property tax rates); Census 2025 metro population estimates and 2023 metro delineations; BEA regional price parities for goods, 2024; Child Care Aware of America 2025 price of center care for an infant and a 4-year-old (2024 for Colorado, South Carolina and D.C.; the median state for New Mexico); Insurify state averages for home insurance ($300,000 dwelling) and full-coverage car insurance, 2026; AAA state gas averages, November 16, 2026; EIA average residential electric bill by state, 2024; AAA Your Driving Costs 2026; USDA moderate-cost food plan; BLS Consumer Expenditure Survey 2024 (dining out); KFF 2026 employer health premiums; Deloitte 2026 travel survey; NRF holiday spending; PolicyEngine US 2026 state and local income tax rules; IRS 2026 brackets, deductions and child tax credit. Credit cards: New York Fed Household Debt and Credit, Q2 2026, over Census households ($9,370 per household), scaled by Experian’s March 2026 average card balance by state; payment is interest at the Federal Reserve G.19 rate (22.36%) plus 1% of the balance a month. Typical married couple: Census CPS 2024, $128,700. Since 2019: Freddie Mac Primary Mortgage Market Survey, 2019 average (3.9%); BLS CPI-U, October 2019 (257.346) and October 2026 (337.511); BLS Usual Weekly Earnings, third quarter 2019 ($919) and 2026 ($1,232).</li>
         <li><b>American Dream Gauntlet:</b> Pew Research Center analysis of Census data, 2024 (degrees); National Student Clearinghouse (enrollment); Federal Reserve Bank of New York, The Labor Market for Recent College Graduates, Q1 2026; BLS 2025 median weekly earnings by sex and education; Heritage Foundation (marriage by income); Institute for Family Studies and Pew (marriage by 35 and 40); NLSY (marriage and divorce without a degree); Bowling Green NCFMR from the 2018 Census SIPP (divorce in the 30s); Census CPS FINC-01 and HINC-01 (income); Federal Reserve, Economic Well-Being of U.S. Households in 2024 (homeownership); Census SIPP (children by 35 to 39); Rosenfeld, Stanford, 2015, and Amato and Booth (divorce); Greenhouse 2026 (hiring); Lachowska, Mas and Woodbury (layoffs); Bound, Khanna and Morales, NBER (H-1B); Federal Reserve Distributional Financial Accounts (wealth by generation); Child Care Aware of America 2025 national average price of care ($13,184 per child).</li>
         <li><b>Census Bureau:</b> American Community Survey 2020–2024 tables B12002, B12002A–I, B15001, B14004, B18101, B18105, B20005, B05003, B24080, C24010, B12503; ACS 2023 microdata for income above $100,000, newlywed age gaps and traits that go together; ACS 2024 same-sex couple households; CPS 2024 income tables PINC-01 and PINC-03; CPS fertility and voting tables; ZIP, county and metro relationship files; OMB 2023 metro definitions.</li>
@@ -3454,10 +3471,10 @@ async function buildReport(F, A, C, fin, WB, live, X = {}){
   cards.splice(0, cards.length, ...cardOrder(cards));   // the jump links and the cards share one order
   box.classList.remove('stale');
   box.innerHTML = `${reportSummary(F, A, C, fin, WB, rows, X)}
-    <nav class="rp-jump" aria-label="Jump to a card">${cards.map(c => { const m = c.match(/class="rp-card ([\w-]+)".*?<\/span>([^<]+)<\/h3>/); return m ? `<a href="#" data-to="${m[1]}">${m[2]}</a>` : ''; }).join('')}</nav>
-    <div class="rp-cards" id="rpCards">${cards.join('')}</div>${familyFloor(F)}`;
+    <nav class="rp-jump" aria-label="Jump to a card">${cards.map(c => { const m = c.match(/class="rp-card ([\w-]+)".*?<\/span>([^<]+)<\/h3>/); return m ? `<a href="#" data-to="${m[1]}">${m[2]}</a>` : ''; }).join('')}${X && X.odds ? '<a href="#" data-to="c-map">Your chances across America</a>' : ''}</nav>
+    <div class="rp-cards" id="rpCards">${cards.join('')}</div>${dmapCard(F, X)}${familyFloor(F)}`;
   box.querySelectorAll('.rp-slot').forEach(sl => sl.dataset.adopt.split('|').forEach(sel => { const n = document.querySelector(sel); if (n && !box.contains(n)) sl.append(rpAdopt(n)); }));
-  layoutCards(true); setTimeout(ffAfterRender, 350); $('resultsBtn').hidden = false; REPORT_FOR = JSON.stringify(F); $('reportClose').textContent = SUM_MIN ? 'Open summary' : 'Close summary';
+  layoutCards(true); setTimeout(ffAfterRender, 350); setTimeout(dmapInit, 50); $('resultsBtn').hidden = false; REPORT_FOR = JSON.stringify(F); $('reportClose').textContent = SUM_MIN ? 'Open summary' : 'Close summary';
 }
 // Report cards show the page's own results sections, moved in while the report is open and put back when it closes.
 const RP_MOVED = [];
@@ -4312,6 +4329,121 @@ function familyFloor(F){
   return `<div class="ff" id="famFloor"><div class="ff-title"><h2>The family floor</h2><p>What it takes to marry, buy a home and raise two kids today, and how few men get there.</p></div>
     <div class="ff-grid">${ffRanking(me, F)}${ffGauntlet(F)}${ffBudget(me)}<div class="ff-col">${ffPartner(F, me)}${ffNearby(F, me)}${ffSince(F, me)}</div></div></div>`;
 }
+// ---------- Your chances map: every U.S. county colored by your chance in the dating economy in its metro or micro area.
+// Exact Census 2023 county boundaries (us-counties.json), drawn over an OpenFreeMap basemap with MapLibre GL. Counties outside
+// any metro or micro area are gray. The color scale is set to this person's own spread of chances: seven steps, each holding
+// about the same number of areas, from the theme's poor red to its good green. Home is colored by its own chance and outlined.
+const DMAP = {lib: null, geo: null, map: null, data: null};
+const DMAP_LIB = 'https://unpkg.com/maplibre-gl@5.24.1/dist/maplibre-gl', DMAP_TOPO = 'https://unpkg.com/topojson-client@3.1.0/dist/topojson-client.min.js';
+const dmapStyle = () => document.documentElement.dataset.scheme === 'dark' ? 'https://tiles.openfreemap.org/styles/dark' : 'https://tiles.openfreemap.org/styles/positron';
+function dmapLoad(){
+  if (DMAP.lib) return DMAP.lib;
+  const js = src => new Promise((res, rej) => { const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = rej; document.head.appendChild(s); });
+  const css = document.createElement('link'); css.rel = 'stylesheet'; css.href = DMAP_LIB + '.css'; document.head.appendChild(css);
+  DMAP.lib = Promise.all([js(DMAP_LIB + '.js'), js(DMAP_TOPO), fetch('us-counties.json').then(r => r.json()).then(t => { DMAP.geo = t; })]);
+  return DMAP.lib;
+}
+const dmapHex = h => { h = h.trim().replace('#', ''); if (h.length === 3) h = h.split('').map(c => c + c).join(''); return [0, 2, 4].map(i => parseInt(h.slice(i, i + 2), 16)); };
+function dmapRamp(n){   // n colors from poor red through long, fair, hi to good green, read from the current theme
+  const cs = getComputedStyle(document.documentElement), stops = ['--poor', '--long', '--fair', '--hi', '--good'].map(v => dmapHex(cs.getPropertyValue(v) || '#888'));
+  return Array.from({length: n}, (_, k) => { const t = n === 1 ? .5 : k / (n - 1), x = t * (stops.length - 1), i = Math.min(stops.length - 2, Math.floor(x)), f = x - i;
+    return 'rgb(' + stops[i].map((c, j) => Math.round(c + (stops[i + 1][j] - c) * f)).join(',') + ')'; });
+}
+const dmapFmt = v => v >= 10 ? String(Math.round(v)) : v >= 1 ? v.toFixed(1).replace(/\.0$/, '') : v > 0 ? String(+v.toPrecision(1)) : '0';
+// The scale for this person: chance (0 to 100) per area, quantile breaks among areas with any chance at all.
+function dmapScale(X){
+  const val = new Map(); for (const [i, o] of X.odds) val.set(D.codes[i], Math.max(0, (o && o.chance || 0) * 100));
+  const pos = [...val.values()].filter(v => v > 0).sort((a, b) => a - b), uniq = new Set(pos.map(v => v.toFixed(3))).size;
+  const n = Math.max(1, Math.min(7, uniq)), br = [];
+  for (let k = 1; k < n; k++) br.push(pos[Math.min(pos.length - 1, Math.floor(k * pos.length / n))]);
+  const bin = v => v <= 0 ? -1 : br.filter(b => v >= b).length;
+  return {val, br, n, bin, lo: pos[0] || 0, hi: pos[pos.length - 1] || 0, pos, zeros: [...val.values()].some(v => v <= 0)};
+}
+function dmapText(X){
+  const S = dmapScale(X), home = S.val.get(D.codes[X.mine]), hb = S.bin(home), name = shortName(D.cbsa[X.mine].n);
+  const beat = S.pos.length ? Math.round(S.pos.filter(v => v < home).length / S.val.size * 100) : 0, cols = dmapRamp(S.n), flat = S.hi - S.lo < 2 && S.hi >= 1;
+  const lede = `Your chance in the dating economy in every county, scored with the same answers in each metro and micro area. The colors follow your own range, red where you’d do worst and green where you’d do best. Home, ${esc(name)}, is ${dmapFmt(home)} out of 100, better than ${beat}% of the ${fmtN(S.val.size)} areas scored.${flat ? ' Your chances barely change from place to place, so small differences show as big color changes here.' : ''}`;
+  const edges = [S.lo, ...S.br, S.hi];
+  const legend = `<div class="dm-ramp">${cols.map((c, k) => `<span style="background:${c}">${k === hb ? '<i class="dm-you">You</i>' : ''}</span>`).join('')}</div>
+    <div class="dm-ticks">${edges.map(v => `<span>${dmapFmt(v)}</span>`).join('')}</div>
+    <div class="dm-keys"><span><i class="dm-k dm-home"></i>Your area</span>${S.zeros ? '<span><i class="dm-k dm-zero"></i>No mutual chance</span>' : ''}<span><i class="dm-k dm-rural"></i>Outside metro and micro areas</span></div>`;
+  return {lede, legend};
+}
+function dmapCard(F, X){
+  if (!X || !X.odds || X.mine == null || !X.odds.get(X.mine)) return '';
+  const T = dmapText(X);
+  return `<section class="rp-card c-map dm-card" id="dmap"><h3><span class="msi" aria-hidden="true">map</span>Your chances across America</h3><p class="rp-cl" id="dmapLede">${T.lede}</p>
+    <div class="rp-body"><div class="dm-wrap"><div class="dm-box" id="dmapBox" role="img" aria-label="Map of the United States by county, colored by your chances in the dating economy"></div>
+    <button type="button" class="dm-homebtn" id="dmapHome"><span class="msi" aria-hidden="true">my_location</span>Your area</button><p class="dm-status" id="dmapStatus" hidden></p></div>
+    <div class="dm-leg" id="dmapLeg" aria-hidden="true">${T.legend}</div>
+    <p class="ff-note">Each county takes its metro or micro area’s score. Drag to move around; use two fingers on a phone or Ctrl and scroll on a computer to zoom. County lines: Census Bureau 2023. Basemap: OpenFreeMap, © OpenStreetMap contributors.</p></div></section>`;
+}
+// The report scores the metro areas; the micro areas are scored here in the background, then the map, scale and legend refresh.
+async function dmapMicros(X, F){
+  if (X.microsDone) return true;
+  const job = JOB, miss = D.codes.map((c, i) => i).filter(i => !X.odds.has(i)), st = document.getElementById('dmapStatus');
+  for (let s = 0; s < miss.length; s += 6){
+    if (job !== JOB || !document.getElementById('dmapBox')) return false;
+    if (st){ st.hidden = false; st.textContent = `Adding ${fmtN(miss.length)} smaller micro areas · ${Math.round(s / miss.length * 100)}%`; }
+    await later(() => { for (const i of miss.slice(s, s + 6)) X.odds.set(i, compete([i], F, {n: 150, maxCells: 50}) || {chance: 0}); });
+  }
+  if (st) st.hidden = true; X.microsDone = true; return true;
+}
+function dmapFeatures(X){
+  const S = dmapScale(X), homeCode = D.codes[X.mine], fc = DMAP.fc || (DMAP.fc = topojson.feature(DMAP.geo, DMAP.geo.objects.c)), idx = DMAP.idx || (DMAP.idx = new Map(D.codes.map((c, i) => [c, i])));
+  for (const f of fc.features){ const p = f.properties, v = p.k != null ? S.val.get(p.k) : undefined;
+    p.v = v == null ? -2 : v; p.b = v == null ? -2 : S.bin(v); p.h = p.k === homeCode ? 1 : 0; p.m = p.k != null && idx.has(p.k) ? shortName(D.cbsa[idx.get(p.k)].n) : ''; }
+  DMAP.data = {fc, S, homeCode};
+}
+async function dmapInit(){
+  const box = document.getElementById('dmapBox'), L = LAST_JOB; if (!box || !L) return;
+  const X = L.args[5]; try { await dmapLoad(); } catch (e) { box.classList.add('dm-err'); box.textContent = 'The map couldn’t load. Check your connection and reopen the report.'; return; }
+  if (!document.getElementById('dmapBox')) return;
+  dmapFeatures(X);
+  if (DMAP.map){ try { DMAP.map.remove(); } catch (e) {} DMAP.map = null; }
+  const map = new maplibregl.Map({container: box, style: dmapStyle(), bounds: [[-125, 24.2], [-66.8, 49.6]], fitBoundsOptions: {padding: innerWidth < 640 ? 2 : 12},
+    cooperativeGestures: true, attributionControl: {compact: true}, dragRotate: false, pitchWithRotate: false, touchPitch: false});
+  map.touchZoomRotate.disableRotation(); map.addControl(new maplibregl.NavigationControl({showCompass: false}), 'top-right');
+  DMAP.map = map; map.on('style.load', () => dmapLayers(map));
+  const pop = new maplibregl.Popup({closeButton: false, closeOnClick: false, offset: 8, className: 'dm-pop'});
+  const show = e => { const f = e.features && e.features[0]; if (!f) return; const p = f.properties;
+    pop.setLngLat(e.lngLat).setHTML(`<b>${esc(p.n)}</b>${p.v === -2 ? '<span>Outside metro and micro areas</span>' : `<span>${esc(p.m)}${p.h ? ' · your area' : ''}</span><em>${p.v <= 0 ? 'No mutual chance' : 'Your chance: ' + dmapFmt(+p.v) + ' / 100'}</em>`}`).addTo(map); };
+  map.on('mousemove', 'dm-fill', e => { map.getCanvas().style.cursor = 'pointer'; show(e); });
+  map.on('mouseleave', 'dm-fill', () => { map.getCanvas().style.cursor = ''; pop.remove(); });
+  map.on('click', 'dm-fill', show);
+  const hb = document.getElementById('dmapHome'); if (hb) hb.onclick = () => dmapHome(map);
+  { const c = D.cbsa[X.mine], el = document.createElement('div'); el.className = 'dm-pin'; el.innerHTML = '<span>You</span>';
+    new maplibregl.Marker({element: el, anchor: 'bottom'}).setLngLat([c.lo, c.la]).addTo(map); }
+  map.on('load', () => { const a = box.querySelector('.maplibregl-ctrl-attrib'); if (a) a.classList.remove('maplibregl-compact-show'); });
+  if (!X.microsDone && await dmapMicros(X, L.args[0]) && DMAP.map === map){
+    dmapFeatures(X); const T = dmapText(X), le = document.getElementById('dmapLede'), lg = document.getElementById('dmapLeg');
+    if (le) le.innerHTML = T.lede; if (lg) lg.innerHTML = T.legend;
+    const go = () => { if (map.getSource('dm')){ map.removeLayer('dm-home'); map.removeLayer('dm-line'); map.removeLayer('dm-zero'); map.removeLayer('dm-fill'); map.removeSource('dm'); if (map.hasImage('dm-hatch')) map.removeImage('dm-hatch'); } dmapLayers(map); };
+    if (map.isStyleLoaded()) go(); else map.once('style.load', go);
+  }
+}
+function dmapHome(map){
+  const {fc, homeCode} = DMAP.data, b = [180, 90, -180, -90];
+  const walk = c => typeof c[0] === 'number' ? (b[0] = Math.min(b[0], c[0]), b[1] = Math.min(b[1], c[1]), b[2] = Math.max(b[2], c[0]), b[3] = Math.max(b[3], c[1])) : c.forEach(walk);
+  fc.features.filter(f => f.properties.k === homeCode).forEach(f => walk(f.geometry.coordinates));
+  if (b[0] < b[2]) map.fitBounds([[b[0], b[1]], [b[2], b[3]]], {padding: 60, maxZoom: 8.5, duration: 900});
+}
+function dmapLayers(map){
+  const {fc, S} = DMAP.data, cols = dmapRamp(S.n), cs = getComputedStyle(document.documentElement);
+  const navy = cs.getPropertyValue('--navy').trim() || '#1e2b45', rural = cs.getPropertyValue('--track').trim() || '#ddd', sheet = cs.getPropertyValue('--sheet').trim() || '#fff';
+  if (!map.hasImage('dm-hatch')){ const c = document.createElement('canvas'); c.width = c.height = 8; const g = c.getContext('2d'); g.strokeStyle = cols[0]; g.lineWidth = 1.5;
+    g.beginPath(); g.moveTo(0, 8); g.lineTo(8, 0); g.moveTo(-2, 2); g.lineTo(2, -2); g.moveTo(6, 10); g.lineTo(10, 6); g.stroke(); map.addImage('dm-hatch', g.getImageData(0, 0, 8, 8)); }
+  const L0 = map.getStyle().layers, firstSym = (L0.find(l => l['source-layer'] === 'transportation' || l['source-layer'] === 'boundary' || l.type === 'symbol') || {}).id;
+  if (map.getSource('dm')) return; map.addSource('dm', {type: 'geojson', data: fc});
+  const color = ['match', ['get', 'b'], -2, rural, -1, sheet, ...cols.flatMap((c, k) => [k, c]), rural];
+  map.addLayer({id: 'dm-fill', type: 'fill', source: 'dm', paint: {'fill-color': color, 'fill-opacity': ['case', ['==', ['get', 'b'], -2], .8, .85]}}, firstSym);
+  map.addLayer({id: 'dm-zero', type: 'fill', source: 'dm', filter: ['==', ['get', 'b'], -1], paint: {'fill-pattern': 'dm-hatch', 'fill-opacity': .9}}, firstSym);
+  map.addLayer({id: 'dm-line', type: 'line', source: 'dm', paint: {'line-color': sheet, 'line-width': ['interpolate', ['linear'], ['zoom'], 3, .15, 7, .8], 'line-opacity': .55}}, firstSym);
+  map.addLayer({id: 'dm-home', type: 'line', source: 'dm', filter: ['==', ['get', 'h'], 1], paint: {'line-color': navy, 'line-width': ['interpolate', ['linear'], ['zoom'], 3, 1.6, 8, 3]}}, firstSym);
+}
+// Theme change while the map is open: recolor and swap the basemap.
+new MutationObserver(() => { const m = DMAP.map; if (!m || !DMAP.data || !document.getElementById('dmapBox')) return;
+  try { m.setStyle(dmapStyle()); } catch (e) {} }).observe(document.documentElement, {attributes: true, attributeFilter: ['data-scheme', 'data-palette']});
 function ffAfterRender(){
   const L = document.getElementById('ffList'), me = document.getElementById('ffMe');
   if (L && me && L.scrollHeight > L.clientHeight + 4) L.scrollTop = Math.max(0, me.offsetTop - L.offsetTop - L.clientHeight / 2);
