@@ -3982,7 +3982,7 @@ function needPrompt(missing, extra){
   if (extra) names.push(extra);
   const list = names.length > 1 ? names.slice(0, -1).join(', ') + ' and ' + names[names.length - 1] : names[0];
   st.hidden = !names.length;
-  st.innerHTML = !names.length ? '' : `<span>${missing.length === 4 ? 'Answer these four questions to see your results.' : `Still needed to see your results: ${list}.`}</span>`;
+  st.innerHTML = !names.length ? '' : `<span>${missing.length === 4 ? 'Start with these four questions. They set up your search, and every question after them makes your report more accurate.' : `Still needed to set up your search: ${list}. Then keep going, since every answer makes your report more accurate.`}</span>`;
 }
 function wholeOnly(el, after){ el.addEventListener('input', e => { const raw = el.value;
   if (/^delete/.test(e.inputType || '')) el.dataset.cents = '';
