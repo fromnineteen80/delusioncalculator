@@ -50,19 +50,21 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .save{display:grid;gap:8px}
 .save p{margin:0 0 8px}
 .save{background:var(--sheet);border:1px solid var(--rule);border-radius:8px;padding:16px 18px;margin:4px 0 6px;display:grid;gap:18px}
-@media (min-width:768px){.save-act{align-self:stretch;height:auto;min-height:38px} .save{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px} .save-col + .save-col{border-left:1px solid var(--rule);padding-left:28px}}
+@media (min-width:768px){.save{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px} .save-col + .save-col{border-left:1px solid var(--rule);padding-left:28px}}
 @media (max-width:767.98px){.save-col + .save-col{border-top:1px solid var(--rule);padding-top:18px}}
 .save-col{display:flex;flex-direction:column;gap:12px;min-width:0}
 .save-hd{display:flex;gap:10px;align-items:flex-start} .save-hd .hstep{margin-top:0} .save-hd .msi{font-size:16px}
 .save-hd h3{margin:0;font:700 16px/1.25 var(--display);color:var(--navy)} .save-hd p{margin:2px 0 0;font-size:12px;line-height:1.4;color:var(--muted)}
-.save-row{display:flex;gap:8px;margin:0;align-items:flex-start}
+.save-row{display:flex;gap:8px;margin:0;align-items:center;position:relative}
 .save-row textarea,.save-row input{flex:1;min-width:0;font:400 12.5px/1.5 var(--mono);color:var(--ink);background:var(--paper);border:1px solid var(--rule);border-radius:6px;padding:8px 10px;resize:none;word-break:break-all;overflow:hidden;outline:none}
 .save-row textarea:focus{border-color:var(--accent)}
 .save-row input{height:38px}
 .save-row textarea::placeholder,.save-row input::placeholder{font-family:var(--body);font-size:13px;color:var(--muted)}
-.save-row textarea{min-height:38px}
+.save .save-row textarea{height:40px;min-height:0;white-space:nowrap;overflow:hidden;word-break:normal;line-height:22px;padding:8px 10px;
+  -webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 48px),transparent calc(100% - 10px));mask-image:linear-gradient(90deg,#000 calc(100% - 48px),transparent calc(100% - 10px))}
+.save .save-row textarea:placeholder-shown{-webkit-mask-image:none;mask-image:none}
 .save-row textarea:placeholder-shown{word-break:normal;overflow-wrap:break-word}
-.save-act{flex:none;align-self:flex-start;width:68px;height:38px;border:1px solid var(--rule);background:var(--sheet);color:var(--navy);border-radius:6px;font:600 13px var(--body);cursor:pointer;padding:0}
+.save-act{flex:none;align-self:center;width:72px;height:40px;border:1px solid var(--rule);background:var(--sheet);color:var(--navy);border-radius:6px;font:600 13px var(--body);cursor:pointer;padding:0}
 .save-act:hover{border-color:var(--muted)}
 .save-act.save-pri{background:var(--navy);border-color:var(--navy);color:var(--sheet)} .save-act.save-pri:hover{opacity:.9}
 .save .save-msg{grid-column:1/-1;margin-top:-8px} .save-msg{margin:0;font-size:11.5px;line-height:1.4;color:var(--accent-ink)} .save-msg:empty{display:none} .save-msg.bad{color:var(--poor)}
@@ -3770,13 +3772,9 @@ function loadAnswers(code){
   for (const id of ['myInc', 'incLo', 'incHi']){ const el = $(id); if (el.value) el.value = fmtMoney(String(Math.round(moneyNum(el.value) || 0)) || ''); }
   syncAll(); render(); setTimeout(layoutFields, 0); return true;
 }
-function fitBox(c){ if (!c) return; c.style.height = 'auto'; c.style.height = c.scrollHeight + 2 + 'px'; if (c.id === 'saveCode' || c.id === 'loadCode') evenSave(); }
+function fitBox(c){ if (!c) return; if (c.id === 'saveCode' || c.id === 'loadCode') return evenSave(); c.style.height = 'auto'; c.style.height = c.scrollHeight + 2 + 'px'; }
 // Side by side, the save and load boxes take the taller of the two heights so the sections line up.
-function evenSave(){
-  const a = document.getElementById('saveCode'), b = document.getElementById('loadCode'); if (!a || !b) return;
-  [a, b].forEach(c => { c.style.height = 'auto'; c.style.height = c.scrollHeight + 2 + 'px'; });
-  if (matchMedia('(min-width:768px)').matches){ const h = Math.max(a.offsetHeight, b.offsetHeight) + 'px'; a.style.height = h; b.style.height = h; }
-}
+function evenSave(){ ['saveCode', 'loadCode'].forEach(id => { const c = document.getElementById(id); if (c){ c.style.height = ''; c.scrollLeft = 0; } }); }   // one-line fields at a fixed height
 ['loadCode'].forEach(id => { const c = document.getElementById(id); if (c) c.addEventListener('input', () => fitBox(c)); });
 window.addEventListener('resize', () => { fitBox(document.getElementById('saveCode')); fitBox(document.getElementById('loadCode')); });
 function refreshCode(){ const c = $('saveCode'); if (!c) return; const k = answersCode(); c.value = k; evenSave(); }
