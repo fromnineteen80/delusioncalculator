@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,500,0,-25..0&icon_names=account_balance_wallet,arrow_downward,arrow_forward,balance,contrast,dark_mode,diversity_3,favorite,filter_alt,groups,history,hourglass,info_i,insights,leaderboard,light_mode,location_city,man,more_horiz,near_me,percent,person,route,scatter_plot,search,star,swords,trending_up,tune,woman&display=block">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,500,0,-25..0&icon_names=account_balance_wallet,arrow_downward,arrow_forward,balance,bookmark,contrast,dark_mode,diversity_3,favorite,filter_alt,groups,history,hourglass,info_i,insights,leaderboard,light_mode,location_city,man,more_horiz,near_me,percent,person,route,scatter_plot,search,star,swords,trending_up,tune,woman&display=block">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
 /* Layout: federal statistical brief. Sticky result bar on top; questionnaire left, tabulated profile right; single column on phones. */
@@ -49,15 +49,23 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 @media (max-width:640px){.tools .contact-btn,#instr .contact-panel{display:none} .contact-m{display:block}}
 .save{display:grid;gap:8px}
 .save p{margin:0 0 8px}
+.save{background:var(--sheet);border:1px solid var(--rule);border-radius:8px;padding:16px 18px;margin:4px 0 6px;display:grid;gap:18px}
+@media (min-width:768px){.save{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px} .save-col + .save-col{border-left:1px solid var(--rule);padding-left:28px;border-top:0;padding-top:0}}
+.save-col + .save-col{border-top:1px solid var(--rule);padding-top:18px}
+.save-col{display:flex;flex-direction:column;gap:12px;min-width:0}
+.save-hd{display:flex;gap:10px;align-items:flex-start} .save-hd .hstep{margin-top:0} .save-hd .msi{font-size:16px}
+.save-hd h3{margin:0;font:700 16px/1.25 var(--display);color:var(--navy)} .save-hd p{margin:2px 0 0;font-size:12px;line-height:1.4;color:var(--muted)}
 .save-row{display:flex;gap:8px;margin:0;align-items:flex-start}
-.save-row textarea,.save-row input{flex:1;min-width:0;font:400 13px/1.5 var(--mono);color:var(--ink);background:var(--paper);border:1px solid var(--rule);border-radius:6px;padding:8px 10px;resize:none;word-break:break-all;overflow:hidden}
+.save-row textarea,.save-row input{flex:1;min-width:0;font:400 12.5px/1.5 var(--mono);color:var(--ink);background:var(--paper);border:1px solid var(--rule);border-radius:6px;padding:8px 10px;resize:none;word-break:break-all;overflow:hidden;outline:none}
+.save-row textarea:focus{border-color:var(--accent)}
 .save-row input{height:38px}
 .save-row textarea::placeholder,.save-row input::placeholder{font-family:var(--body);font-size:13px;color:var(--muted)}
 .save-row textarea{min-height:38px}
 .save-row textarea:placeholder-shown{word-break:normal;overflow-wrap:break-word}
-.save-act{flex:none;align-self:flex-start;width:64px;height:38px;border:1px solid var(--rule);background:var(--sheet);color:var(--muted);border-radius:6px;font:600 13px var(--body);cursor:pointer;padding:0}
-.save-act:hover{border-color:var(--accent);color:var(--accent-ink)}
-.save-msg{margin:0;font-size:11.5px;line-height:1.4;color:var(--accent-ink)} .save-msg:empty{display:none} .save-msg.bad{color:var(--poor)}
+.save-act{flex:none;align-self:flex-start;width:68px;height:38px;border:1px solid var(--rule);background:var(--sheet);color:var(--navy);border-radius:6px;font:600 13px var(--body);cursor:pointer;padding:0}
+.save-act:hover{border-color:var(--muted)}
+.save-act.save-pri{background:var(--navy);border-color:var(--navy);color:var(--sheet)} .save-act.save-pri:hover{opacity:.9}
+.save .save-msg{grid-column:1/-1;margin-top:-8px} .save-msg{margin:0;font-size:11.5px;line-height:1.4;color:var(--accent-ink)} .save-msg:empty{display:none} .save-msg.bad{color:var(--poor)}
 .instr-btn{display:inline-flex;align-items:center;gap:6px;background:none;border:0;padding:6px 0;font:600 13px var(--body);color:var(--ink);cursor:pointer}
 .instr-btn .pm{font-size:0;color:var(--accent-ink);display:inline-flex;align-items:center;width:10px;height:10px}
 .instr-btn .pm::before{content:"";width:6px;height:6px;border-right:1.7px solid currentColor;border-bottom:1.7px solid currentColor;transform:translateY(-.5px) rotate(45deg);transition:transform .15s ease}
@@ -737,8 +745,14 @@ a.ext{color:var(--accent-ink);text-decoration:none}
     </div></div>
     <div class="instr-panel" id="savePanel"><div class="instr-inner">
       <div class="save">
-        <div class="save-row"><textarea id="saveCode" readonly rows="1" placeholder="Your code appears here as you fill out the questionnaire" spellcheck="false" aria-label="Your saved code"></textarea><button type="button" class="save-act" id="copyBtn">Copy</button></div>
-        <div class="save-row"><textarea id="loadCode" rows="1" spellcheck="false" autocomplete="off" placeholder="Paste a saved code" aria-label="Paste a saved code"></textarea><button type="button" class="save-act" id="loadBtn">Load</button></div>
+        <div class="save-col">
+          <div class="save-hd"><span class="hstep" aria-hidden="true"><span class="msi">bookmark</span></span><div><h3>Save your answers</h3><p>Copy this code to come back later. It updates as you answer.</p></div></div>
+          <div class="save-row"><textarea id="saveCode" readonly rows="1" placeholder="Your code appears here as you fill out the questionnaire" spellcheck="false" aria-label="Your saved code"></textarea><button type="button" class="save-act save-pri" id="copyBtn">Copy</button></div>
+        </div>
+        <div class="save-col">
+          <div class="save-hd"><span class="hstep" aria-hidden="true"><span class="msi">history</span></span><div><h3>Pick up where you left off</h3><p>Paste a saved code. Older codes still load.</p></div></div>
+          <div class="save-row"><textarea id="loadCode" rows="1" spellcheck="false" autocomplete="off" placeholder="Paste a saved code" aria-label="Paste a saved code"></textarea><button type="button" class="save-act" id="loadBtn">Load</button></div>
+        </div>
         <p class="save-msg" id="saveMsg" aria-live="polite"></p>
       </div>
     </div></div>
