@@ -50,10 +50,13 @@
   --navy:#c9d6ea; --accent:#8fb0d9; --accent-ink:#a9c3e6; --accent-soft:#1c2738; --track:#262d3a; --chev:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23a2abbb' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); --warn:#e7a072; --warn-soft:#33241a; --you-soft:#1e2838; --good:#6fcf97; --good-soft:#143323; --fair:#f5c518; --fair-soft:#33290c; --fair-ink:#f5c518; --long:#f0975a; --long-soft:#3a2111; --poor:#f08a80; --poor-soft:#3b1714; --hi:#a8d46a; --hi-soft:#22300f; color-scheme:dark }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
-body{background:radial-gradient(circle,color-mix(in srgb,var(--track) 70%,transparent) 1.1px,transparent 1.5px) 0 0/11px 11px fixed,var(--paper);color:var(--ink);font-family:var(--body);font-size:13px;line-height:1.5;
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:13px;line-height:1.5;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px}
 b,strong{font-weight:600}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
+/* The dot texture sits on its own fixed layer behind the page, so it covers the whole screen everywhere, iPhone and iPad included
+   (Safari on iOS does not support fixed backgrounds and was only painting part of it). */
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(circle,color-mix(in srgb,var(--track) 70%,transparent) 1.1px,transparent 1.5px) 0 0/11px 11px}
 .wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
 /* The page shell carries the static dot texture; the content wrapper sits on it in the clean background color with its own padding.
    On phones the wrapper fills the screen, so the texture only shows on wider screens. */
