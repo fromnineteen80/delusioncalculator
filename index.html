@@ -3877,7 +3877,9 @@ addEventListener('resize', alignTagline); if (document.fonts && document.fonts.r
 // Instagram story image (1080 × 1920): the strongest dot grid with the key numbers above it, offered through the viewer's
 // download prompt. Hidden where this view can't save files.
 let DL = null;
-if (window.claude && claude.use) claude.use('downloads').then(d => { DL = d; document.querySelectorAll('.story-btn').forEach(b => b.hidden = !d); }).catch(() => {});
+// Inside Claude the downloads capability saves the image; on the open web the browser saves it, or on a phone the share sheet sends it straight to Instagram or TikTok.
+document.querySelectorAll('.story-btn').forEach(b => b.hidden = false);
+if (window.claude && claude.use) claude.use('downloads').then(d => { DL = d; }).catch(() => {});
 // The story image uses the colors of the theme on screen (light or dark), read from the page.
 const themeColor = (name, fb) => { try { return getComputedStyle(document.documentElement).getPropertyValue('--' + name).trim() || fb; } catch (e) { return fb; } };
 function storyContent(numPx = 72){
@@ -3912,8 +3914,11 @@ function storyContent(numPx = 72){
   const sq2 = n => total > 0 && n >= 1 ? Math.max(1, Math.round(n / total * N)) : 0, nI = sq2(C.poolN), nM = sq2(wdm);
   const meFirst = wdm <= C.poolN, n1 = Math.min(nI, nM), n2 = Math.max(nI, nM);
   for (let i = 0; i < N; i++){ g.fillStyle = i < n1 ? navy : i < n2 ? accent : track; g.fillRect(L + (i % cols) * pitch, top + Math.floor(i / cols) * pitch, sq, sq); }
-  const ky = top + side + 50; g.font = `500 28px ${sans}`; let lx = L;
-  for (const [c, t] of [[navy, meFirst ? 'Would date me' : 'I would pursue'], [accent, meFirst ? 'I would pursue' : 'Would date me'], [track, `Local single ${ow}`]]){ g.fillStyle = c; g.fillRect(lx, ky - 22, 26, 26); g.fillStyle = muted; g.fillText(t, lx + 38, ky); lx += 70 + g.measureText(t).width; }
+  const keys = [[navy, meFirst ? 'Would date me' : 'I would pursue'], [accent, meFirst ? 'I would pursue' : 'Would date me'], [track, `Local single ${ow}`]];
+  let fs = 28; const keyW = () => { g.font = `500 ${fs}px ${sans}`; return keys.reduce((a, [, t]) => a + g.measureText(t).width, 0) + keys.length * fs * 1.36 + (keys.length - 1) * fs * 1.14; };
+  while (fs > 18 && keyW() > side) fs--;   // the key stays inside the grid's width
+  const ky = top + side + 50, bs = Math.round(fs * .93); let lx = L;
+  for (const [c, t] of keys){ g.fillStyle = c; g.fillRect(lx, ky - bs * .85, bs, bs); g.fillStyle = muted; g.fillText(t, lx + fs * 1.36, ky); lx += fs * 2.5 + g.measureText(t).width; }
   return cv;
 }
 // One content block, framed per platform. Instagram stories use the full 1080 × 1920; TikTok covers the top, the bottom and the
@@ -3934,11 +3939,18 @@ function storyCanvas(kind = 'ig'){
   return out;
 }
 document.querySelectorAll('.story-btn').forEach(btn => btn.addEventListener('click', async () => {
-  if (!DL || !LAST_JOB) return; const kind = btn.dataset.kind;
+  if (!LAST_JOB) return; const kind = btn.dataset.kind;
   if (document.fonts && document.fonts.ready) await document.fonts.ready;
-  const blob = await new Promise(res => storyCanvas(kind).toBlob(res, 'image/png')), was = btn.textContent;
-  try { await DL.save({filename: `youre-all-delusional-${PLATFORM[kind].file}.png`, data: blob}); btn.textContent = 'Saved'; setTimeout(() => btn.textContent = was, 2000); }
-  catch (e) { if (e && ['unavailable', 'not_granted', 'capability_disabled', 'capability_removed'].includes(e.code)) document.querySelectorAll('.story-btn').forEach(x => x.hidden = true); }
+  const cv = storyCanvas(kind); if (!cv) return;
+  const blob = await new Promise(res => cv.toBlob(res, 'image/png')), was = btn.textContent, name = `youre-all-delusional-${PLATFORM[kind].file}.png`;
+  const done = t => { btn.textContent = t; setTimeout(() => btn.textContent = was, 2000); };
+  if (DL){ try { await DL.save({filename: name, data: blob}); return done('Saved'); } catch (e) {} }
+  const file = new File([blob], name, {type: 'image/png'});
+  if (matchMedia('(pointer: coarse)').matches && navigator.canShare && navigator.canShare({files: [file]})){
+    try { await navigator.share({files: [file]}); return done('Shared'); } catch (e) { if (e && e.name === 'AbortError') return; }
+  }
+  const a = document.createElement('a'), url = URL.createObjectURL(blob); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 4000); done('Saved');
 }));
 
 // Field layout: two to a line in question order. A field takes the whole line when its longest choice won't fit in half a line,
