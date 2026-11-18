@@ -75,6 +75,11 @@ body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;bac
 @media (min-width:768px){.save{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px} .save-col + .save-col{border-left:1px solid var(--rule);padding-left:28px}}
 @media (max-width:767.98px){.save-col + .save-col{border-top:1px solid var(--rule);padding-top:18px}}
 .save-col{display:flex;flex-direction:column;gap:12px;min-width:0}
+.ins{background:var(--sheet);border:1px solid var(--rule);border-radius:8px;margin:4px 0 6px;display:grid;grid-template-columns:minmax(0,1fr)}
+.ins-i{padding:16px 18px;min-width:0} .ins-i + .ins-i{border-top:1px solid var(--rule)}
+.ins .save-hd p{font-size:12.5px;line-height:1.5;color:var(--ink);opacity:.85;margin-top:4px} .ins .save-hd p a{color:var(--accent-ink)}
+@media (min-width:768px){ .ins{grid-template-columns:minmax(0,1fr) minmax(0,1fr)} .ins-i + .ins-i{border-top:0} .ins-i:nth-child(even){border-left:1px solid var(--rule)} .ins-i:nth-child(n+3){border-top:1px solid var(--rule)} }
+
 .save-hd{display:flex;gap:10px;align-items:flex-start} .save-hd .hstep{margin-top:0} .save-hd .msi{font-size:16px}
 .save-hd h3{margin:0;font:700 16px/1.25 var(--display);color:var(--navy)} .save-hd p{margin:2px 0 0;font-size:12px;line-height:1.4;color:var(--muted)}
 .save-row{display:flex;gap:8px;margin:0;align-items:center;position:relative}
@@ -821,10 +826,12 @@ a.ext{color:var(--accent-ink);text-decoration:none}
       <button type="button" class="instr-btn contact-btn" id="contactBtn" aria-expanded="false" aria-controls="contactPanel">Contact <span class="pm" aria-hidden="true">+</span></button>
     </div>
     <div class="instr-panel" id="instrPanel"><div class="instr-inner">
-      <p>To get started, answer who you are, your ZIP code, where to search, and the type of partner you are looking for.</p>
-      <p><b>About you:</b> Answer as much as possible and be honest. You can skip questions about yourself, but it will make your final results and report less complete.</p>
-      <p><b>Your ideal match:</b> Only filter what you truly need in a partner. Sticking with Skip or No preference will clear everyone for that specific question.</p>
-      <p><b>Save:</b> Copy your code to come back later. It is labeled with the place you searched and the date and time you saved it. To pick up where you left off, paste the whole code into the second box. Using <a href="http://notepad.cc" target="_blank" rel="noopener">notepad.cc</a> is an easy way to save your code online and revisit when you need it.</p>
+      <div class="ins">
+        <div class="ins-i"><div class="save-hd"><span class="hstep" aria-hidden="true"><span class="msi">arrow_forward</span></span><div><h3>Get started</h3><p>Answer who you are, your ZIP code, where to search, and the type of partner you are looking for.</p></div></div></div>
+        <div class="ins-i"><div class="save-hd"><span class="hstep" aria-hidden="true"><span class="msi">person</span></span><div><h3>About you</h3><p>Answer as much as possible and be honest. You can skip questions about yourself, but it will make your final results and report less complete.</p></div></div></div>
+        <div class="ins-i"><div class="save-hd"><span class="hstep" aria-hidden="true"><span class="msi">favorite</span></span><div><h3>Your ideal match</h3><p>Only filter what you truly need in a partner. Sticking with Skip or No preference will clear everyone for that specific question.</p></div></div></div>
+        <div class="ins-i"><div class="save-hd"><span class="hstep" aria-hidden="true"><span class="msi">bookmark</span></span><div><h3>Save</h3><p>Copy your code to come back later. It is labeled with the place you searched and the date and time you saved it. To pick up where you left off, paste the whole code into the second box. Using <a href="http://notepad.cc" target="_blank" rel="noopener">notepad.cc</a> is an easy way to save your code online and revisit when you need it.</p></div></div></div>
+      </div>
     </div></div>
     <div class="instr-panel" id="savePanel"><div class="instr-inner">
       <div class="save">
