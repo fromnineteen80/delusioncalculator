@@ -284,6 +284,17 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
 .rp-prog circle{fill:none;stroke-width:4} .rp-prog .tr{stroke:var(--track)} .rp-prog .fg{stroke:var(--accent);stroke-linecap:round;transition:stroke-dashoffset .2s ease}
 .rp-prog.spin svg{animation:rpspin 1s linear infinite} @keyframes rpspin{to{transform:rotate(270deg)}} @media (prefers-reduced-motion:reduce){.rp-prog.spin svg{animation:none}}
 .stale > :not(#rpProg){opacity:.4;pointer-events:none;transition:opacity .2s} #rpProg{position:sticky;top:0;z-index:5;background:var(--sheet)}
+#rpProg.float{position:fixed;left:var(--pcx,50%);top:var(--pcy,50%);transform:translate(-50%,-50%);z-index:60;width:min(340px,calc(100vw - 32px));padding:18px 20px;gap:14px;
+  background:var(--sheet);border:1px solid var(--rule);border-radius:12px;box-shadow:0 18px 48px rgba(10,16,30,.22),0 2px 6px rgba(10,16,30,.08);animation:pfIn .18s ease-out}
+#rpProg.float svg{width:44px;height:44px} #rpProg.float b{font-size:14px} #rpProg.float span{white-space:normal}
+#runOv{position:fixed;inset:0;z-index:80;display:grid;place-items:center;padding:16px;background:color-mix(in srgb,var(--paper) 88%,transparent);
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);opacity:0;transition:opacity .22s ease}
+#runOv.on{opacity:1} body.rv-wait{overflow:hidden} body.rv-wait #rpProg.float{visibility:hidden}
+#runOv .run-pnl{width:min(360px,100%);padding:20px 22px;gap:14px;background:var(--sheet);border:1px solid var(--rule);border-radius:12px;
+  box-shadow:0 18px 48px rgba(10,16,30,.22),0 2px 6px rgba(10,16,30,.08);transform:translateY(8px);transition:transform .22s ease-out}
+#runOv.on .run-pnl{transform:none} #runOv .run-pnl svg{width:44px;height:44px} #runOv .run-pnl b{font-size:14px} #runOv .run-pnl span{white-space:normal}
+@media (prefers-reduced-motion:reduce){#runOv,#runOv .run-pnl{transition:none}}
+@keyframes pfIn{from{opacity:0;transform:translate(-50%,calc(-50% + 8px))}} @media (prefers-reduced-motion:reduce){#rpProg.float{animation:none}}
 .rp-prog b{display:block;font:600 13px var(--body)} .rp-prog span{display:block;font-size:11.5px;line-height:1.4;color:var(--muted)}
 
 .rp-cards{display:grid;grid-template-columns:repeat(var(--cols,1),minmax(0,1fr));gap:16px;align-items:start;margin:16px 0 8px}
@@ -3127,7 +3138,7 @@ async function buildReport(F, A, C, fin, WB, live, X = {}){
   // Determinate progress: one step per answer measured, shown as a ring with the answer being measured.
   let prog = $('rpProg'); if (!prog){ prog = document.createElement('div'); prog.id = 'rpProg'; prog.className = 'rp-prog'; prog.setAttribute('role', 'progressbar'); prog.setAttribute('aria-valuemin', '0'); prog.setAttribute('aria-valuemax', '100'); }
   rpRestore(); const first = !box.querySelector('.rp-cards'); if (first) $('reportClose').textContent = 'Finish the report';
-  if (first){ box.replaceChildren(prog); prog.classList.add('big'); } else { prog.classList.remove('big'); box.prepend(prog); }
+  if (first){ box.replaceChildren(prog); prog.classList.add('big'); prog.classList.remove('float'); } else { prog.classList.remove('big'); box.prepend(prog); progFloat(prog); }
   const step = (k, lab) => { const f = k / nAll, c = 2 * Math.PI * 16;
     prog.setAttribute('aria-valuenow', String(Math.round(f * 100)));
     prog.innerHTML = `<svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="16" class="tr"/><circle cx="20" cy="20" r="16" class="fg" style="stroke-dasharray:${c.toFixed(2)};stroke-dashoffset:${(c * (1 - f)).toFixed(2)}"/></svg>
@@ -3596,12 +3607,19 @@ function enterReport(){
   else { $('report').hidden = false; runProg(.01, 'Scoring your answers'); render(); } $('resultsBtn').setAttribute('aria-pressed', 'true'); $('resultsBtn').querySelector('.pm').textContent = '–';
   $('bar').scrollIntoView({behavior: 'auto', block: 'start'});
 }
+// Updating: the progress floats as a small panel centered over the visible part of the report, so it reads the same at any width and scroll.
+function progFloat(pr){
+  pr.classList.add('float'); const r = $('report').getBoundingClientRect(), vh = innerHeight;
+  const top = Math.max(r.top, 0), bot = Math.min(r.bottom, vh);
+  pr.style.setProperty('--pcx', (r.left + r.width / 2) + 'px'); pr.style.setProperty('--pcy', (bot > top + 120 ? (top + bot) / 2 : vh / 2) + 'px');
+}
+['scroll', 'resize'].forEach(ev => addEventListener(ev, () => { const p = document.querySelector('#rpProg.float'); if (p) progFloat(p); }, {passive: true}));
 // While new answers are scored, the report shows a progress ring at once and dims the cards it's replacing.
 function runProg(f, lab){
   const box = $('reportBody'); if (!box || $('report').hidden || !document.body.classList.contains('rv')) return;
   let pr = $('rpProg'); const old = !!box.querySelector('.rp-cards');
   if (!pr){ pr = document.createElement('div'); pr.id = 'rpProg'; pr.className = 'rp-prog'; pr.setAttribute('role', 'progressbar'); pr.setAttribute('aria-valuemin', '0'); pr.setAttribute('aria-valuemax', '100'); }
-  if (old){ pr.classList.remove('big'); if (box.firstChild !== pr) box.prepend(pr); box.classList.add('stale'); } else { pr.classList.add('big'); if (!box.contains(pr)) box.replaceChildren(pr); }
+  if (old){ pr.classList.remove('big'); if (box.firstChild !== pr) box.prepend(pr); box.classList.add('stale'); progFloat(pr); } else { pr.classList.add('big'); pr.classList.remove('float'); if (!box.contains(pr)) box.replaceChildren(pr); }
   const c = 2 * Math.PI * 16, pct = Math.round(f * 100); pr.classList.remove('spin'); pr.setAttribute('aria-valuenow', String(pct));
   pr.innerHTML = `<svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="16" class="tr"/><circle cx="20" cy="20" r="16" class="fg" style="stroke-dasharray:${c.toFixed(2)};stroke-dashoffset:${(c * (1 - f)).toFixed(2)}"/></svg><div><b>${old ? 'Updating your results' : 'Finishing your results'} · ${pct}%</b><span>${lab}</span></div>`;
 }
@@ -3622,13 +3640,45 @@ const morph = go => (document.startViewTransition && !matchMedia('(prefers-reduc
 // Finishing About you (button, or answering every About you question) returns the original two-column layout.
 function aboutDone(){ selTab(1, true); }
 $('aboutDone').addEventListener('click', aboutDone);
+// Run report: a progress panel covers the questions while the report builds behind it, then the panel and the questions give way to the report.
+function runReport(){
+  const key = JSON.stringify(readForm()), L = LAST_JOB && LAST_JOB.key === key ? LAST_JOB : null;
+  if (L && REPORT_FOR === L.key && $('reportBody').querySelector('.rp-cards')) return enterReport();   // already built: open at once
+  let ov = $('runOv'); if (ov) return;
+  ov = document.createElement('div'); ov.id = 'runOv'; ov.setAttribute('role', 'status'); ov.setAttribute('aria-live', 'polite');
+  ov.innerHTML = '<div class="rp-prog run-pnl"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="16" class="tr"/><circle cx="20" cy="20" r="16" class="fg" style="stroke-dasharray:100.53;stroke-dashoffset:100.53"/></svg><div><b>Building your report · 0%</b><span>Scoring your answers</span></div></div>';
+  document.body.appendChild(ov); document.body.classList.add('rv-wait'); requestAnimationFrame(() => requestAnimationFrame(() => ov.classList.add('on')));
+  const pnl = ov.firstChild, box = $('reportBody'), t0 = Date.now(); let raw0 = null, shown = 0;
+  const end = () => { document.body.classList.remove('rv-wait'); ov.classList.remove('on'); setTimeout(() => ov.remove(), 260); };
+  const tick = () => {
+    if (!document.body.classList.contains('rv')) return end();   // left the report before it finished
+    const src = box.querySelector('.rp-prog');
+    if (src){   // one 0 to 100% for the whole wait: scoring is the first 70%, building the report the last 30%, counted from when the panel opened
+      const f = (+src.getAttribute('aria-valuenow') || 0) / 100, raw = /report/.test(src.querySelector('b')?.textContent || '') ? .7 + .3 * f : src.classList.contains('spin') ? .7 : .7 * f;
+      if (raw0 == null) raw0 = raw;
+      const target = raw0 >= .999 ? 1 : Math.min(1, (raw - raw0) / (1 - raw0));
+      shown = Math.max(shown, Math.min(target, shown + .04));   // climbs smoothly, never backward
+      const pct = Math.round(shown * 100), c = 2 * Math.PI * 16, lab = src.querySelector('span')?.textContent || '';
+      pnl.innerHTML = `<svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="16" class="tr"/><circle cx="20" cy="20" r="16" class="fg" style="stroke-dasharray:${c.toFixed(2)};stroke-dashoffset:${(c * (1 - shown)).toFixed(2)}"/></svg><div><b>Building your report · ${pct}%</b><span>${esc(lab)}</span></div>`;
+    }
+    const ready = box.querySelector('.rp-cards') && !src && !box.classList.contains('stale');
+    if (ready || Date.now() - t0 > 180000){   // finished: run the ring the rest of the way, then reveal the report
+      const c = 2 * Math.PI * 16, fg = pnl.querySelector('.fg'), b = pnl.querySelector('b');
+      const fin = () => { shown = Math.min(1, shown + .1); if (fg){ fg.style.strokeDasharray = c.toFixed(2); fg.style.strokeDashoffset = (c * (1 - shown)).toFixed(2); }
+        if (b) b.textContent = `Building your report · ${Math.round(shown * 100)}%`; if (shown < 1) return setTimeout(fin, 35); scrollTo(0, 0); setTimeout(end, 250); };
+      return fin();
+    }
+    setTimeout(tick, 120);
+  };
+  setTimeout(() => { enterReport(); scrollTo(0, 0); tick(); }, 220);   // the panel is in place before the page changes behind it
+}
 // Header Done: About you closes (moving on to your ideal match the first time through); ideal match works like Finished the questionnaire.
 document.querySelectorAll('.hd-done').forEach(b => b.addEventListener('click', e => { e.stopPropagation();
   if (b.dataset.part === '1') return $('doneBtn').click();
   if (GRID.classList.contains('intro')) aboutDone(); else setPart(0, false); }));
 $('part1').addEventListener('change', () => { if (true) return; const F = readForm(); if (ABOUT_KEYS.every(k2 => F[k2] !== '' && F[k2] != null)) aboutDone(); });
-$('doneBtn').addEventListener('click', () => { if ($('resultsBtn').disabled){ const m = ['mySex','seek','zip'].map(id => $(id)).find(el => !el.value); (m || $('mySex')).focus(); return; } enterReport(); });   // needs the basics first
-$('resultsBtn').addEventListener('click', () => GRID.classList.contains('done') ? exitReport(0) : enterReport());
+$('doneBtn').addEventListener('click', () => { if ($('resultsBtn').disabled){ const m = ['mySex','seek','zip'].map(id => $(id)).find(el => !el.value); (m || $('mySex')).focus(); return; } runReport(); });   // needs the basics first
+$('resultsBtn').addEventListener('click', () => GRID.classList.contains('done') ? exitReport(0) : runReport());
 // Close report: when the cards are ready, the summary folds into its tile and the cards stay; before then it reads
 // "Finish the report" and returns to the questions.
 $('reportClose').addEventListener('click', () => {
@@ -3821,7 +3871,7 @@ const tryLoad = () => { const ok = loadAnswers($('loadCode').value); $('saveMsg'
     // Wait until scoring for these answers has started (it runs a moment after loading), then open the results.
     const key = JSON.stringify(readForm()), t0 = Date.now();
     const go = () => { const ready = (LAST_JOB && LAST_JOB.key === key) || (RUN_KEY && RUN_KEY.key === key && RUN_KEY.token === JOB);
-      if (ready) enterReport(); else if (Date.now() - t0 < 15000) setTimeout(go, 100); };
+      if (ready) runReport(); else if (Date.now() - t0 < 15000) setTimeout(go, 100); };
     setTimeout(go, 100);
   } } };
 $('loadBtn').addEventListener('click', tryLoad);
