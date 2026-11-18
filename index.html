@@ -50,8 +50,8 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .save{display:grid;gap:8px}
 .save p{margin:0 0 8px}
 .save{background:var(--sheet);border:1px solid var(--rule);border-radius:8px;padding:16px 18px;margin:4px 0 6px;display:grid;gap:18px}
-@media (min-width:768px){.save{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px} .save-col + .save-col{border-left:1px solid var(--rule);padding-left:28px;border-top:0;padding-top:0}}
-.save-col + .save-col{border-top:1px solid var(--rule);padding-top:18px}
+@media (min-width:768px){.save-act{align-self:stretch;height:auto;min-height:38px} .save{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px} .save-col + .save-col{border-left:1px solid var(--rule);padding-left:28px}}
+@media (max-width:767.98px){.save-col + .save-col{border-top:1px solid var(--rule);padding-top:18px}}
 .save-col{display:flex;flex-direction:column;gap:12px;min-width:0}
 .save-hd{display:flex;gap:10px;align-items:flex-start} .save-hd .hstep{margin-top:0} .save-hd .msi{font-size:16px}
 .save-hd h3{margin:0;font:700 16px/1.25 var(--display);color:var(--navy)} .save-hd p{margin:2px 0 0;font-size:12px;line-height:1.4;color:var(--muted)}
@@ -3770,10 +3770,16 @@ function loadAnswers(code){
   for (const id of ['myInc', 'incLo', 'incHi']){ const el = $(id); if (el.value) el.value = fmtMoney(String(Math.round(moneyNum(el.value) || 0)) || ''); }
   syncAll(); render(); setTimeout(layoutFields, 0); return true;
 }
-function fitBox(c){ if (!c) return; c.style.height = 'auto'; c.style.height = c.scrollHeight + 2 + 'px'; }
+function fitBox(c){ if (!c) return; c.style.height = 'auto'; c.style.height = c.scrollHeight + 2 + 'px'; if (c.id === 'saveCode' || c.id === 'loadCode') evenSave(); }
+// Side by side, the save and load boxes take the taller of the two heights so the sections line up.
+function evenSave(){
+  const a = document.getElementById('saveCode'), b = document.getElementById('loadCode'); if (!a || !b) return;
+  [a, b].forEach(c => { c.style.height = 'auto'; c.style.height = c.scrollHeight + 2 + 'px'; });
+  if (matchMedia('(min-width:768px)').matches){ const h = Math.max(a.offsetHeight, b.offsetHeight) + 'px'; a.style.height = h; b.style.height = h; }
+}
 ['loadCode'].forEach(id => { const c = document.getElementById(id); if (c) c.addEventListener('input', () => fitBox(c)); });
 window.addEventListener('resize', () => { fitBox(document.getElementById('saveCode')); fitBox(document.getElementById('loadCode')); });
-function refreshCode(){ const c = $('saveCode'); if (!c) return; const k = answersCode(); c.value = k; c.style.height = 'auto'; c.style.height = c.scrollHeight + 2 + 'px'; }
+function refreshCode(){ const c = $('saveCode'); if (!c) return; const k = answersCode(); c.value = k; evenSave(); }
 $('copyBtn').addEventListener('click', () => {
   refreshCode(); const c = $('saveCode'), done = () => { $('saveMsg').className = 'save-msg'; $('saveMsg').textContent = 'Copied. Keep it somewhere safe.'; };
   const pick = () => { c.focus(); c.select(); $('saveMsg').className = 'save-msg'; $('saveMsg').textContent = 'Selected. Press Ctrl+C or Cmd+C to copy.'; };
