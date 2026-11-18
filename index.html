@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,500,0,-25..0&icon_names=account_balance_wallet,arrow_downward,arrow_forward,balance,bookmark,contrast,dark_mode,diversity_3,favorite,filter_alt,groups,history,hourglass,info_i,insights,leaderboard,light_mode,location_city,man,map,more_horiz,my_location,near_me,percent,person,route,scatter_plot,search,star,swords,trending_up,tune,woman&display=block">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,500,0,-25..0&icon_names=account_balance_wallet,arrow_downward,arrow_forward,balance,bookmark,contrast,dark_mode,diversity_3,favorite,filter_alt,groups,history,home,hourglass,info_i,insights,leaderboard,light_mode,location_city,man,map,more_horiz,my_location,near_me,percent,person,route,scatter_plot,search,star,swords,trending_up,tune,woman&display=block">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
 /* Layout: federal statistical brief. Sticky result bar on top; questionnaire left, tabulated profile right; single column on phones. */
@@ -73,7 +73,13 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .instr-btn .pm::before{content:"";width:6px;height:6px;border-right:1.7px solid currentColor;border-bottom:1.7px solid currentColor;transform:translateY(-.5px) rotate(45deg);transition:transform .15s ease}
 .instr-btn[aria-expanded="true"] .pm::before,.instr-btn[aria-pressed="true"] .pm::before{transform:translateY(3.75px) rotate(-135deg)}
 @media (prefers-reduced-motion:reduce){.instr-btn .pm::before{transition:none}}
-#resultsBtn .pm,#editBtn .pm{display:none}   /* Edit and Results are plain links now; only the menus keep a chevron */
+#resultsBtn .pm,#editBtn .pm{display:none}
+.res-dd{position:relative;display:inline-flex;margin-left:-18px} #resultsBtn[hidden] + .res-dd{display:none} .res-caret{padding:6px 2px}
+.res-menu{position:absolute;left:-60px;top:calc(100% + 6px);z-index:70;width:300px;max-width:calc(100vw - 32px);padding:6px;background:var(--sheet);border:1px solid var(--rule);border-radius:10px;box-shadow:0 14px 36px rgba(10,16,30,.18),0 2px 6px rgba(10,16,30,.08)}
+.res-menu[hidden]{display:none} .res-menu button{display:flex;gap:12px;align-items:flex-start;width:100%;padding:10px;border:0;border-radius:7px;background:none;text-align:left;cursor:pointer;color:var(--ink)}
+.res-menu button:hover,.res-menu button:focus-visible{background:var(--accent-soft);outline:none} .res-menu .msi{flex:none;width:20px;font-size:20px;color:var(--navy);margin-top:1px;text-align:center}
+.res-menu b{display:block;font:700 14.5px/1.25 var(--display);color:var(--navy)} .res-menu small{display:block;font-size:12px;line-height:1.35;color:var(--muted);margin-top:2px}
+.sec-title{scroll-margin-top:12px} .sec-econ{border-top:0;padding-top:4px} .sec-nation{margin:20px 0 16px}   /* Edit and Results are plain links now; only the menus keep a chevron */
 .instr-panel{display:grid;grid-template-rows:0fr;transition:grid-template-rows .25s ease}
 .instr-panel.open{grid-template-rows:1fr}
 .instr-inner{overflow:hidden;font-size:13px;color:var(--ink);padding-inline:5px;margin-inline:-5px}
@@ -762,7 +768,12 @@ a.ext{color:var(--accent-ink);text-decoration:none}
     <div class="tools">
       <button type="button" class="instr-btn" id="instrBtn" aria-expanded="false" aria-controls="instrPanel">Instructions <span class="pm" aria-hidden="true">+</span></button>
       <button type="button" class="instr-btn" id="editBtn" hidden>Edit</button>
-      <button type="button" class="instr-btn" id="resultsBtn" aria-pressed="false" disabled hidden>Results <span class="pm" aria-hidden="true">+</span></button>
+      <button type="button" class="instr-btn" id="resultsBtn" aria-pressed="false" disabled hidden>Results <span class="pm" aria-hidden="true">+</span></button><span class="res-dd"><button type="button" class="instr-btn res-caret" id="resCaret" aria-haspopup="menu" aria-expanded="false" aria-controls="resMenu" aria-label="Go to a results section"><span class="pm" aria-hidden="true">+</span></button>
+        <div class="res-menu" id="resMenu" role="menu" hidden>
+          <button type="button" role="menuitem" data-sec="secEcon"><span class="msi" aria-hidden="true">favorite</span><span><b>The Dating Economy</b><small>Your odds, your competition and who would date you</small></span></button>
+          <button type="button" role="menuitem" data-sec="secNation"><span class="msi" aria-hidden="true">map</span><span><b>Your Chances Nationwide</b><small>Every county, scored based on your answers</small></span></button>
+          <button type="button" role="menuitem" data-sec="secDream"><span class="msi" aria-hidden="true">home</span><span><b>The American Dream</b><small>What a family of four takes, and how few men get there</small></span></button>
+        </div></span>
       <button type="button" class="instr-btn" id="saveBtn" aria-expanded="false" aria-controls="savePanel">Save <span class="pm" aria-hidden="true">+</span></button>
       <button type="button" class="instr-btn contact-btn" id="contactBtn" aria-expanded="false" aria-controls="contactPanel">Contact <span class="pm" aria-hidden="true">+</span></button>
     </div>
@@ -3470,9 +3481,9 @@ async function buildReport(F, A, C, fin, WB, live, X = {}){
       `<ul class="rp-minor">${small.map(r => `<li><span>${esc(r.label)}</span><b>${sgn(r.dc)}</b></li>`).join('')}</ul>`)); }
   cards.splice(0, cards.length, ...cardOrder(cards));   // the jump links and the cards share one order
   box.classList.remove('stale');
-  box.innerHTML = `${reportSummary(F, A, C, fin, WB, rows, X)}
-    <nav class="rp-jump" aria-label="Jump to a card">${cards.map(c => { const m = c.match(/class="rp-card ([\w-]+)".*?<\/span>([^<]+)<\/h3>/); return m ? `<a href="#" data-to="${m[1]}">${m[2]}</a>` : ''; }).join('')}${X && X.odds ? '<a href="#" data-to="c-map">Your chances across America</a>' : ''}</nav>
-    <div class="rp-cards" id="rpCards">${cards.join('')}</div>${familyFloor(F, dmapCard(F, X))}`;
+  box.innerHTML = `<div class="ff-title sec-title sec-econ" id="secEcon"><h2>The Dating Economy</h2><p>Where you stand where you live: who would date you, who you compete with and your odds.</p></div>${reportSummary(F, A, C, fin, WB, rows, X)}
+    <nav class="rp-jump" aria-label="Jump to a card">${cards.map(c => { const m = c.match(/class="rp-card ([\w-]+)".*?<\/span>([^<]+)<\/h3>/); return m ? `<a href="#" data-to="${m[1]}">${m[2]}</a>` : ''; }).join('')}</nav>
+    <div class="rp-cards" id="rpCards">${cards.join('')}</div>${(m => m ? `<div class="sec-nation"><div class="ff-title sec-title" id="secNation"><h2>Your Chances Nationwide</h2><p>The same you, scored in every metro and micro area in the country.</p></div>${m}</div>` : '')(dmapCard(F, X))}${familyFloor(F)}`;
   box.querySelectorAll('.rp-slot').forEach(sl => sl.dataset.adopt.split('|').forEach(sel => { const n = document.querySelector(sel); if (n && !box.contains(n)) sl.append(rpAdopt(n)); }));
   layoutCards(true); setTimeout(ffAfterRender, 350); setTimeout(dmapInit, 50); $('resultsBtn').hidden = false; REPORT_FOR = JSON.stringify(F); $('reportClose').textContent = SUM_MIN ? 'Open summary' : 'Close summary';
 }
@@ -3697,6 +3708,19 @@ document.querySelectorAll('.hd-done').forEach(b => b.addEventListener('click', e
 $('part1').addEventListener('change', () => { if (true) return; const F = readForm(); if (ABOUT_KEYS.every(k2 => F[k2] !== '' && F[k2] != null)) aboutDone(); });
 $('doneBtn').addEventListener('click', () => { if ($('resultsBtn').disabled){ const m = ['mySex','seek','zip'].map(id => $(id)).find(el => !el.value); (m || $('mySex')).focus(); return; } runReport(); });   // needs the basics first
 $('resultsBtn').addEventListener('click', () => GRID.classList.contains('done') ? exitReport(0) : runReport());
+// Results menu: the three sections of the report. Picking one opens the report if needed, then slides the page down to it.
+{ const btn = $('resCaret'), menu = $('resMenu');
+  const close = () => { menu.hidden = true; btn.setAttribute('aria-expanded', 'false'); };
+  btn.addEventListener('click', e => { e.stopPropagation(); const open = menu.hidden; menu.hidden = !open; btn.setAttribute('aria-expanded', String(open)); if (open){ menu.style.left = ''; const r = menu.getBoundingClientRect(), pad = 12;
+      if (r.left < pad) menu.style.left = (parseFloat(getComputedStyle(menu).left) + pad - r.left) + 'px'; else if (r.right > innerWidth - pad) menu.style.left = (parseFloat(getComputedStyle(menu).left) - (r.right - innerWidth + pad)) + 'px';
+      menu.querySelector('button').focus(); } });
+  document.addEventListener('click', e => { if (!menu.hidden && !menu.contains(e.target)) close(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !menu.hidden){ close(); btn.focus(); } });
+  const slide = id => { const el = document.getElementById(id); if (!el) return false; el.scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start'}); return true; };
+  menu.addEventListener('click', e => { const b = e.target.closest('[data-sec]'); if (!b) return; close(); const id = b.dataset.sec;
+    if (document.body.classList.contains('rv') && !$('runOv') && slide(id)) return;
+    if (!document.body.classList.contains('rv')) runReport();
+    const t0 = Date.now(), wait = () => { if (!$('runOv') && document.body.classList.contains('rv') && document.getElementById(id)) return setTimeout(() => slide(id), 120); if (Date.now() - t0 < 120000) setTimeout(wait, 150); }; wait(); }); }
 // Close report: when the cards are ready, the summary folds into its tile and the cards stay; before then it reads
 // "Finish the report" and returns to the questions.
 $('reportClose').addEventListener('click', () => {
@@ -4324,10 +4348,10 @@ function ffNearby(F, me){
     <p class="rp-cl">${lede}</p><div class="rp-body"><ol class="ff-near">${rows}</ol>
     <p class="ff-note">Cheapest first. Areas within 250 miles, including smaller micro areas.</p></div></section>`;
 }
-function familyFloor(F, mapHtml = ''){
+function familyFloor(F){
   const me = ffArea(F);
-  return `<div class="ff" id="famFloor"><div class="ff-title"><h2>The family floor</h2><p>What it takes to marry, buy a home and raise two kids today, and how few men get there.</p></div>
-    <div class="ff-grid">${ffRanking(me, F)}${mapHtml}${ffGauntlet(F)}${ffBudget(me)}<div class="ff-col">${ffPartner(F, me)}${ffNearby(F, me)}${ffSince(F, me)}</div></div></div>`;
+  return `<div class="ff" id="famFloor"><div class="ff-title sec-title" id="secDream"><h2>The American Dream</h2><p>What it takes to marry, buy a home and raise two kids today, and how few men get there.</p></div>
+    <div class="ff-grid">${ffRanking(me, F)}${ffGauntlet(F)}${ffBudget(me)}<div class="ff-col">${ffPartner(F, me)}${ffNearby(F, me)}${ffSince(F, me)}</div></div></div>`;
 }
 // ---------- Your chances map: every U.S. county colored by your chance in the dating economy in its metro or micro area.
 // Exact Census 2023 county boundaries (us-counties.json), drawn over an OpenFreeMap basemap with MapLibre GL. Counties outside
@@ -4371,7 +4395,7 @@ function dmapText(X){
 function dmapCard(F, X){
   if (!X || !X.odds || X.mine == null || !X.odds.get(X.mine)) return '';
   const T = dmapText(X);
-  return `<section class="rp-card c-map dm-card ff-wide" id="dmap"><h3><span class="msi" aria-hidden="true">map</span>Your chances across America</h3><p class="rp-cl" id="dmapLede">${T.lede}</p>
+  return `<section class="rp-card c-map dm-card" id="dmap"><h3><span class="msi" aria-hidden="true">map</span>Every county, scored based on your answers</h3><p class="rp-cl" id="dmapLede">${T.lede}</p>
     <div class="rp-body"><div class="dm-wrap"><div class="dm-box" id="dmapBox" role="img" aria-label="Map of the United States by county, colored by your chances in the dating economy"></div>
     <button type="button" class="dm-homebtn" id="dmapHome"><span class="msi" aria-hidden="true">my_location</span>Your area</button><p class="dm-status" id="dmapStatus" hidden></p></div>
     <div class="dm-leg" id="dmapLeg" aria-hidden="true">${T.legend}</div>
