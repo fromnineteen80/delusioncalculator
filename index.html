@@ -282,6 +282,7 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
 .pb-t{height:4px;background:var(--track);border-radius:2px;overflow:hidden;margin:5px 0 3px} .pb-t i{display:block;height:100%;background:var(--accent)}
 .pb.vhigh .pb-t i{background:var(--good)} .pb.high .pb-t i{background:var(--hi)} .pb.mod .pb-t i{background:var(--fair)} .pb.low .pb-t i{background:var(--long)} .pb.vlow .pb-t i{background:var(--poor)}
 .pb.vhigh .pb-l b{color:var(--good)} .pb.high .pb-l b{color:var(--hi)} .pb.mod .pb-l b{color:var(--fair-ink)} .pb.low .pb-l b{color:var(--long)} .pb.vlow .pb-l b{color:var(--poor)}
+.pb-d{margin:4px 0 0;font-size:11.5px;line-height:1.4;color:var(--ink);opacity:.8}
 .pb-e{display:flex;justify-content:space-between;font-size:11.5px;line-height:1.4;color:var(--muted)}
 .rp-core{font-weight:600}
 .rp-lead{margin:14px 0 4px;font-size:13px;color:var(--ink)}
@@ -829,7 +830,7 @@ a.ext{color:var(--accent-ink);text-decoration:none}
 <form id="f" autocomplete="off" class="parts">
 
   <section class="part" id="part1">
-    <header class="part-head"><span class="step">1</span><div><h2>About you <small class="qprog" id="prog1"></small></h2><p>The reward for honesty is better data results.</p></div><button type="button" class="hd-done" data-part="0">Done</button><button type="button" class="pm" aria-expanded="true" aria-controls="pb1" aria-label="Show or hide About you">–</button></header>
+    <header class="part-head"><span class="step">1</span><div><h2>About you <small class="qprog" id="prog1"></small></h2><p>Honest answers get you better results.</p></div><button type="button" class="hd-done" data-part="0">Done</button><button type="button" class="pm" aria-expanded="true" aria-controls="pb1" aria-label="Show or hide About you">–</button></header>
     <div class="part-body" id="pb1"><div class="part-inner">
 
     <div class="sec">
@@ -1047,8 +1048,8 @@ a.ext{color:var(--accent-ink);text-decoration:none}
       <p><b>Known limits.</b> Same-sex daters are judged by the preferences of the sex judging them (Bailey 1994); height has no effect for them because no study gives a usable figure for same-sex height preferences. The straight, gay and lesbian counts in the top bar include bisexual people. Puerto Rico and other territories aren’t covered. Alaska uses its statewide vote. Seven Connecticut metro areas use state religion rates because their boundaries changed after the 2020 Religion Census. Middle Eastern or North African isn’t a Census race category yet. Height, past partners and children aren’t published locally. The weight refusal figure is from 1998, validated against 2022–2023 surveys. The yearly relationship rates come from a small follow-up study. Sex is limited to the two categories the Census publishes.</p>
       <p><b>Fixes coming.</b> Counties with prisons, military barracks, college dorms and nursing homes count those residents among local singles, so their counts run slightly high until we remove people living in group quarters. Serious mental illness, disability and felony records rest on state rates and few studies; we will add local and measured sources as they appear. The strength of the four aiming-high rules and the BMI and exercise overlap are our estimates, to be replaced with measured figures. Traits outside the Census and CDC records are linked only where noted above; the rest are multiplied as independent until measured overlaps are added. Long reports take a few seconds to build, and we are making them faster.</p>
       <p><b>What this is.</b> An estimate of scale built from public data, not a list of real people.</p>
-      <p><b>Your chances across America.</b> The map scores your same answers in all 925 metro and micro areas and colors every county in an area by your chance in the dating economy there. Counties outside any metro or micro area are gray. The colors are set to your own results: seven steps from red to green, each holding about the same number of areas, so the map shows where you’d do better or worse whether your chances run high or low everywhere. Metro areas use the same scoring as the Best 10 and Worst 10 lists; micro areas are scored after the report opens.</p>
-      <p><b>The family floor.</b> Each area’s floor is the household income a married couple with two kids, ages 1 and 4, needs to cover one budget after taxes: a typical 4-bedroom home with 10% down at 7.2% for 30 years, mortgage insurance, property tax, home insurance and 1% a year in upkeep; daycare for two; two cars; groceries, dining out and household goods scaled to local prices; health and life insurance; student loans; minimum payments on the typical household’s credit card balance; vacation and celebrations; an emergency fund; and 15% of pay to retirement, up to the 401(k) limit. Taxes use 2026 federal rules, state and county income taxes from PolicyEngine, typical local wage taxes in Ohio (2%), Pennsylvania (1%), Kentucky (1%) and Maryland counties (3%), but not a single city’s rate such as New York City’s or Philadelphia’s, since home values cover the whole metro, and Social Security and Medicare. Home values are Zillow’s typical 4-bedroom value for the metro; for 69 areas Zillow doesn’t cover, mostly micro areas, the state’s 4-bedroom value is scaled by the area’s median home value. Insurance, daycare, gas and electric use state figures. The 200 largest metros are ranked by 2025 population. The 2019 comparison reruns the same budget for the same month of 2019 with Zillow’s 2019 value and Freddie Mac’s 2019 average rate of 3.9%; every other cost and the tax brackets move back by the Consumer Price Index.</p>
+      <p><b>Your Chances Nationwide.</b> The map scores your same answers in all 925 metro areas and micro areas (smaller cities and towns the Census groups with their surrounding counties) and colors every county in an area by your chance in the dating economy there. Counties outside any metro or micro area are gray. The colors are set to your own results: seven steps from red to green, each holding about the same number of areas, so the map shows where you’d do better or worse whether your chances run high or low everywhere. Metro areas use the same scoring as the Best 10 and Worst 10 lists; micro areas are scored after the report opens.</p>
+      <p><b>The American Dream.</b> Each area’s family floor is the household income a married couple with two kids, ages 1 and 4, needs to cover one budget after taxes: a typical 4-bedroom home with 10% down at 7.2% for 30 years, mortgage insurance, property tax, home insurance and 1% a year in upkeep; daycare for two; two cars; groceries, dining out and household goods scaled to local prices; health and life insurance; student loans; minimum payments on the typical household’s credit card balance; vacation and celebrations; an emergency fund; and 15% of pay to retirement, up to the 401(k) limit. Taxes use 2026 federal rules, state and county income taxes from PolicyEngine, typical local wage taxes in Ohio (2%), Pennsylvania (1%), Kentucky (1%) and Maryland counties (3%), but not a single city’s rate such as New York City’s or Philadelphia’s, since home values cover the whole metro, and Social Security and Medicare. Home values are Zillow’s typical 4-bedroom value for the metro; for 69 areas Zillow doesn’t cover, mostly micro areas, the state’s 4-bedroom value is scaled by the area’s median home value. Insurance, daycare, gas and electric use state figures. The 200 largest metros are ranked by 2025 population. The 2019 comparison reruns the same budget for the same month of 2019 with Zillow’s 2019 value and Freddie Mac’s 2019 average rate of 3.9%; every other cost and the tax brackets move back by the Consumer Price Index.</p>
       <p><b>The American Dream Gauntlet.</b> Start with 1,000 men turning 37 and apply the published share who clear each step to the men still in the running. Three steps combine more than one published figure: out-earning the women he’d marry, marrying by 37, and earning $250,000 together. Men who reach these milestones after 37 aren’t counted. Your path uses your education and income: a bachelor’s degree and earnings above the $72,436 median for women with one puts you on the career-growth path.</p>
       <p><b>Sources.</b></p>
       <ul class="srclist">
@@ -1066,13 +1067,13 @@ a.ext{color:var(--accent-ink);text-decoration:none}
         <li><b>Sex ratios and history:</b> Emlen &amp; Oring (1977), Science; Guttentag &amp; Secord (1983), <i>Too Many Women?</i>; Wilder, Mobasher &amp; Hammer (2004), Molecular Biology and Evolution; Karmin et al. (2015), Genome Research; Zeng, Aw &amp; Feldman (2018), Nature Communications; Hajnal (1965), European marriage patterns in perspective; Henrich, Boyd &amp; Richerson (2012), Philosophical Transactions of the Royal Society B; Lichter, Price &amp; Swigert (2019), Journal of Marriage and Family; Rudder (2014), <i>Dataclysm</i>; Census Bureau (2019), Fertility of Men and Women.</li>
         <li><b>Surveys:</b> Pew Research Center dating surveys 2019–2024; Survey Center on American Life 2023; Sobal &amp; Bursztyn 1998; eharmony 2022; YouGov 2023; Match Singles in America 2016; Ipsos 2019; Perrone 2022; Lichter et al. 2005; Stewart, Manning &amp; Smock 2003; Shannon et al. 2017; BJS Prisoners in 2023; Gallup LGBTQ+ identification 2024; Pew Research Center 2023 on sexual orientation.</li>
       </ul>
-      <p class="ver">Version 0.11.1 · Updated October 29, 2026</p>
+      <p class="ver">Updated November 2026</p>
     </div>
     <p class="contact-m">For more information, email <a href="mailto:info@datingeconomycalculator.com?subject=Question%20about%20You%27re%20All%20Delusional%20Calculator">info@datingeconomycalculator.com</a>.</p></div></div></div>
   </section>
 </div>
 </div>
-<footer class="foot"><p class="tagline-foot">It’s highly likely <em class="you">you</em> need a reality check about today’s dating economy. <em class="cta">Take our questionnaire and find out.</em></p><div class="foot-row"><p>Best used full screen in your web browser, outside the Claude app.</p><p><a class="foot-mail" href="mailto:info@datingeconomycalculator.com?subject=Question%20about%20You%27re%20All%20Delusional">info@datingeconomycalculator.com</a></p></div><div class="foot-theme"><div class="swatches" role="radiogroup" aria-label="Color theme"><button type="button" class="sw" role="radio" data-p="calculator" aria-label="Calculator theme" title="Calculator" style="background:#687286"></button><button type="button" class="sw" role="radio" data-p="clay" aria-label="Clay theme" title="Clay" style="background:#c96442"></button><button type="button" class="sw" role="radio" data-p="daylight" aria-label="Daylight theme" title="Daylight" style="background:#7088a6"></button><button type="button" class="sw" role="radio" data-p="linen" aria-label="Linen theme" title="Linen" style="background:#3f7f73"></button><button type="button" class="sw" role="radio" data-p="glacier" aria-label="Glacier theme" title="Glacier" style="background:#2a9bb5"></button><button type="button" class="sw" role="radio" data-p="sage" aria-label="Sage theme" title="Sage" style="background:#7a8b5c"></button><button type="button" class="sw" role="radio" data-p="midnight" aria-label="Midnight theme" title="Midnight" style="background:#9d8cf0"></button></div><div class="modes" role="radiogroup" aria-label="Light or dark"><button type="button" role="radio" data-m="light" aria-label="Light" title="Light"><span class="msi">light_mode</span></button><button type="button" role="radio" data-m="dark" aria-label="Dark" title="Dark"><span class="msi">dark_mode</span></button><button type="button" role="radio" data-m="auto" aria-label="Match my device" title="Match my device"><span class="msi">contrast</span></button></div></div></footer>
+<footer class="foot"><p class="tagline-foot">It’s highly likely <em class="you">you</em> need a reality check about today’s dating economy. <em class="cta">Take our questionnaire and find out.</em></p><div class="foot-row"><p><a class="foot-mail" href="mailto:info@datingeconomycalculator.com?subject=Question%20about%20You%27re%20All%20Delusional">info@datingeconomycalculator.com</a></p></div><div class="foot-theme"><div class="swatches" role="radiogroup" aria-label="Color theme"><button type="button" class="sw" role="radio" data-p="calculator" aria-label="Calculator theme" title="Calculator" style="background:#687286"></button><button type="button" class="sw" role="radio" data-p="clay" aria-label="Clay theme" title="Clay" style="background:#c96442"></button><button type="button" class="sw" role="radio" data-p="daylight" aria-label="Daylight theme" title="Daylight" style="background:#7088a6"></button><button type="button" class="sw" role="radio" data-p="linen" aria-label="Linen theme" title="Linen" style="background:#3f7f73"></button><button type="button" class="sw" role="radio" data-p="glacier" aria-label="Glacier theme" title="Glacier" style="background:#2a9bb5"></button><button type="button" class="sw" role="radio" data-p="sage" aria-label="Sage theme" title="Sage" style="background:#7a8b5c"></button><button type="button" class="sw" role="radio" data-p="midnight" aria-label="Midnight theme" title="Midnight" style="background:#9d8cf0"></button></div><div class="modes" role="radiogroup" aria-label="Light or dark"><button type="button" role="radio" data-m="light" aria-label="Light" title="Light"><span class="msi">light_mode</span></button><button type="button" role="radio" data-m="dark" aria-label="Dark" title="Dark"><span class="msi">dark_mode</span></button><button type="button" role="radio" data-m="auto" aria-label="Match my device" title="Match my device"><span class="msi">contrast</span></button></div></div></footer>
 </div>
 
 <script>
@@ -2559,8 +2560,8 @@ function ratioBlock(F, C, A, CF){
   // Each bar's title carries its ratio, larger group first (e.g. 17:1 women to men).
   const rt = x => (x >= 10 ? Math.round(x) : Math.round(x * 10) / 10) + ':1', rtl = (x, a, b) => a === b ? `${rt(x)} competitors to each ${a === 'men' ? 'man' : 'woman'} you want` : x >= 1 ? `${rt(x)} ${a} to ${b}` : `${rt(1 / x)} ${b} to ${a}`;
   const rows = [...ERAS.map(e => ({v: leftOver(e.r), label: `${e.name} · ${rtl(e.r, 'women', 'men')}`, note: e.note, cls: ''})),
-    ...(F.mySex === F.T ? [] : [{v: lo(rawR), label: `${area} operational sex ratio: all single ${F.mySex === F.T ? (you === 'men' ? 'gay men' : 'lesbians') : 'straight ' + them + ' and ' + you} · ${rtl(rawR, you, them)}`, note: `${(rawComp / rawPool).toFixed(2)} single ${you} looking for every single ${them === 'men' ? 'man' : 'woman'} looking here; interest acts as if ${att.toFixed(1)}× as many compete.`, cls: 'mk'}]),
-    {v: lo(myR), label: `Your filtered dating economy in ${area} · ${rtl(myR, you, them)}`, note: `${(C.compN / C.poolN).toFixed(2)} competitors for every ${them === 'men' ? 'man' : 'woman'} you want, ${myR.toFixed(1)} once interest is counted.`, cls: 'mk me'}].sort((a, b) => a.v - b.v);
+    ...(F.mySex === F.T ? [] : [{v: lo(rawR), label: `Everyone single and looking in ${area}, counting where interest goes · ${rtl(rawR, you, them)}`, note: `${(rawComp / rawPool).toFixed(2)} single ${you} are looking for every single ${them === 'men' ? 'man' : 'woman'} looking here, the operational sex ratio. Because most interest goes to a few, it plays out as if ${att.toFixed(1)} times as many were competing.`, cls: 'mk'}]),
+    {v: lo(myR), label: `Your filtered dating economy in ${area} · ${rtl(myR, you, them)}`, note: `${(C.compN / C.poolN).toFixed(2)} ${you} compete for every ${them === 'men' ? 'man' : 'woman'} you want. Counting where interest actually goes, it plays out like ${myR.toFixed(1)} to one.`, cls: 'mk me'}].sort((a, b) => a.v - b.v);
   const e = near(lo(myR));
   const sentence = myR > 1
     ? `In ${area}, there aren’t enough of the ${them} you want to go around. Even if every single adult paired up, ${pct(lo(myR))} of the ${you} competing for ${them} would be left out. That’s closest to ${plainEra(e)}.`
@@ -2574,7 +2575,7 @@ function ratioBlock(F, C, A, CF){
     ${F.mySex === F.T ? '' : `<div class="sxr-row"><div class="sxr-t">High-status ratio<span>${fmtX(EL.men)} high-status men, ${fmtX(EL.women)} highly sought-after women</span></div><div class="sxr-v">${Math.round(EL.men) >= 1 ? fx(EL.women / EL.men) : '—'}<small>women per man</small></div></div>`}
   </div>`;
   const band = v => v < .25 ? 'var(--good)' : v < .5 ? 'var(--fair)' : v < .75 ? 'var(--long)' : 'var(--poor)';   // green, yellow, orange, red by share left over
-  return `<div class="ratio"><p class="gl-h">Sex ratios</p><p class="ghead">Men per woman in the market around you, competitors per ${them === 'men' ? 'man' : 'woman'} you want in the market you defined, and women per man among the people most in demand.</p>${sr}<div class="ratio-hist"><p class="gl-h">Across history</p><p class="ghead">${sentence}</p>
+  return `<div class="ratio"><p class="gl-h">Sex ratios</p><p class="ghead">The balance of men and women around you, counted by heads. The first line counts everyone single and looking where you live. The second counts only your competition for the ${them} you want. The last compares the most sought-after men and women.</p>${sr}<div class="ratio-hist"><p class="gl-h">Across history</p><p class="ghead">${sentence}</p>
     <ul class="ratio-list">${rows.map(r2 => `<li class="${r2.cls}"><div class="rl"><span>${esc(r2.label)}</span><b>${pct(r2.v)}</b></div><div class="rb"><i style="width:${Math.max(1, r2.v * 100).toFixed(1)}%;background:${band(r2.v)}"></i></div><div class="rn">${esc(r2.note)}</div></li>`).join('')}</ul></div></div>`;
 }
 function adultsIn(codes, S){ return codes.reduce((a, i) => a + ((D.cbsa[i].ad || {})[S] || 0), 0); }
@@ -2893,7 +2894,7 @@ async function compJob(F, A, rows, mine, base, fin, w, token, C0, WB){
         : C.pct >= .6 ? ' You stand out against your competition, so your expectations, not your appeal, are what limit you most.'
         : C.pct < .4 ? ' Loosening your expectations widens your options, but your standing against your competition limits you more.'
         : ' Both your expectations and your standing against your competition shape your options.';
-      return `<div class="mutual first"><p class="ghead"><b>Mutual matches.</b> ${head}${tail} The grid below is scaled to demonstrate the field of ${fmtN(oTot)} local single ${oriWord(F.T, F.mySex)}.</p></div>`; })() : ''}
+      return `<div class="mutual first"><p class="ghead"><b>Mutual matches.</b> ${head}${tail} ${oTot >= GRID_N ? `Each square in the grid below stands for about ${fmtN(oTot / GRID_N)} of the ${fmtN(oTot)} local single ${oriWord(F.T, F.mySex)}.` : `Each square in the grid below is one of the ${fmtN(oTot)} local single ${oriWord(F.T, F.mySex)}.`}</p></div>`; })() : ''}
     ${rankHtml}
     <div class="odds mkt-odds ${ok}">
       <div class="o-head"><b>${chanceTxt(ch)}</b><span class="of">/ 100</span>${pill(ch)}<span>your chances in the dating economy</span></div>
@@ -3106,8 +3107,9 @@ function reportSummary(F, A, C, fin, WB, rows, X){
   const near = byLo.find(e => Math.abs(lo100(e) - dim.comp) <= 6), above = byLo.find(e => lo100(e) > dim.comp + 6), below = byLo.slice().reverse().find(e => lo100(e) < dim.comp - 6);
   const eraS = near ? pick([`That’s about what ${near.s} looked like.`, `History has a match for that: ${near.s}.`])
     : above && below ? `That’s steeper than ${below.s}, though not as bad as ${above.s}.` : below ? `That’s steeper than ${below.s}.` : '';
-  const compS = rIA > 1 ? pick([`On paper there are ${raw.toFixed(1)} ${you} of competition for each ${F.looking !== false ? 'actively dating ' : ''}${them1} you’d pursue. Most of the attention goes to the strongest few, so in practice it’s closer to ${rIA.toFixed(1)} to one, and at that ratio about ${Math.round(dim.comp)}% of your competition ends up with nobody.`,
-      `By the numbers it’s ${raw.toFixed(1)} ${you} of competition for each ${F.looking !== false ? 'actively dating ' : ''}${them1} you’d pursue. Count who actually gets the attention and it’s closer to ${rIA.toFixed(1)}, which leaves about ${Math.round(dim.comp)}% of your competition with nobody.`]) + (eraS ? ' ' + eraS : '')
+  const perS = r => r < 1 ? `about ${Math.max(1, Math.round(r * 10))} ${you} competing for every 10` : r < 10 ? `about ${r.toFixed(1)} ${you} competing for each` : `about ${Math.round(r)} ${you} competing for each`;
+  const compS = rIA > 1 ? pick([`On paper there are ${perS(raw)} ${F.looking !== false ? 'actively dating ' : ''}${raw < 1 ? them : them1} you’d pursue. Most of the attention goes to the strongest few, so in practice it’s closer to ${rIA.toFixed(1)} to one, and at that ratio about ${Math.round(dim.comp)}% of your competition ends up with nobody.`,
+      `By the numbers there are ${perS(raw)} ${F.looking !== false ? 'actively dating ' : ''}${raw < 1 ? them : them1} you’d pursue. Count who actually gets the attention and it’s closer to ${rIA.toFixed(1)}, which leaves about ${Math.round(dim.comp)}% of your competition with nobody.`]) + (eraS ? ' ' + eraS : '')
     : `There are enough of these ${them} to go around, even after the strongest ${you} take their share.`;
   // drivers, each told through what it actually does
   const sorted = rows.slice().sort((a, b) => Math.abs(b.dc) - Math.abs(a.dc)).filter(r => Math.abs(r.dc) >= .3);
@@ -3138,13 +3140,13 @@ function reportSummary(F, A, C, fin, WB, rows, X){
   const sum = side => rows.filter(r => r.side === side && r.dc < 0).reduce((a, r) => a + r.dc, 0);
   const lim = [['you', sum('you')], ['want', sum('want')], ['market', sum('market')]].sort((a, b) => a[1] - b[1])[0];
   const limS = lim[1] > -1 || verdictS ? '' : lim[0] === 'want' ? pick(['Most of the damage is coming from your list, not from you.', 'Your expectations are costing you more than anything about you.'])
-    : lim[0] === 'you' ? pick(['It’s your own traits, more than what you’re asking for, that hold your number down.', 'Your list isn’t the main problem. Your own traits are.']) : 'The market itself is the biggest drag here.';
+    : lim[0] === 'you' ? pick(['It’s your own traits, more than what you’re asking for, that hold your number down.', 'Your list isn’t the main problem. Your own traits are.']) : (dns[0] && dns[0].side === 'market' ? '' : 'Where you live is holding you back more than anything about you.');
   // The persona's description, built from where this person actually falls on each measure, so every phrase is true for them.
   const appP = dim.appeal >= 80 ? 'you’re near the top of the field' : dim.appeal >= 60 ? 'you outrank most of the competition' : dim.appeal >= 40 ? 'you’re in the middle of the pack' : 'most of the competition outranks you';
   const selP = dim.select >= 99 ? `your list rules out almost everyone who’d date you` : dim.select >= 80 ? `your list rules out most of the ${them} who’d date you` : dim.select >= 50 ? `your list rules out about half of the ${them} who’d date you` : 'your list is easy to meet';
   const compP = dim.comp >= 60 ? 'the field is crowded' : dim.comp >= 40 ? 'the competition is steady' : 'there’s room to spare';
   const endP = ratio < .2 ? 'These odds don’t come back unless something changes.' : ratio < .87 ? 'There’s ground to make up.' : ratio < 1.15 ? `You’re about where a typical ${one} your age is.` : 'The math is on your side.';
-  const personaS = `${cap(selP)}, ${appP}, and ${compP}. ${endP}`;
+  const personaS = `${cap(selP)}. ${cap(appP)}, and ${compP}.`;
   const p1 = `${personaS} ${rankS} ${oddsS}`;
   const p2 = [listS, compS, drvS, limS].filter(Boolean).join(' ');
   // what would change it
@@ -3168,9 +3170,14 @@ function reportSummary(F, A, C, fin, WB, rows, X){
   } else p3 = `Nothing you could change here moves your chances by a full point. This is where you stand.`;
   // Color uses the page's odds scale (outcome tiers); on Selectivity and Competition higher is worse for you, so the color reads 100 − value.
   const tierOf = g => g >= 80 ? 'vhigh' : g >= 60 ? 'high' : g >= 40 ? 'mod' : g >= 20 ? 'low' : 'vlow';
-  const bar = (label, v, lo, hi, worse) => `<div class="pb ${tierOf(worse ? 100 - v : v)}"><div class="pb-l"><span>${label}</span><b>${v >= 99.5 && v < 100 ? '>99%' : v > 0 && v < .5 ? '<1%' : Math.round(v) + '%'}</b></div><div class="pb-t"><i style="width:${Math.max(1, v).toFixed(1)}%"></i></div><div class="pb-e"><span>${lo}</span><span>${hi}</span></div></div>`;
-  const bars = [bar('Your appeal', dim.appeal, 'Behind others', 'Ahead of others'), bar('Your selectivity', dim.select, 'Open', 'Selective', true), bar('Your local market', dim.market, 'Works against you', 'Favors you'),
-    bar('Competition with others', dim.comp, 'Even', 'Steep', true), bar('Your odds vs. typical', dim.fit, 'Below typical', 'Above typical'), bar('Room to improve', dim.lev, 'Few good moves', 'Big moves available')].join('');
+  const bar = (label, v, lo, hi, worse, d) => `<div class="pb ${tierOf(worse ? 100 - v : v)}"><div class="pb-l"><span>${label}</span><b>${v >= 99.5 && v < 100 ? '>99%' : v > 0 && v < .5 ? '<1%' : Math.round(v) + '%'}</b></div><div class="pb-t"><i style="width:${Math.max(1, v).toFixed(1)}%"></i></div><div class="pb-e"><span>${lo}</span><span>${hi}</span></div>${d ? `<p class="pb-d">${d}</p>` : ''}</div>`;
+  const r0 = v => Math.round(v);
+  const bars = [bar('Your appeal', dim.appeal, 'Behind others', 'Ahead of others', false, `You outrank ${r0(dim.appeal)}% of the ${you} competing for the same ${them}.`),
+    bar('Your selectivity', dim.select, 'Open', 'Selective', true, `Your list rules out ${r0(dim.select)}% of the ${them} who would date you.`),
+    bar('Your local market', dim.market, 'Works against you', 'Favors you', false, `50% is the national average. Above 50% means less competition here than typical.`),
+    bar('Competition with others', dim.comp, 'Even', 'Steep', true, `${r0(dim.comp)}% of the ${you} chasing the same ${them} would end up with nobody.`),
+    bar('Your odds vs. typical', dim.fit, 'Below typical', 'Above typical', false, `50% means the same odds as a typical ${one} your age. Above 50% is better.`),
+    bar('Room to improve', dim.lev, 'Few good moves', 'Big moves available', false, `How much your best single change, or a move to a better city, would raise your chances.`)].join('');
   return `<div class="rp-sum${SUM_MIN ? ' min' : ''}" id="rpSum"><span class="rp-ribbon"><svg class="rb-pin" viewBox="2 3 20 18.35" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="#fff"/><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" class="rb-in" transform="translate(12 11.6) scale(.45) translate(-12 -12)"/></svg><span class="rb-t">${area}</span></span><div class="rp-type"><div><span>Your dating persona</span><h3>${pname}</h3></div><button type="button" class="pm" id="rpSumTog" aria-expanded="${!SUM_MIN}" aria-label="Show or hide the summary">${SUM_MIN ? '+' : '–'}</button></div>
     ${(() => { const ow = oriWord(F.T, F.mySex), wdm = WB != null ? WB : fin, st = (n, l) => `<div><b>${fmtN(Math.max(0, n))}</b><span>${l}</span></div>`;
       return `<div class="rp-mini">${st(oriCount(A.codes, F, F.T, F.mySex), ow.includes(' ') ? `single ${ow.replace(' ', ' local ')}` : `single local ${ow}`)}${st(wdm, `${them} who would date you`)}${st(C.poolN, `${them} you’d pursue`)}${st(C.compN, `${you} competing for them`)}</div>`; })()}
@@ -3243,15 +3250,16 @@ async function buildReport(F, A, C, fin, WB, live, X = {}){
   const sgn = v => (v >= 0 ? '+' : '−') + Math.abs(v).toFixed(Math.abs(v) < 10 ? 1 : 0);
   // What each row did, in this person's numbers: who it adds or removes, and where it moves their rank.
   const chan = r => { const b = [];
-    if (r.side === 'want' && r.pool0 > 0 && Math.abs(r.pool0 - C.poolN) / r.pool0 >= .01) b.push(`${fmtN(C.poolN)} → ${fmtN(r.pool0)} ${them} you’d pursue without it`);
-    if (Math.abs(r.dm) >= .01 && r.would0 != null) b.push(`${fmtN(fin)} → ${fmtN(r.would0)} mutual matches without it`);
-    if (C.answered && r.pct0 != null && Math.abs(C.pct - r.pct0) >= .02) b.push(`outrank ${P(C.pct)}% → ${P(r.pct0)}% of your competition without it`);
-    if (r.side === 'want' && r.dc > 0 && r.pool0 > C.poolN) b.push(`the ${them} it keeps are less contested`);
-    return b.join(' · '); };
+    if (r.side === 'want' && r.pool0 > 0 && Math.abs(r.pool0 - C.poolN) / r.pool0 >= .01) b.push(`you’d pursue ${fmtN(r.pool0)} ${them} instead of ${fmtN(C.poolN)}`);
+    if (Math.abs(r.dm) >= .01 && r.would0 != null) b.push(`you’d have ${fmtN(r.would0)} mutual matches instead of ${fmtN(fin)}`);
+    if (C.answered && r.pct0 != null && Math.abs(C.pct - r.pct0) >= .02) b.push(`you’d outrank ${P(r.pct0)}% of your competition instead of ${P(C.pct)}%`);
+    let t = b.length ? 'Without it, ' + (b.length > 1 ? b.slice(0, -1).join(', ') + ' and ' + b[b.length - 1] : b[0]) + '.' : '';
+    if (r.side === 'want' && r.dc > 0 && r.pool0 > C.poolN) t += (t ? ' ' : '') + `The ${them} it keeps face less competition.`;
+    return t; };
   const big = r => Math.abs(r.dc) >= 1, mine = rows.filter(r => r.side === 'you'), asks = rows.filter(r => r.side === 'want');
   const rowsOf = list => { const L = list.filter(big), mx = Math.max(1, ...L.map(r => Math.abs(r.dc)));
     return L.map(r => `<li class="rk-row ${r.dc >= 0 ? 'up' : 'dn'}"><div class="rk-m"><div class="rk-l">${esc(r.label)}</div>
-      <div class="rk-bar"><i style="width:${Math.max(2, Math.abs(r.dc) / mx * 100).toFixed(1)}%"></i></div>${chan(r) ? `<div class="rk-w">${chan(r).split(' · ').map(t => `<span>${t}</span>`).join('<span class="sep"> · </span>')}</div>` : ''}</div>
+      <div class="rk-bar"><i style="width:${Math.max(2, Math.abs(r.dc) / mx * 100).toFixed(1)}%"></i></div>${chan(r) ? `<div class="rk-w"><span>${chan(r)}</span></div>` : ''}</div>
       <div class="rk-v"><b>${sgn(r.dc)}</b><small>points</small></div></li>`).join(''); };
   const ptsC = v => { const x = Math.abs(v); return `${x.toFixed(x < 10 ? 1 : 0)} point${x >= .95 && x < 1.05 ? '' : 's'}`; };
   const tot = (list, f) => list.filter(f).reduce((a, r) => a + r.dc, 0);
@@ -3264,7 +3272,7 @@ async function buildReport(F, A, C, fin, WB, live, X = {}){
       : `Against the typical ${one} chasing the same ${them}, what you told us ${up >= .05 && dn <= -.05 ? `adds ${ptsC(up)} to your chances and takes away ${ptsC(dn).replace(/ points?$/, '')}` : up >= .05 ? `adds ${ptsC(up)} to your chances` : `costs you ${ptsC(dn)} of your chances`}.`;
     YOU_PART = `<div class="rk-you">${L.length ? `<ol class="rk-list">${rowsOf(L)}</ol>` : ''}</div>`; }   // shown inside Where you rank
   { const net = tot(asks, () => true), L = asks.filter(big);
-    const lede = !asks.length ? `You haven’t set any expectations beyond sex, so everyone single in your age range counts.`
+    const lede = !asks.length ? `You haven’t set any expectations beyond wanting ${them}, so everyone single in your age range counts.`
       : !L.length ? `None of your expectations moves your chances by a full point.`
       : `Your expectations ${net < 0 ? 'lower' : 'raise'} your chances in the dating economy by ${ptsC(net)} out of 100.${asks.some(r => r.dc > .3 && r.pool0 > C.poolN) ? ' Not every cut hurts, though: a filter that shrinks the field can pay off when the people it keeps face less competition.' : ''}`;
     const mxW = Math.max(1, ...L.map(r => Math.abs(r.dc)));
@@ -3299,16 +3307,16 @@ async function buildReport(F, A, C, fin, WB, live, X = {}){
     const P = (b, t) => `<p class="gl-p"><b>${b}</b>${t ? ' ' + t : ''}</p>`, aim = trigOf(F).r > 0;
     const body = `<p class="gl-h">The ${them} you’d pursue</p>`
       + P(`${fmtN(N.pAll)} single ${ow}`, `meet everything you’re looking for. ${fmtN(N.pAct)} of them are actively dating right now.`)
-      + (F.T !== 'B' && C.compN >= 1 ? P(`About ${(C.compN / Math.max(1, C.poolN)).toFixed(1)} ${you} compete for each of those ${fmtN(C.poolN)} ${them}.`, `${cap0(you)} are counted by how much of their attention goes to ${them} like them${C.desire && C.desire > 1.05 ? `, and ${them} this sought-after draw more attention than average` : ''}.`) : '')
+      + (F.T !== 'B' && C.compN >= 1 ? P((r => r < 1 ? `About ${Math.max(1, Math.round(r * 10))} ${you} compete for every 10 of those ${fmtN(C.poolN)} ${them}.` : `About ${r.toFixed(1)} ${you} compete for each of those ${fmtN(C.poolN)} ${them}.`)(C.compN / Math.max(1, C.poolN)), `${cap0(you)} are counted by how much of their attention goes to ${them} like them${C.desire && C.desire > 1.05 ? `, and ${them} this sought-after draw more attention than average` : ''}.`) : '')
       + (C.answered && F.T !== 'B' ? P(`You outrank ${Math.round(C.pct * 100)}% of that competition`, `on the questions you answered.${ageNote(rows)}`) : '')
       + (WB != null ? P(`${fin >= 1 ? fmtN(fin) : 'No'} mutual match${Math.round(fin) === 1 ? '' : 'es'}:`, `${F.looking !== false ? 'actively dating ' : ''}${them} you’d pursue who would also date you.`) : '')
       + (N.wbAll != null ? `<p class="gl-h">The ${them} who’d date you</p>`
         + P(`${fmtN(N.wbAll)} single ${ow}`, `would be open to dating a ${me} like you, based on your About you answers alone.`)
         + P(`${fmtN(N.wbAct)} of them are actively dating`, 'right now.')
-        + P(`${fin >= 1 ? fmtN(fin) : 'None'} of them ${Math.round(fin) === 1 ? 'is a' : 'are'} ${them} you’d pursue.`, 'The same mutual matches.')
+        + P(`${fin >= 1 ? fmtN(fin) : 'None'} of them ${Math.round(fin) === 1 ? 'is also one of the' : 'are also'} ${them} you’d pursue.`, 'These are your mutual matches.')
         + gapLesson() : '');
-    cards.unshift(card('c-glance', 'insights', 'Your results at a glance', `Your answers in ${area}, read from the ${them} you want and the ${them} who want you.`, body)); }
-  if (C.answered) cards.splice(1, 0, card('c-rank', 'leaderboard', 'Where you rank', `${Math.round(C.compN) < GRID_N ? 'Each dot is one of the' : 'The 2,500 dots stand for the'} ${fmtN(C.compN)} single ${you} competing against you for the ${them} you want, ranked by appeal on the questions you answered.`, slot('#mktBody .grids .gcol:not(.rare)') + YOU_PART));
+    cards.unshift(card('c-glance', 'insights', 'Your results at a glance', `What your answers mean in ${area}: first the ${them} you’d pursue, then the ${them} who would date you.`, body)); }
+  if (C.answered) cards.splice(1, 0, card('c-rank', 'leaderboard', 'Where you rank', `${Math.round(C.compN) < GRID_N ? 'Each dot is one of the' : 'The 2,500 dots stand for the'} ${fmtN(C.compN)} single ${you} competing against you for the ${them} you want, ranked by appeal on the questions you answered.${YOU_PART ? ' Below the grid, the answers that move your chances most, in points out of 100.' : ''}`, slot('#mktBody .grids .gcol:not(.rare)') + YOU_PART));
   cards.splice(C.answered ? 2 : 1, 0, card('c-exp', 'filter_alt', 'Your expectations', (document.querySelector('#mktBody .mutual .ghead') || {}).innerHTML || '', slot('#mktBody .gcol.rare')));
   // Your competition: from every single person of your sex and orientation here down to the ones who outscore you.
   if (F.T !== 'B' && C.compN >= 1){
@@ -3324,7 +3332,7 @@ async function buildReport(F, A, C, fin, WB, live, X = {}){
     const para = `In ${area}, ${fmtN(all)} single ${oriW} are your potential competition, and ${fmtN(C.compAll)} of them are actively dating ${them}. `
       + (anyAge ? `They’re counted by how much of their dating attention goes to the ${them} you want${C.desire && Math.abs(C.desire - 1) >= .05 ? `, and ${C.desire > 1 ? 'raised' : 'lowered'} ${Math.round(Math.abs(C.desire - 1) * 100)}% because ${them} who meet your expectations are ${C.desire > 1 ? 'more' : 'less'} sought-after than the typical local ${them === 'men' ? 'man' : 'woman'}` : ''}.`
                 : `The ones who date ${them} ${ages} are counted by how much of their dating attention goes to the ${them} you want${C.desire && Math.abs(C.desire - 1) >= .05 ? `, ${C.desire > 1 ? 'raised' : 'lowered'} ${Math.round(Math.abs(C.desire - 1) * 100)}% because ${them} who meet your expectations are ${C.desire > 1 ? 'more' : 'less'} sought-after than the typical local ${them === 'men' ? 'man' : 'woman'}` : ''}.`)
-      + (per ? ` That makes ${perT} ${you} of competition for each of the ${fmtN(C.poolN)} ${F.looking !== false ? 'actively dating ' : ''}${them} you’d pursue.` : '')
+      + (per ? ` That works out to ${per < 1 ? `about ${Math.max(1, Math.round(per * 10))} ${you} competing for every 10` : `${perT} ${you} competing for each`} of the ${fmtN(C.poolN)} ${F.looking !== false ? 'actively dating ' : ''}${them} you’d pursue.` : '')
       + (C.answered ? ` On the questions you answered, you outrank ${pctT(C.pct)} of that competition.${ageNote(rows)}` : ` Answer the questions in About you to see where you rank among these ${you}.`);
     const ri = cards.findIndex(c => c.includes('rp-card c-rank'));
     cards.splice(ri + 1, 0, card('c-comp', 'swords', 'Your competition', para, list));
@@ -3335,9 +3343,9 @@ async function buildReport(F, A, C, fin, WB, live, X = {}){
     if (N2.wbAll != null) R2.push(['Would date you', `${look2 ? 'Actively dating single' : 'Single'} ${ow2} who would date you, from your About you answers`, fmtN(look2 ? N2.wbAct : N2.wbAll)]);
     if (F.T !== 'B' && C.compN >= 1 && C.poolN >= 1) R2.push([`Competition for each ${one2} you’d pursue`, `${fmtN(C.compN)} ${you} compete for the ${fmtN(C.poolN)} ${look2 ? 'actively dating ' : ''}${them} you’d pursue`, (C.compN / C.poolN).toFixed(1)]);
     const ord = n => n + (n % 100 >= 11 && n % 100 <= 13 ? 'th' : ['th', 'st', 'nd', 'rd'][n % 10] || 'th');
-    if (C.answered && F.T !== 'B' && RANK_ALL != null) R2.push([`Where you rank among all ${you}`, `Your percentile among single ${oriWord(F.mySex, F.T)} in ${area} who are dating ${them}`, ord(Math.max(1, Math.min(99, Math.round(RANK_ALL * 100))))]);
-    if (C.answered && F.T !== 'B'){ R2.push([`Where you rank among ${you} like you`, `The share of the ${you} competing for the same ${them} that you outrank`, pc(C.pct)]); R2.push(['Ranked higher', `${cap0(you)} at or above you on the questions you answered`, fmtN(C.atOrAbove)]); }
-    R2.push(['Your chances', `How do things add up for you in ${area}`, `${chanceTxt(C.chance)} in 100`]);
+    if (C.answered && F.T !== 'B' && RANK_ALL != null) R2.push([`Where you rank among all ${you}`, `Your percentile among all single ${oriWord(F.mySex, F.T)} in ${area} who are dating ${them}, whoever they’re after`, ord(Math.max(1, Math.min(99, Math.round(RANK_ALL * 100))))]);
+    if (C.answered && F.T !== 'B'){ R2.push([`Where you rank among your competition`, `The share of the ${you} going after the same ${them} as you that you outrank`, pc(C.pct)]); R2.push(['Ranked higher', `${cap0(you)} at or above you on the questions you answered`, fmtN(C.atOrAbove)]); }
+    R2.push(['Your chances', `How it all adds up for you in ${area}`, `${chanceTxt(C.chance)} in 100`]);
     cards.push(card('c-odds', 'percent', 'Your chances in the dating economy', `In ${area}, who would date you, your competition and your rank add up to your chances in the dating economy. They weigh you against the ${you} competing for the same ${them}, not against all ${you}.`,
       `<ol class="prof">${R2.map(([t, c, n], i) => `<li class="${i === R2.length - 1 ? 'final' : ''}"><div><div class="t">${t}</div><div class="crit">${c}</div></div><div class="n"><b>${n}</b></div></li>`).join('')}</ol>`)); }
   // Sex ratios and Across history: one card each, the subheader as the title and its paragraph as the card's metadata.
@@ -3358,18 +3366,18 @@ async function buildReport(F, A, C, fin, WB, live, X = {}){
     for (const [k2, nm, bad] of [['mySmoke','Smoke','yes'],['myDrink','Binge drink','binge'],['myFel','Felony record','yes'],['myEmp','Not working','none'],['myKids','Have kids','yes'],['myPot','Marijuana','yes']])
       if (F[k2] !== '' && F[k2] != null) li.push([nm, F[k2] === bad ? 'yes' : 'no', (v => v ? `${v}% do` : '0%')(Math.round(share(k2, bad) * 100))]);
     if (F.myAge) li.push(['Age', String(F.myAge), String(Math.round(med('myAge')))]);
-    if (li.length) cards.push(card('c-ahead', 'groups', 'Ahead of you in the dating economy', `The competition at or above you in ${esc(A.label || shortName(D.cbsa[A.codes[0]].n))}, on the questions you answered. Medians, or shares of that competition where shown.`,
+    if (li.length) cards.push(card('c-ahead', 'groups', 'Ahead of you in the dating economy', `The competition at or above you in ${esc(A.label || shortName(D.cbsa[A.codes[0]].n))}, on the questions you answered. Each line shows the middle value for that group, or the share of them who have the trait.`,
       `<table class="rp-vs"><thead><tr><th colspan="2">You</th><th>Ahead of you</th></tr></thead><tbody>${li.map(([a, b2, c]) => `<tr><td>${a}</td><td>${esc(b2)}</td><td>${esc(c)}</td></tr>`).join('')}</tbody></table>`)); }
   // Your mutual matches: who they are, from the Census cells they come from.
   if (SHOW_MIX && C.mix && C.mix.tot > 0 && fin >= 1){
     const M2 = C.mix, pc = v => `${Math.round(v / M2.tot * 100)}%`, ages = Object.entries(M2.age).sort((a, b) => a[0].localeCompare(b[0]));
-    cards.push(card('c-mutual', 'favorite', 'Your mutual matches', `Your ${fmtN(fin)} mutual matches: ${F.looking !== false ? 'actively dating ' : ''}${them} you’d pursue who would also date you. Shares below are of those ${fmtN(fin)}.`,
+    cards.push(card('c-mutual', 'favorite', 'Your mutual matches', `Your ${fmtN(fin)} mutual matches: ${F.looking !== false ? 'actively dating ' : ''}${them} you’d pursue who would also date you. The percentages below describe those ${fmtN(fin)} ${them}.`,
       (() => {
         const bar = (k2, v) => `<div class="pb"><div class="pb-l"><span>${k2}</span><b>${pc(v)}</b></div><div class="pb-t"><i style="width:${Math.max(1, v / M2.tot * 100).toFixed(1)}%"></i></div></div>`;
         return `<div class="rp-mix"><p class="rp-h">Age</p>${ages.map(([k2, v]) => bar(k2, v)).join('')}
        <p class="rp-h">Marital history</p>${bar('Never married', M2.mar.nm)}${bar('Divorced', M2.mar.dv)}${bar('Widowed', M2.mar.wd)}
        <p class="rp-h">Education</p>${bar('Bachelor’s degree or more', M2.deg)}</div>`; })())); }
-  cards.push(card('c-best', 'star', 'Best 10 metros', `Consider the best local dating economies in the United States based on who you are and what you are looking for. Ranked by your chances in the dating economy in each metro, which weigh your competition and where you rank, not by these two counts alone.`, slot('#cmpCard .tw')));
+  cards.push(card('c-best', 'star', 'Best 10 metros', `Consider the best local dating economies in the United States based on who you are and what you are looking for. Ranked by your chances in the dating economy in each metro, which also count your competition and where you rank, so a metro with more people who’d date you doesn’t always rank higher.`, slot('#cmpCard .tw')));
   if (X.worst && X.worst.length) cards.push(card('c-worst', 'arrow_downward', 'Worst 10 metros', `Where the same you does worst, among metro areas with at least ${fmtN(X.WMIN || 500)} ${them} who meet your expectations.`,
     `<div class="tw"><table class="cmpw"><thead><tr><th></th><th class="m">Metro area</th><th>You’d pursue</th><th>Mutual matches</th></tr></thead><tbody>${X.worst.map((r, n) => { const e = (X.ex && X.ex.get(r.i)) || {}; return `<tr><td class="r">${n + 1}</td><td class="m">${esc(shortName(r.n))}</td><td class="v">${e.p != null ? fmtN(e.p) : '—'}</td><td class="v">${e.m != null ? fmtN(e.m) : '—'}</td></tr>`; }).join('')}</tbody></table></div>`));
   // Every metro: your mutual matches there (log scale) against your chance there, same answers everywhere.
@@ -3422,7 +3430,7 @@ async function buildReport(F, A, C, fin, WB, live, X = {}){
         : `The ${them} who would date you are most often ${nb(wp)}. The ${them} you’d pursue are most often ${nb(pp)}.`;
       const wk = B.indexOf(wp), wpn = Math.round(wv[wk] * EXR.age.wouldN);
       cards.push(card('c-age', 'groups', 'Who you match by age', lede,
-        `<div class="sc-wrap"><svg viewBox="0 0 ${W} ${H}" class="sc" role="img" aria-label="${esc(lede.replace(/<[^>]+>/g, ''))}">${g}</svg></div><div class="sq-legend"><span><i class="k on"></i>Would date you and actively dating · ${fmtN(EXR.age.wouldN)}</span>${wp !== pp ? `<span><span class="msi ag-ic" aria-hidden="true">${F.T === 'M' ? 'man' : 'woman'}</span>Would date you most often, ${wp} · ${fmtN(wpn)}</span>` : ''}<span><i class="k mut"></i>You’d pursue and actively dating · ${fmtN(C.poolN)}</span></div>`));
+        `<div class="sc-wrap"><svg viewBox="0 0 ${W} ${H}" class="sc" role="img" aria-label="${esc(lede.replace(/<[^>]+>/g, ''))}">${g}</svg></div><div class="sq-legend"><span><i class="k on"></i>${fmtN(EXR.age.wouldN)} actively dating ${them} who would date you</span>${wp !== pp ? `<span><span class="msi ag-ic" aria-hidden="true">${F.T === 'M' ? 'man' : 'woman'}</span>Most likely to date you: ages ${wp}, ${fmtN(wpn)} ${them}</span>` : ''}<span><i class="k mut"></i>${fmtN(C.poolN)} actively dating ${them} you’d pursue</span></div>`));
     }
   }
   // Your area against the nation: one card for the people you want, one for the people you compete with.
@@ -4193,7 +4201,7 @@ function ffRanking(me, F){
     ? `<b>${ffEsc(me.name)}</b> ranks <b>${list.indexOf(me.i) + 1} of 200</b> at <b>${ffM(me.total)}</b>.`
     : `<b>${ffEsc(me.name)}</b> isn’t one of the 200 largest metros. At <b>${ffM(me.total)}</b> it would rank <b>${list.indexOf(me.i) + 1} of ${n}</b>.`;
   return `<section class="rp-card ff-card ff-wide c-floor" id="ffRank"><h3><span class="msi" aria-hidden="true">location_city</span>What a family of four must earn in the 200 largest metros</h3>
-    <p class="rp-cl">The same family budget priced for each metro, from least to most expensive. $250,000 is still the number most people quote, and only ${under} of the 200 come in under it. The typical metro on this list needs ${ffM(ffMed())}. Counted by where people actually live, it’s ${ffM(FFD.wmed)}.</p>
+    <p class="rp-cl">The same family budget priced for each metro, from least to most expensive. $250,000 is still the number most people quote, and only ${under} of the 200 come in under it. The typical metro on this list needs ${ffM(ffMed())}. Weighted by population, the typical American lives where it takes ${ffM(FFD.wmed)}.</p>
     <div class="rp-body"><p class="ff-where">${nearNote}${where}</p>
     <label class="ff-find"><span class="msi" aria-hidden="true">search</span><input type="search" id="ffFind" placeholder="Find a metro" autocomplete="off" aria-label="Find a metro"></label>
     <ol class="ff-rank" id="ffList">${items}</ol></div></section>`;
@@ -4202,14 +4210,14 @@ function ffRanking(me, F){
 // 2. The American Dream Gauntlet: 1,000 men turning 37, eight steps, three paths.
 const FF_STEPS = [
   // label, [career growth, career struggles, no degree] still in, made of, base, what the numbers say, what is holding men back
-  ['Earn a degree', [370, 0, 630], 370, 1000, '37% of men ages 25 to 34 have one, compared with 47% of women', 'Boys fall behind in school; men are 42% of four-year students'],
-  ['Land a job that needs it', [216, 154, 630], 216, 370, '41.5% of recent graduates work jobs that don’t need a degree', 'AI and job bots; fewer manager jobs; entry-level H-1B hiring; DEI goals'],
-  ['Out-earn the women he’d marry', [147, 223, 630], 569, 846, '68% of men with degrees, and 67% without, out-earn the typical woman with the same schooling', 'Hypergamy: women tend to marry men who earn as much or more'],
-  ['Get married by 37', [109, 104, 410], 623, 1000, '62% of all men marry by 37; men who out-earn her, about 74%', 'Hypergamy shrinks the pool, so more men compete for the same women'],
-  ['Stay married', [95, 82, 324], 501, 623, '13% of ever-married adults in their 30s have divorced; for men without a degree or a job that needs one, divorce runs about 1.6 times as high', 'Women file about 69% of divorces, most ending low-conflict marriages'],
-  ['Earn $250k+ together', [48, 11, 42], 101, 501, 'About 1 in 5 two-parent, two-kid families earn $250,000 or more', 'Layoffs; fewer promotions; taxes take a quarter; prices outrun pay'],
-  ['Buy a home near the job', [41, 9, 36], 86, 101, '85% of adults with family income over $100,000 own a home', 'Mortgage rates above 7%, zoning, property taxes; Boomers hold half the wealth'],
-  ['Have two kids by 37', [25, 5, 21], 51, 86, '60% of married men 35 to 39 have two or more kids', 'Daycare runs $13,184 per child, with nothing left for an emergency']
+  ['Earn a degree', [370, 0, 630], 370, 1000, '37% of men ages 25 to 34 have one, compared with 47% of women', 'Boys fall behind in school, and men are now only 42% of four-year college students.'],
+  ['Land a job that needs it', [216, 154, 630], 216, 370, '41.5% of recent graduates work jobs that don’t need a degree', 'AI and automated hiring screens, fewer manager jobs, entry-level H-1B hiring and DEI goals all shrink the jobs open to new graduates.'],
+  ['Out-earn the women he’d marry', [147, 223, 630], 569, 846, '68% of men with degrees, and 67% without, out-earn the typical woman with the same schooling', 'Hypergamy: women tend to marry men who earn as much as they do or more.'],
+  ['Get married by 37', [109, 104, 410], 623, 1000, '62% of all men marry by 37; men who out-earn her, about 74%', 'Hypergamy shrinks the pool, so more men compete for the same women.'],
+  ['Stay married', [95, 82, 324], 501, 623, '13% of ever-married adults in their 30s have divorced; for men without a degree or a job that needs one, divorce runs about 1.6 times as high', 'Women file about 69% of divorces, and most of those end low-conflict marriages.'],
+  ['Earn $250k+ together', [48, 11, 42], 101, 501, 'About 1 in 5 two-parent, two-kid families earn $250,000 or more', 'Layoffs and fewer promotions slow raises, taxes take about a quarter of pay, and prices have risen faster than paychecks.'],
+  ['Buy a home near the job', [41, 9, 36], 86, 101, '85% of adults with family income over $100,000 own a home', 'Mortgage rates above 7%, tight zoning and property taxes price couples out, while Boomers hold half the wealth.'],
+  ['Have two kids by 37', [25, 5, 21], 51, 86, '60% of married men 35 to 39 have two or more kids', 'Daycare runs $13,184 per child, leaving little for an emergency.']
 ];
 const FF_PATHS = [['College degree, career growth', 'ff-p1', 147, 25], ['College degree, career struggles', 'ff-p2', 223, 5], ['No degree', 'ff-p3', 630, 21]];
 function ffPath(F){
@@ -4353,7 +4361,7 @@ function ffSince(F, me){
     <p class="rp-cl">${lede}</p><div class="rp-body"><ol class="ff-near ff-since"><li class="ff-hd"><span></span><span>2019</span><span>Now</span><span>Change</span></li>${rows}
       <li class="ff-ref"><span class="ff-nm">Typical full-time pay</span><span>${ffK(919 * 52)}</span><span>${ffK(1232 * 52)}</span><span class="ff-df">+${pf(FF_WAGE)}</span></li>
       <li class="ff-ref"><span class="ff-nm">Prices (CPI)</span><span></span><span></span><span class="ff-df">+${pf(FF_CPI)}</span></li></ol>
-    <p class="ff-note">Fastest rise first. Red means the floor rose faster than pay, here the BLS median for one full-time worker over a year. The 2019 budget uses that year’s home values and 3.9% mortgage rate, with everything else moved back by inflation.</p></div></section>`;
+    <p class="ff-note">Fastest rise first. Red means the floor rose faster than the typical full-time paycheck, the BLS median for one worker over a year. The 2019 budget uses that year’s home values and 3.9% mortgage rate, with everything else moved back by inflation.</p></div></section>`;
 }
 function ffNearby(F, me){
   if (!me) return '';
@@ -4367,7 +4375,7 @@ function ffNearby(F, me){
     return `<li${o.me ? ' class="ff-me"' : ''}><span class="ff-nm">${ffEsc(o.name)}<small>${o.me ? 'your area' : Math.round(o.d) + ' miles'}${ok ? ' · on your income' : ''}</small></span><span class="ff-v">${ffM(o.t)}</span><span class="ff-df ${df < 0 ? 'ok' : df > 0 ? 'up' : ''}">${o.me ? '' : (df < 0 ? '−' : '+') + ffK(Math.abs(df))}</span></li>`; }).join('');
   return `<section class="rp-card ff-card c-floor" id="ffNear"><h3><span class="msi" aria-hidden="true">near_me</span>What the same life costs nearby</h3>
     <p class="rp-cl">${lede}</p><div class="rp-body"><ol class="ff-near">${rows}</ol>
-    <p class="ff-note">Cheapest first. Areas within 250 miles, including smaller micro areas.</p></div></section>`;
+    <p class="ff-note">Cheapest first. Areas within 250 miles, including smaller cities and towns the Census calls micro areas.</p></div></section>`;
 }
 function familyFloor(F){
   const me = ffArea(F);
@@ -4407,7 +4415,7 @@ function dmapScale(X){
 function dmapText(X){
   const S = dmapScale(X), home = S.val.get(D.codes[X.mine]), hb = S.bin(home), name = shortName(D.cbsa[X.mine].n);
   const beat = S.pos.length ? Math.round(S.pos.filter(v => v < home).length / S.val.size * 100) : 0, cols = dmapRamp(S.n), flat = S.hi - S.lo < 2 && S.hi >= 1;
-  const lede = `Your chance in the dating economy in every county, scored with the same answers in each metro and micro area. The colors compare places against each other for you, from red where you’d do worst to green where you’d do best. Home, ${esc(name)}, gives you a ${dmapFmt(home)}% chance, better than ${beat}% of the ${fmtN(S.val.size)} areas. Point to any county for your chance there.${flat ? ' Your chances barely change from place to place, so small differences show as big color changes here.' : ''}`;
+  const lede = `Your chance in the dating economy in every county, scored with the same answers in every metro area and in every smaller city and town the Census calls a micro area. The colors compare places against each other for you, from red where you’d do worst to green where you’d do best. Home, ${esc(name)}, gives you a ${dmapFmt(home)}% chance, better than ${beat}% of the ${fmtN(S.val.size)} areas. Point to any county for your chance there.${flat ? ' Your chances barely change from place to place, so small differences show as big color changes here.' : ''}`;
   const legend = `<div class="dm-ramp">${cols.map((c, k) => `<span style="background:${c}">${k === hb ? '<i class="dm-you">You</i>' : ''}</span>`).join('')}</div>
     <div class="dm-ticks"><span>Worst areas for you</span><span>Best areas for you</span></div>
     <div class="dm-keys"><span><i class="dm-k dm-home"></i>Your area</span>${S.zeros ? '<span><i class="dm-k dm-zero"></i>No mutual chance</span>' : ''}<span><i class="dm-k dm-rural"></i>Outside metro and micro areas</span></div>`;
@@ -4428,7 +4436,7 @@ async function dmapMicros(X, F){
   const job = JOB, miss = D.codes.map((c, i) => i).filter(i => !X.odds.has(i)), st = document.getElementById('dmapStatus');
   for (let s = 0; s < miss.length; s += 6){
     if (job !== JOB || !document.getElementById('dmapBox')) return false;
-    if (st){ st.hidden = false; st.textContent = `Adding ${fmtN(miss.length)} smaller micro areas · ${Math.round(s / miss.length * 100)}%`; }
+    if (st){ st.hidden = false; st.textContent = `Adding ${fmtN(miss.length)} smaller cities and towns · ${Math.round(s / miss.length * 100)}%`; }
     await later(() => { for (const i of miss.slice(s, s + 6)) X.odds.set(i, compete([i], F, {n: 150, maxCells: 50}) || {chance: 0}); });
   }
   if (st) st.hidden = true; X.microsDone = true; return true;
