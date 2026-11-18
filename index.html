@@ -289,6 +289,9 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
 .psb::before{content:"";position:absolute;left:1px;width:4px;top:0;bottom:0;border-radius:2px;background:var(--rule)}
 .psb i{position:absolute;left:0;top:0;width:6px;border-radius:3px;background:color-mix(in srgb,var(--navy) 35%,var(--sheet));cursor:grab;transition:background-color .15s}
 .psb:hover i,.psb.drag i{background-color:var(--accent)} .psb.drag i{cursor:grabbing}
+/* Where the browser supports it, the thumb is tied to the list's scroll by the browser itself, so it moves in the same frame as the list. */
+@keyframes psb{from{transform:translateY(0)}to{transform:translateY(var(--room,0px))}}
+@supports (animation-timeline: scroll()){.prof-wrap{timeline-scope:--profsc} .prof-sc{scroll-timeline:--profsc y} .psb.tl i{animation:psb linear both;animation-timeline:--profsc}}
 .card{background:var(--sheet);border:1px solid var(--rule);border-radius:8px;padding:16px 18px;min-width:0}
 .card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px 16px;flex-wrap:wrap;margin-bottom:6px}
 .card h2{font:700 20px/1.2 var(--display);color:var(--navy);margin:0}
@@ -3845,17 +3848,20 @@ function showReport(){
 }
 // Step by step's scrollbar: measured whenever anything could have changed (list, size, tab coming back, scroll) so it never goes missing.
 { const sc = document.querySelector('.prof-sc'), wrap = sc && sc.parentNode, bar = wrap && wrap.querySelector('.psb'), th = bar && bar.firstChild;
-  if (sc && th){ let tH = 0, room = 0, max = 0, raf = 0;
-  // The thumb is moved straight from the scroll event, which the browser fires before it paints the scrolled list.
-  const place = () => { th.style.transform = `translateY(${max > 0 ? Math.min(1, Math.max(0, sc.scrollTop / max)) * room : 0}px)`; };
+  if (sc && th){ let tH = 0, room = 0, max = 0, raf = 0; const css = window.CSS && CSS.supports('animation-timeline: scroll()');
+  // With the browser's scroll timeline the thumb needs no script while scrolling; the animation is restarted whenever its travel changes or the
+  // tab comes back, since the browser keeps the old values otherwise. Without it, the thumb is moved straight from the scroll event.
+  const restart = () => { bar.classList.remove('tl'); void th.offsetWidth; bar.classList.add('tl'); };
+  const place = () => { if (!css) th.style.transform = `translateY(${max > 0 ? Math.min(1, Math.max(0, sc.scrollTop / max)) * room : 0}px)`; };
   const size = () => { const long = getComputedStyle(sc).overflowY === 'auto' && sc.scrollHeight > sc.clientHeight + 2;
     if (long !== wrap.classList.contains('long')) wrap.classList.toggle('long', long);
     if (!long) return; const track = bar.clientHeight; max = sc.scrollHeight - sc.clientHeight; tH = Math.max(32, Math.round(track * sc.clientHeight / sc.scrollHeight));
-    room = track - tH; th.style.height = tH + 'px'; place(); };
+    const r = track - tH; th.style.height = tH + 'px';
+    if (r !== room){ room = r; th.style.setProperty('--room', room + 'px'); if (css) restart(); } place(); };
   const later = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; size(); }); };
   sc.addEventListener('scroll', () => { if (!max) size(); else place(); }, {passive: true});
-  addEventListener('resize', later); addEventListener('focus', later); addEventListener('pageshow', later);
-  document.addEventListener('visibilitychange', () => { if (!document.hidden) later(); });
+  addEventListener('resize', later); addEventListener('focus', () => { if (css) restart(); later(); }); addEventListener('pageshow', () => { if (css) restart(); later(); });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden){ if (css) restart(); later(); } });
   if (window.ResizeObserver){ const ro = new ResizeObserver(later); ro.observe(sc); ro.observe($('prof')); }
   new MutationObserver(later).observe($('prof'), {childList: true, subtree: true, characterData: true});
   new MutationObserver(later).observe(document.body, {attributes: true, attributeFilter: ['class']});
