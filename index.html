@@ -3141,7 +3141,7 @@ function reportSummary(F, A, C, fin, WB, rows, X){
   let seed = (Math.round(C.chance * 1e5) * 31 + Math.round(fin || 0) * 7 + Math.round(C.compN)) >>> 0;
   const pick = a => { seed = (Math.imul(seed, 1103515245) + 12345) >>> 0; return a[(seed >>> 8) % a.length]; };
   const cap = t => t.charAt(0).toUpperCase() + t.slice(1), lc = t => t.charAt(0).toLowerCase() + t.slice(1);
-  const ptsV = v => { const x = Math.abs(v); return `${x.toFixed(x < 10 ? 1 : 0)} point${x >= .95 && x < 1.05 ? '' : 's'}`; };
+  const ptsV = v => { const x = Math.abs(v); return `${x.toFixed(x < 10 ? 1 : 0)}%`; };
   const pctS = pctTxt(C.pct), N = fmtN(C.compN), ratio = C.chance / h;
   // who you are against your competition
   const rankS = !C.answered ? `You haven’t told us enough about yourself to rank you, so you’re scored as the typical ${one} here.`
@@ -3231,7 +3231,7 @@ function reportSummary(F, A, C, fin, WB, rows, X){
     p3 += moved < .03 ? ` ${two ? 'Neither changes' : 'That doesn’t change'} much. This is roughly where you stand.`
       : bestCh >= h && C.chance < h ? ` ${two ? 'The better of the two' : 'That'} puts you ${bestCh >= h * 1.15 ? 'ahead of' : 'level with'} a typical ${one} your age.`
       : C.chance >= h ? '' : ` ${two ? 'Even the better of the two' : 'Even that'} leaves you behind a typical ${one} your age.`;
-  } else p3 = `Nothing you could change here moves your chances by a full point. This is where you stand.`;
+  } else p3 = `Nothing you could change here moves your chances by even 1%. This is where you stand.`;
   // Color uses the page's odds scale (outcome tiers); on Selectivity and Competition higher is worse for you, so the color reads 100 − value.
   const tierOf = g => g >= 80 ? 'vhigh' : g >= 60 ? 'high' : g >= 40 ? 'mod' : g >= 20 ? 'low' : 'vlow';
   const bar = (label, v, lo, hi, worse, d) => `<div class="pb ${tierOf(worse ? 100 - v : v)}"><div class="pb-l"><span>${label}</span><b>${v >= 99.5 && v < 100 ? '>99%' : v > 0 && v < .5 ? '<1%' : Math.round(v) + '%'}</b></div><div class="pb-t"><i style="width:${Math.max(1, v).toFixed(1)}%"></i></div><div class="pb-e"><span>${lo}</span><span>${hi}</span></div>${d ? `<p class="pb-d">${d}</p>` : ''}</div>`;
@@ -3324,27 +3324,27 @@ async function buildReport(F, A, C, fin, WB, live, X = {}){
   const rowsOf = list => { const L = list.filter(big), mx = Math.max(1, ...L.map(r => Math.abs(r.dc)));
     return L.map(r => `<li class="rk-row ${r.dc >= 0 ? 'up' : 'dn'}"><div class="rk-m"><div class="rk-l">${esc(r.label)}</div>
       <div class="rk-bar"><i style="width:${Math.max(2, Math.abs(r.dc) / mx * 100).toFixed(1)}%"></i></div>${chan(r) ? `<div class="rk-w"><span>${chan(r)}</span></div>` : ''}</div>
-      <div class="rk-v"><b>${sgn(r.dc)}</b><small>points</small></div></li>`).join(''); };
-  const ptsC = v => { const x = Math.abs(v); return `${x.toFixed(x < 10 ? 1 : 0)} point${x >= .95 && x < 1.05 ? '' : 's'}`; };
+      <div class="rk-v"><b>${sgn(r.dc)}%</b></div></li>`).join(''); };
+  const ptsC = v => { const x = Math.abs(v); return `${x.toFixed(x < 10 ? 1 : 0)}%`; };
   const tot = (list, f) => list.filter(f).reduce((a, r) => a + r.dc, 0);
   const card = (cls, icon, title, lede, body) => `<section class="rp-card ${cls}"><h3><span class="msi" aria-hidden="true">${icon}</span>${title}</h3>${lede ? `<p class="rp-cl">${lede}</p>` : ''}<div class="rp-body">${body}</div></section>`;
   const cards = [];
   let YOU_PART = '';
   { const up = tot(mine, r => r.dc > 0), dn = tot(mine, r => r.dc < 0), L = mine.filter(big);
     const lede = !mine.length ? `You haven’t answered anything about yourself, so you’re scored as the typical ${one} chasing the same ${them}.`
-      : !L.length ? `None of your answers moves your chances by a full point. Against the typical ${one} chasing the same ${them}, you look average on what you told us.`
-      : `Against the typical ${one} chasing the same ${them}, what you told us ${up >= .05 && dn <= -.05 ? `adds ${ptsC(up)} to your chances and takes away ${ptsC(dn).replace(/ points?$/, '')}` : up >= .05 ? `adds ${ptsC(up)} to your chances` : `costs you ${ptsC(dn)} of your chances`}.`;
+      : !L.length ? `None of your answers moves your chances by even 1%. Against the typical ${one} chasing the same ${them}, you look average on what you told us.`
+      : `Against the typical ${one} chasing the same ${them}, what you told us ${up >= .05 && dn <= -.05 ? `adds ${ptsC(up)} to your chances and takes away ${ptsC(dn)}` : up >= .05 ? `adds ${ptsC(up)} to your chances` : `costs you ${ptsC(dn)} of your chances`}.`;
     YOU_PART = `<div class="rk-you">${L.length ? `<ol class="rk-list">${rowsOf(L)}</ol>` : ''}</div>`; }   // shown inside Where you rank
   { const net = tot(asks, () => true), L = asks.filter(big);
     const lede = !asks.length ? `You haven’t set any expectations beyond wanting ${them}, so everyone single in your age range counts.`
-      : !L.length ? `None of your expectations moves your chances by a full point.`
-      : `Your expectations ${net < 0 ? 'lower' : 'raise'} your chances in the dating economy by ${ptsC(net)} out of 100.${asks.some(r => r.dc > .3 && r.pool0 > C.poolN) ? ' Not every cut hurts, though: a filter that shrinks the field can pay off when the people it keeps face less competition.' : ''}`;
+      : !L.length ? `None of your expectations moves your chances by even 1%.`
+      : `Your expectations ${net < 0 ? 'lower' : 'raise'} your chances in the dating economy by ${ptsC(net)}.${asks.some(r => r.dc > .3 && r.pool0 > C.poolN) ? ' Not every cut hurts, though: a filter that shrinks the field can pay off when the people it keeps face less competition.' : ''}`;
     const mxW = Math.max(1, ...L.map(r => Math.abs(r.dc)));
     const wantRow = r => { const i = r.label.indexOf(':'), nm = i > 0 ? r.label.slice(0, i) : r.label, val = i > 0 ? r.label.slice(i + 1).replace(/\s*\([^)]*\)/g, '').trim() : '', ch = [];
       if (r.pool0 > 0 && Math.abs(r.pool0 - C.poolN) / r.pool0 >= .01) ch.push([`${cap0(them)} you’d pursue`, fmtN(C.poolN), fmtN(r.pool0)]);
       if (Math.abs(r.dm) >= .01 && r.would0 != null) ch.push(['Mutual matches', fmtN(fin), fmtN(r.would0)]);
       if (C.answered && r.pct0 != null && Math.abs(C.pct - r.pct0) >= .02) ch.push(['You outrank', P(C.pct) + '%', P(r.pct0) + '%']);
-      return `<li class="wr ${r.dc >= 0 ? 'up' : 'dn'}"><div class="wr-h"><span class="wr-t">${esc(nm)}</span><b class="wr-v">${sgn(r.dc)} points</b></div>${val ? `<div class="wr-s">${esc(val)}</div>` : ''}
+      return `<li class="wr ${r.dc >= 0 ? 'up' : 'dn'}"><div class="wr-h"><span class="wr-t">${esc(nm)}</span><b class="wr-v">${sgn(r.dc)}%</b></div>${val ? `<div class="wr-s">${esc(val)}</div>` : ''}
         <div class="rk-bar"><i style="width:${Math.max(2, Math.abs(r.dc) / mxW * 100).toFixed(1)}%"></i></div>
         ${ch.length ? `<table class="wr-c"><thead><tr><th></th><th>Now</th><th>Without it</th></tr></thead><tbody>${ch.map(([a, b2, c2]) => `<tr><td>${a}</td><td>${b2}</td><td>${c2}</td></tr>`).join('')}</tbody></table>` : ''}</li>`; };
     cards.push(card('c-want', 'tune', 'What you’re asking for', lede, L.length ? `<ol class="wr-list">${L.map(wantRow).join('')}</ol>` : '')); }
@@ -3364,7 +3364,7 @@ async function buildReport(F, A, C, fin, WB, live, X = {}){
     const top = cost.slice(0, pick.length).every(r => pick.includes(r));
     return `<p class="gl-gap">${aimed ? 'Aiming high is what’s limiting you.' : 'Your filters are what’s limiting you most.'} Drop your ${nm(a)} alone and you’d pursue ${fmtN(a.pool0)} ${F.looking !== false ? 'actively dating ' : ''}${them} instead of ${fmtN(C.poolN)}${mm(a)}.`
       + (b ? ` ${aimed && !top ? `Of your other aiming high filters, your ${nm(b)} costs the most` : `Your ${nm(b)} is next`}: dropping it alone gives you ${fmtN(b.pool0)} ${F.looking !== false ? 'actively dating ' : ''}${them} you’d pursue${b.would0 != null ? ` and ${fmtN(b.would0)} mutual match${Math.round(b.would0) === 1 ? '' : 'es'}` : ''}.` : '')
-      + ` ${b ? `They cost you ${ptsC(a.dc).replace(/ points?$/, '')} and ${ptsC(b.dc)} of your chances` : `It costs you ${ptsC(a.dc)} of your chances`}${top ? ', more than anything else you asked for' : ''}.</p>`;
+      + ` ${b ? `They cost you ${ptsC(a.dc)} and ${ptsC(b.dc)} of your chances` : `It costs you ${ptsC(a.dc)} of your chances`}${top ? ', more than anything else you asked for' : ''}.</p>`;
   };
   // Your results at a glance: both funnels in full sentences, first in the report.
   { const N = funnelNums(A, F, WB), one = F.T === 'M' ? 'man' : 'woman', me = F.mySex === 'M' ? 'man' : 'woman', ow = F.T === 'B' ? them : oriWord(F.T, F.mySex);
@@ -3380,7 +3380,7 @@ async function buildReport(F, A, C, fin, WB, live, X = {}){
         + P(`${fin >= 1 ? fmtN(fin) : 'None'} of them ${Math.round(fin) === 1 ? 'is also one of the' : 'are also'} ${them} you’d pursue.`, 'These are your mutual matches.')
         + gapLesson() : '');
     cards.unshift(card('c-glance', 'insights', 'Your results at a glance', `What your answers mean in ${area}: first the ${them} you’d pursue, then the ${them} who would date you.`, body)); }
-  if (C.answered) cards.splice(1, 0, card('c-rank', 'leaderboard', 'Where you rank', `${Math.round(C.compN) < GRID_N ? 'Each dot is one of the' : 'The 2,500 dots stand for the'} ${fmtN(C.compN)} single ${you} competing against you for the ${them} you want, ranked by appeal on the questions you answered.${YOU_PART ? ' Below the grid, the answers that move your chances most, in points out of 100.' : ''}`, slot('#mktBody .grids .gcol:not(.rare)') + YOU_PART));
+  if (C.answered) cards.splice(1, 0, card('c-rank', 'leaderboard', 'Where you rank', `${Math.round(C.compN) < GRID_N ? 'Each dot is one of the' : 'The 2,500 dots stand for the'} ${fmtN(C.compN)} single ${you} competing against you for the ${them} you want, ranked by appeal on the questions you answered.${YOU_PART ? ' Below the grid, the answers that move your chances most, in percent.' : ''}`, slot('#mktBody .grids .gcol:not(.rare)') + YOU_PART));
   cards.splice(C.answered ? 2 : 1, 0, card('c-exp', 'filter_alt', 'Your expectations', (document.querySelector('#mktBody .mutual .ghead') || {}).innerHTML || '', slot('#mktBody .gcol.rare')));
   // Your competition: from every single person of your sex and orientation here down to the ones who outscore you.
   if (F.T !== 'B' && C.compN >= 1){
@@ -3506,7 +3506,7 @@ async function buildReport(F, A, C, fin, WB, live, X = {}){
       const G = EXR.local[who]; if (!G || !G.here || !G.us) continue;
       const word = sex === 'F' ? 'women' : 'men', rows = lab(sex).filter(([k]) => G.here[k] != null && G.us[k] != null);
       const big1 = rows.slice().sort((a, b) => Math.abs(G.here[b[0]] - G.us[b[0]]) - Math.abs(G.here[a[0]] - G.us[a[0]]))[0], d = G.here[big1[0]] - G.us[big1[0]];
-      const lede = `Local single ${who === 'them' ? oriWord(F.T, F.mySex) : oriWord(F.mySex, F.T)} of every age in ${esc(area)} against all U.S. metro areas. The biggest difference: ${big1[1][0].toLowerCase() + big1[1].slice(1)}, ${Pc(G.here[big1[0]])} here against ${Pc(G.us[big1[0]])} nationally. Green is better for you, red is worse, in percentage points.`;
+      const lede = `Local single ${who === 'them' ? oriWord(F.T, F.mySex) : oriWord(F.mySex, F.T)} of every age in ${esc(area)} against all U.S. metro areas. The biggest difference: ${big1[1][0].toLowerCase() + big1[1].slice(1)}, ${Pc(G.here[big1[0]])} here against ${Pc(G.us[big1[0]])} nationally. Green is better for you, red is worse.`;
       // Which way is better for you. People you want: more of what you'd want is better (less weight, less smoking); religion, politics,
       // never married and U.S. born follow your own answers, otherwise they're neutral. Competitors: the reverse, since a stronger field is worse for you.
       const rel = ['wk', 'mon'].includes(F.myFaith) ? 1 : F.myFaith === 'none' ? -1 : 0, pol = F.myPol === 'c' ? 1 : F.myPol === 'l' ? -1 : 0;
@@ -3570,7 +3570,7 @@ async function buildReport(F, A, C, fin, WB, live, X = {}){
   const cardOrder = list => list.map((h, i) => { const m = h.match(/class="rp-card (c-[a-z-]+)/), k = m ? ORDER.indexOf(m[1]) : -1; return [k < 0 ? ORDER.length - 1.5 : k, i, h]; })
     .sort((a, b) => a[0] - b[0] || a[1] - b[1]).map(x => x[2]);
   { const small = rows.filter(r => r.side !== 'market' && !big(r) && Math.abs(r.dc) >= .05);   // anything that rounds to 0 is left out
-    if (small.length) cards.push(card('c-minor', 'more_horiz', 'Also consider', `These move your chances by less than a point either way.`,
+    if (small.length) cards.push(card('c-minor', 'more_horiz', 'Also consider', `These move your chances by less than 1% either way.`,
       `<ul class="rp-minor">${small.map(r => `<li><span>${esc(r.label)}</span><b>${sgn(r.dc)}</b></li>`).join('')}</ul>`)); }
   cards.splice(0, cards.length, ...cardOrder(cards));   // the jump links and the cards share one order
   box.classList.remove('stale');
@@ -4478,7 +4478,7 @@ const FF_MIDTOP = 240400;
 function ffWarn(){
   const t200 = FFD.rows.filter(r => r[2]).map(r => r[0]), all = FFD.rows.map(r => r[0]);
   const n200 = t200.filter(v => v <= FF_MIDTOP).length, nAll = all.filter(v => v <= FF_MIDTOP).length;
-  return `<div class="ff-warn"><p><b>Before you read on, it is important to remember the American middle-class family of four has almost entirely vanished and is merely a talking point for politicians and the media in ${new Date().getFullYear()}.</b> The standard definition of middle class tops out at about ${ffM(FF_MIDTOP)} a year for a family of four (Pew Research Center), and the typical American household earns about $83,730 (Census Bureau, 2024). ${n200 ? `Only ${n200} of the 200 largest metros` : 'Not one of the 200 largest metros'} can cover the budget below on even the very top of that range, and only ${nAll} of all ${fmtN(all.length)} areas can, nearly all of them small towns. Every metro here includes its suburbs and exurbs, so moving just outside the city doesn’t close the gap either. The definitions used for middle and working class simply don’t come close to what it now takes to keep a family of four.</p>
+  return `<div class="ff-warn"><p><b>It is important to remember the American middle-class family of four has almost entirely vanished and is merely a talking point for politicians and the media in ${new Date().getFullYear()}.</b> The standard definition of middle class tops out at about ${ffM(FF_MIDTOP)} a year for a family of four (Pew Research Center), and the typical American household earns about $83,730 (Census Bureau, 2024). ${n200 ? `Only ${n200} of the 200 largest metros` : 'Not one of the 200 largest metros'} can cover the budget below on even the very top of that range, and only ${nAll} of all ${fmtN(all.length)} areas can, nearly all of them small towns. Every metro here includes its suburbs and exurbs, so moving just outside the city doesn’t close the gap either. The definitions used for middle and working class simply don’t come close to what it now takes to keep a family of four.</p>
     <p>That matters in a dating economy this competitive, where online communities, consumer marketing and our very real shrinking purchasing power all set expectations that few people can meet. Do with that information what you will if you’re serious about finding love. It might require setting realistic expectations about your value in the marketplace and what is available to you as you explore the dating scene in metros nationwide.</p></div>`;
 }
 function familyFloor(F){
