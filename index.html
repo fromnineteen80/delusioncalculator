@@ -3856,7 +3856,10 @@ function showReport(){
     if (!long) return; const track = bar.clientHeight; max = sc.scrollHeight - sc.clientHeight; tH = Math.max(32, track * sc.clientHeight / sc.scrollHeight);
     room = track - tH; th.style.height = tH + 'px'; th.style.setProperty('--room', room + 'px'); move(); };
   const upd = size;
-  sc.addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(move); }, {passive: true}); addEventListener('resize', size);
+  // Re-measure on every way the list can change size, on scroll, and once a second as a safety net, so the bar never goes missing.
+  sc.addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; size(); }); }, {passive: true}); addEventListener('resize', size);
+  addEventListener('scroll', size, {passive: true}); setInterval(() => { if (!document.hidden) size(); }, 1000);
+  new MutationObserver(size).observe($('prof'), {childList: true, subtree: true, characterData: true});
   if (window.ResizeObserver){ const ro = new ResizeObserver(size); ro.observe(sc); ro.observe($('prof')); }
   new MutationObserver(size).observe(document.body, {attributes: true, attributeFilter: ['class']});
   let y0 = 0, s0 = 0;
