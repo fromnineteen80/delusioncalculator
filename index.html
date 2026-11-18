@@ -60,13 +60,14 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .save-row textarea:focus{border-color:var(--accent)}
 .save-row input{height:38px}
 .save-row textarea::placeholder,.save-row input::placeholder{font-family:var(--body);font-size:13px;color:var(--muted)}
-.save .save-row textarea{height:40px;min-height:0;white-space:nowrap;overflow:hidden;word-break:normal;line-height:22px;padding:8px 10px;
-  -webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 48px),transparent calc(100% - 10px));mask-image:linear-gradient(90deg,#000 calc(100% - 48px),transparent calc(100% - 10px))}
-.save .save-row textarea:placeholder-shown{-webkit-mask-image:none;mask-image:none}
+.save-fld{flex:1;min-width:0;display:block;background:var(--paper);border:1px solid var(--rule);border-radius:6px;padding:8px 10px;cursor:text}
+.save-fld:focus-within{border-color:var(--accent)}
+.save .save-fld textarea{display:block;width:100%;height:44px;min-height:0;padding:0;border:0;border-radius:0;background:none;white-space:normal;overflow:hidden;word-break:break-all;line-height:22px}
+.save .save-fld textarea:placeholder-shown{word-break:normal}
 .save-row textarea:placeholder-shown{word-break:normal;overflow-wrap:break-word}
 .save-act{flex:none;align-self:center;width:72px;height:40px;border:1px solid var(--rule);background:var(--sheet);color:var(--navy);border-radius:6px;font:600 13px var(--body);cursor:pointer;padding:0}
 .save-act:hover{border-color:var(--muted)}
-.save-act.save-pri{background:var(--navy);border-color:var(--navy);color:var(--sheet)} .save-act.save-pri:hover{opacity:.9}
+.save-act,.save-act.save-pri{background:var(--navy);border-color:var(--navy);color:var(--sheet)} .save-act:hover{opacity:.9;border-color:var(--navy)}
 .save .save-msg{grid-column:1/-1;margin-top:-8px} .save-msg{margin:0;font-size:11.5px;line-height:1.4;color:var(--accent-ink)} .save-msg:empty{display:none} .save-msg.bad{color:var(--poor)}
 .instr-btn{display:inline-flex;align-items:center;gap:6px;background:none;border:0;padding:6px 0;font:600 13px var(--body);color:var(--ink);cursor:pointer}
 .instr-btn .pm{font-size:0;color:var(--accent-ink);display:inline-flex;align-items:center;width:10px;height:10px}
@@ -787,11 +788,11 @@ a.ext{color:var(--accent-ink);text-decoration:none}
       <div class="save">
         <div class="save-col">
           <div class="save-hd"><span class="hstep" aria-hidden="true"><span class="msi">bookmark</span></span><div><h3>Save your answers</h3><p>Copy this code to come back later. It updates as you answer.</p></div></div>
-          <div class="save-row"><textarea id="saveCode" readonly rows="1" placeholder="Your code appears here as you fill out the questionnaire" spellcheck="false" aria-label="Your saved code"></textarea><button type="button" class="save-act save-pri" id="copyBtn">Copy</button></div>
+          <div class="save-row"><span class="save-fld"><textarea id="saveCode" readonly rows="1" placeholder="Your code appears here as you fill out the questionnaire" spellcheck="false" aria-label="Your saved code"></textarea></span><button type="button" class="save-act save-pri" id="copyBtn">Copy</button></div>
         </div>
         <div class="save-col">
           <div class="save-hd"><span class="hstep" aria-hidden="true"><span class="msi">history</span></span><div><h3>Pick up where you left off</h3><p>Paste a saved code. Older codes still load.</p></div></div>
-          <div class="save-row"><textarea id="loadCode" rows="1" spellcheck="false" autocomplete="off" placeholder="Paste a saved code" aria-label="Paste a saved code"></textarea><button type="button" class="save-act" id="loadBtn">Load</button></div>
+          <div class="save-row"><span class="save-fld"><textarea id="loadCode" rows="1" spellcheck="false" autocomplete="off" placeholder="Paste a saved code" aria-label="Paste a saved code"></textarea></span><button type="button" class="save-act" id="loadBtn">Load</button></div>
         </div>
         <p class="save-msg" id="saveMsg" aria-live="polite"></p>
       </div>
