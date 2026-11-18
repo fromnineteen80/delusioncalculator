@@ -342,7 +342,7 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
 #rpProg.float{position:fixed;left:var(--pcx,50%);top:var(--pcy,50%);transform:translate(-50%,-50%);z-index:60;width:min(340px,calc(100vw - 32px));padding:18px 20px;gap:14px;
   background:var(--sheet);border:1px solid var(--rule);border-radius:12px;box-shadow:0 18px 48px rgba(10,16,30,.22),0 2px 6px rgba(10,16,30,.08);animation:pfIn .18s ease-out}
 #rpProg.float svg{width:44px;height:44px} #rpProg.float b{font-size:14px} #rpProg.float span{white-space:normal}
-body:not(.rv) #bar{display:none} .grid.done{row-gap:0} .grid.done > #out{margin-top:16px}   /* the questions are folded away in the report: no empty row between the bar and the report */
+body:not(.rv) #bar{display:none} .grid.done{row-gap:0} .grid.done > .out{margin-top:16px}   /* the questions are folded away in the report: no empty row between the bar and the report */
  .grid.done .qtabs{display:none}   /* in the report, Edit is the way back to the questions */   /* the summary bar belongs to the report; the questions have their own step-by-step results */
 #runOv{position:fixed;inset:0;z-index:80;display:grid;place-items:center;padding:16px;background:color-mix(in srgb,var(--paper) 88%,transparent);
   -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);opacity:0;transition:opacity .22s ease}
@@ -633,7 +633,9 @@ html:root[data-scheme="dark"] .msi{font-variation-settings:"GRAD" -25}
 :root{--ff-tax:var(--navy);--ff-save:var(--accent-ink);--ff-home:var(--accent);--ff-kids:var(--long);--ff-car:var(--fair-ink);--ff-food:var(--hi);--ff-health:var(--good);--ff-debt:var(--poor);--ff-life:var(--faint);
   --ff-p1:var(--accent-ink);--ff-p2:var(--long);--ff-p3:var(--fair-ink);--ff-ok:var(--good)}
 .ff{margin:22px 0 4px}
-.ff-title{padding:14px 0 12px;border-top:2px solid var(--navy)} #secNation,#secDream{border-top-width:4px}   /* matches the line above The Dating Economy (the report header's line plus its own) */
+.ff-title{padding:14px 0 12px;border-top:2px solid var(--navy)}
+/* Your Chances Nationwide and The American Dream are their own white cards under the report, with the same 16px of page between them as every other card. */
+.rp-x{margin-top:16px;padding-top:4px} #report[hidden] ~ .rp-x{display:none} .rp-x > .sec-nation,.rp-x > .ff{margin:0} .rp-x .ff-title{border-top:0}
 .spon{margin:16px auto;text-align:center;width:100%;max-width:100%;box-sizing:border-box} .spon[hidden]{display:none!important}
 .spon-tag{display:block;margin:0 0 4px;font:600 10px/1.2 var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
 .spon img{display:block;max-width:100%;height:auto;margin:0 auto;border-radius:4px}
@@ -1064,6 +1066,8 @@ body.rv .part{padding-left:18px}   /* results page: same left padding as the rep
     <div class="card-head"><div class="hgrp"><span class="hstep" aria-hidden="true"><span class="msi">leaderboard</span></span><div><h2>Your report</h2><p>A deep dive on your identity and dating preferences.</p></div></div><div class="rp-act"><button type="button" class="rp-close" id="reportClose">Close report</button><div class="rp-key" aria-label="Show cards by group"><button type="button" data-g="m" aria-pressed="false"><i class="k-m"></i>Finding a match</button><button type="button" data-g="c" aria-pressed="false"><i class="k-c"></i>Your competition</button><button type="button" data-g="o" aria-pressed="false"><i class="k-o"></i>Overview and deep dive</button></div></div></div>
     <div id="reportBody"><p class="note">Working out what shapes your results…</p></div>
   </section>
+  <section class="card rp-x" id="reportNation" hidden></section>
+  <section class="card rp-x" id="reportDream" hidden></section>
 <div class="out">
   <section class="card" id="profile">
     <div class="card-head">
@@ -3578,7 +3582,9 @@ async function buildReport(F, A, C, fin, WB, live, X = {}){
   box.classList.remove('stale');
   box.innerHTML = `<div class="ff-title sec-title sec-econ" id="secEcon"><h2>The Dating Economy</h2><p>Where you stand where you live: who would date you, who you compete with and your odds.</p></div>${reportSummary(F, A, C, fin, WB, rows, X)}
     <nav class="rp-jump" aria-label="Jump to a card">${cards.map(c => { const m = c.match(/class="rp-card ([\w-]+)".*?<\/span>([^<]+)<\/h3>/); return m ? `<a href="#" data-to="${m[1]}">${m[2]}</a>` : ''; }).join('')}</nav>
-    <div class="rp-cards" id="rpCards">${cards.join('')}</div><div class="spon spon-line" data-spon="line1" hidden></div><div class="spon spon-ban" data-spon="econ" hidden></div>${(m => m ? `<div class="sec-nation"><div class="ff-title sec-title" id="secNation"><h2>Your Chances Nationwide</h2><p>The same you, scored in every metro and micro area in the country.</p></div><div class="ff-warn"><p><b>Give the map a few seconds to populate results.</b> It scores every metro, micro area and county nationwide against your answers. Each location is scored the way your home market is: the ${F.T === 'M' ? 'men' : F.T === 'F' ? 'women' : 'people'} there who fit what you want, the ones who would want you back and how many others are going after the same people. A county turns green when you stand out against that competition, not just because it has more ${F.T === 'M' ? 'men' : F.T === 'F' ? 'women' : 'people'}.</p></div>${m}</div>` : '')(dmapCard(F, X))}${familyFloor(F)}`;
+    <div class="rp-cards" id="rpCards">${cards.join('')}</div><div class="spon spon-line" data-spon="line1" hidden></div><div class="spon spon-ban" data-spon="econ" hidden></div>`;
+  { const nh = (m => m ? `<div class="sec-nation"><div class="ff-title sec-title" id="secNation"><h2>Your Chances Nationwide</h2><p>The same you, scored in every metro and micro area in the country.</p></div><div class="ff-warn"><p><b>Give the map a few seconds to populate results.</b> It scores every metro, micro area and county nationwide against your answers. Each location is scored the way your home market is: the ${F.T === 'M' ? 'men' : F.T === 'F' ? 'women' : 'people'} there who fit what you want, the ones who would want you back and how many others are going after the same people. A county turns green when you stand out against that competition, not just because it has more ${F.T === 'M' ? 'men' : F.T === 'F' ? 'women' : 'people'}.</p></div>${m}</div>` : '')(dmapCard(F, X)), fh = familyFloor(F), rn = $('reportNation'), rd = $('reportDream');   // their own cards under the report
+    rn.innerHTML = nh; rn.hidden = !nh; rd.innerHTML = fh; rd.hidden = !fh; }
   box.querySelectorAll('.rp-slot').forEach(sl => sl.dataset.adopt.split('|').forEach(sel => { const n = document.querySelector(sel); if (n && !box.contains(n)) sl.append(rpAdopt(n)); }));
   layoutCards(true); setTimeout(ffAfterRender, 350); setTimeout(dmapInit, 50); sponRender(); $('resultsBtn').hidden = false; $('shareBtn').hidden = false; REPORT_FOR = JSON.stringify(F); if (JSON.stringify(readForm()) === REPORT_FOR) REPORT_CODE = answersCode(); $('reportClose').textContent = SUM_MIN ? 'Open summary' : 'Close summary';
 }
