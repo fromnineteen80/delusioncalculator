@@ -12,7 +12,7 @@ KEYS = list(B[0]['lines'])
 rows = [[o['total'], o['price'], int(o['code'] in ts), int(o['psrc'] != 'zillow_metro')] + [o['lines'][k] for k in KEYS] for o in B]
 names = ['Poughkeepsie, NY' if o['name'] == 'Kiryas Joel, NY' else o['name'] for o in B]
 n_est = sum(o['psrc'] != 'zillow_metro' for o in B)
-ffd = dict(asof=datetime.date.today().isoformat(), wmed=wmed, zdate=I['zdate'], keys=KEYS, cols=['total', 'price', 'top200', 'priceEst'], rows=rows, names=names)
+ffd = dict(asof=datetime.date.today().isoformat(), wmed=wmed, zdate=I['zdate'], keys=KEYS, cols=['total', 'price', 'top200', 'priceEst'], rows=rows, names=names, t19=[o['total19'] for o in B], z19=I['z19'])
 lines = open(page_path, encoding='utf-8').read().split('\n')
 k = next(i for i, l in enumerate(lines) if l.startswith('const FFD = '))
 lines[k] = 'const FFD = ' + json.dumps(ffd, separators=(',', ':')) + ';'

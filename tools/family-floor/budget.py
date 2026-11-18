@@ -22,14 +22,20 @@ DEFAULT={'OH':.02,'PA':.01,'KY':.01}
 def grid(a):
     S=PE['state'][a['st']]; C=PE['county'].get(a['pe_county']) if a['pe_county'] else None
     return S, C
-def run(a):
-    st=a['st']; N=I['NAME'][st]; price=a['price']; loan=price*0.9
-    pti=pi(loan); pmi=loan*0.005; proptax=price*a['ptax']; ins=I['HINS'][N]; child=I['CC'][N]; g=a['rpp']/100
+# 2019 comparison: the same family in the same month of 2019. Home at its 2019 Zillow value and the 2019 Freddie Mac average rate (3.9%);
+# every other cost, and the tax brackets and limits, moved back by CPI-U (October 2019 257.346 over October 2026 337.511).
+CPI19=257.346/337.511; RATE19=0.039
+def run(a,y19=False):
+    st=a['st']; N=I['NAME'][st]; price=a['price19'] if y19 else a['price']; loan=price*0.9
+    if y19:   # housing in 2019 dollars, restated in today's dollars so the rest of the model runs unchanged, then scaled back at the end
+        r=RATE19/12; pti=loan*r/(1-(1+r)**-360)*12/CPI19; price=price/CPI19; loan=loan/CPI19
+    else: pti=pi(loan)
+    pmi=loan*0.005; proptax=price*a['ptax']; ins=I['HINS'][N]; child=I['CC'][N]; g=a['rpp']/100
     loc=dict(groceries=311*52*g, dining=5974*g, clothing_household=4000*g, utilities=5062*I['ELEC'][N]/US_ELEC,
              car_own=2*CAR_BASE, auto_ins=24*I['AUTO'][N], gas=2*GAL*I['GAS'][N])
     cards=card_pay(N)
     spend=pti+pmi+proptax+ins+price*0.01+child+sum(OTHER.values())+sum(loc.values())+cards
-    interest=loan*RATE*min(1,750000/loan); S,C=grid(a)
+    interest=loan*(RATE19 if y19 else RATE)*min(1,750000/loan); S,C=grid(a)
     wr=DEFAULT.get(st,0)   # metro-wide home values, so statewide-typical local taxes rather than one city's rate
     def takehome(G):
         kk=min(0.15*G,49000); agi=G-kk-PREM; wages=G-PREM
@@ -57,12 +63,13 @@ def run(a):
       health=PREM+OTHER['health_oop'],life_ins=OTHER['life_ins'],wellness=OTHER['wellness'],car_own=loc['car_own'],auto_ins=loc['auto_ins'],gas=loc['gas'],
       loans=OTHER['loans'],cards=cards,vacation=OTHER['vacation'],celebrations=OTHER['celebrations'],retire=tx['k401'],emergency=OTHER['emergency'],
       fed_tax=tx['fed'],state_tax=tx['state'],local_tax=tx['local'],fica=tx['fica'])
+    if y19: L={k:v*CPI19 for k,v in L.items()}
     L={k:round(v) for k,v in L.items()}
     return sum(L.values()), L
 if __name__=='__main__':
     out=[]
     for a in I['areas']:
-        t,L=run(a); out.append(dict(a,total=t,lines=L))
+        t,L=run(a); t19,L19=run(a,True); out.append(dict(a,total=t,lines=L,total19=t19,mort19=L19['mortgage']))
     json.dump(out,open('budgets.json','w'))
     by={o['name']:o for o in out}
     deck={'Huntsville, AL':251729,'Tyler, TX':270832,'Columbus, OH':286381,'Jackson, MS':202633,'Detroit, MI':237086,'Dallas, TX':296533,'Chicago, IL':289339,'Atlanta, GA':300319,'Denver, CO':345640,'Washington, DC':394586,'Boston, MA':416384,'New York, NY':434907,'Los Angeles, CA':446844,'San Francisco, CA':544426,'Santa Cruz, CA':619435,'Milwaukee, WI':249602,'Houston, TX':259483,'Philadelphia, PA':282787}

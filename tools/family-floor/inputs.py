@@ -10,6 +10,12 @@ def zread(f,col):
     r=list(csv.reader(open(f))); h=r[0]; i=h.index(col)
     return {x[i]:float(x[-1]) for x in r[1:] if x[-1]}, h[-1]
 zmet,zdate=zread('raw/z4.csv','RegionName'); zst,_=zread('raw/z4state.csv','RegionName')
+# Same month in 2019, for the "since 2019" comparison
+Z19=str(int(zdate[:4])-7)+zdate[4:7]
+def zread19(f,col):
+    r=list(csv.reader(open(f))); h=r[0]; i=h.index(col); j=next(k for k,x in enumerate(h) if x.startswith(Z19))
+    return {x[i]:float(x[j]) for x in r[1:] if x[j]}
+zmet19=zread19('raw/z4.csv','RegionName'); zst19=zread19('raw/z4state.csv','RegionName')
 # ACS 2020-2024 medians
 def acs(f):
     o={}
@@ -45,16 +51,17 @@ for code,c in zip(codes,cbsa):
     title=cbc[code]['title']; cities=re.split(r'[-/]',title.split(', ')[0]); st1=title.split(', ')[1].split('-')[0]
     key=f'{cities[0]}, {st1}'
     # Zillow names a metro by one of its principal cities; try each, plus known old names
-    p=None; psrc='zillow_metro'
+    p=None; psrc='zillow_metro'; p19=None
     for nm in [ZALIAS.get(code)]+[f'{c}, {st1}' for c in cities]:
-        if nm and nm in zmet: p=zmet[nm]; break
+        if nm and nm in zmet: p=zmet[nm]; p19=zmet19.get(nm); break
     tx=num(tax.get('310M700US'+code)); mv=num(val.get('310M700US'+code))
     if p is None:
         sv=num(val.get('0400000US'+[k for k,v in FIPS.items() if v==st1][0]))
         p=zst.get(NAME[st1])*(mv/sv if mv and sv else 1); psrc='zillow_state_scaled'; miss['zillow']+=1
+    if p19 is None: p19=p*zst19[NAME[st1]]/zst[NAME[st1]]   # no 2019 metro value: move with the state
     ptax=tx/mv if tx and mv else None
     g=rpp_m.get(code); gsrc='msa'
     if g is None: g=rpp_s[[k for k,v in FIPS.items() if v==st1][0]+'000']; gsrc='state'
-    areas.append(dict(code=code,name=key,micro=' (micro)' in c['n'],st=st1,lat=c['la'],lon=c['lo'],price=round(p),psrc=psrc,ptax=ptax,rpp=g,rsrc=gsrc,pe_county=cbc[code].get('pe_county')))
+    areas.append(dict(code=code,name=key,micro=' (micro)' in c['n'],st=st1,lat=c['la'],lon=c['lo'],price=round(p),price19=round(p19),psrc=psrc,ptax=ptax,rpp=g,rsrc=gsrc,pe_county=cbc[code].get('pe_county')))
 print(len(areas), miss, 'zillow month', zdate, 'no ptax', sum(a['ptax'] is None for a in areas))
-json.dump(dict(areas=areas,GAS=GAS,ELEC=ELEC,AUTO=AUTO,HINS=HINS,CC=cc,CC_NOTE=CC_NOTE,zdate=zdate,NAME=NAME),open('inputs.json','w'))
+json.dump(dict(areas=areas,GAS=GAS,ELEC=ELEC,AUTO=AUTO,HINS=HINS,CC=cc,CC_NOTE=CC_NOTE,zdate=zdate,z19=Z19,NAME=NAME),open('inputs.json','w'))
