@@ -3696,7 +3696,16 @@ PARTS.forEach((P, i) => P.querySelector('.part-head').addEventListener('click', 
 const GRID = document.querySelector('.grid');
 const morph = go => (document.startViewTransition && !matchMedia('(prefers-reduced-motion: reduce)').matches) ? document.startViewTransition(go) : go();
 // Finishing About you (button, or answering every About you question) returns the original two-column layout.
-function aboutDone(){ selTab(1, true); }
+// Trying to move on without the basics: stay on About you, show what's missing and put the cursor in the first empty field.
+function needGate(){
+  if (!NEED_LAST.length) return false;
+  NEED_SHOW = true; if (QTAB !== 0) selTab(0, false); needPrompt(NEED_LAST);
+  const ids = {'who you are': 'mySex', 'who you’re looking for': 'seek', 'your ZIP code': 'zip', 'where to search': 'mode'}, first = ['who you are', 'who you’re looking for', 'your ZIP code', 'where to search'].find(m => NEED_LAST.includes(m));
+  const st = $('start'); if (st) st.scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center'});
+  if (first) setTimeout(() => { const f = $(ids[first]); if (f) f.focus({preventScroll: true}); }, 250);
+  return true;
+}
+function aboutDone(){ if (needGate()) return; selTab(1, true); }
 $('aboutDone').addEventListener('click', aboutDone);
 // Run report: a progress panel covers the questions while the report builds behind it, then the panel and the questions give way to the report.
 function runReport(){
@@ -3735,7 +3744,7 @@ document.querySelectorAll('.hd-done').forEach(b => b.addEventListener('click', e
   if (b.dataset.part === '1') return $('doneBtn').click();
   if (GRID.classList.contains('intro')) aboutDone(); else setPart(0, false); }));
 $('part1').addEventListener('change', () => { if (true) return; const F = readForm(); if (ABOUT_KEYS.every(k2 => F[k2] !== '' && F[k2] != null)) aboutDone(); });
-$('doneBtn').addEventListener('click', () => { if ($('resultsBtn').disabled){ const m = ['mySex','seek','zip'].map(id => $(id)).find(el => !el.value); (m || $('mySex')).focus(); return; } runReport(); });   // needs the basics first
+$('doneBtn').addEventListener('click', () => { if (needGate()) return; if ($('resultsBtn').disabled){ const m = ['mySex','seek','zip'].map(id => $(id)).find(el => !el.value); (m || $('mySex')).focus(); return; } runReport(); });   // needs the basics first
 $('resultsBtn').addEventListener('click', () => GRID.classList.contains('done') ? exitReport(0) : runReport());
 // Results menu: the three sections of the report. Picking one opens the report if needed, then slides the page down to it.
 { const btn = $('resCaret'), menu = $('resMenu');
@@ -3927,8 +3936,8 @@ function selTab(i, scroll){
   if (scroll){ const r = QTABS.getBoundingClientRect(); if (r.top < 0 || r.top > innerHeight * 0.5) QTABS.scrollIntoView({behavior: 'auto', block: 'start'}); }
   setTimeout(layoutFields, 0); qtSave();
 }
-QTABS.addEventListener('click', e => { const b = e.target.closest('.qtab'); if (!b) return; if (GRID.classList.contains('done')) exitReport(); selTab(+b.dataset.t, true); });
-QTABS.addEventListener('keydown', e => { if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return; e.preventDefault(); const i = 1 - QTAB; if (GRID.classList.contains('done')) exitReport(); selTab(i, false); $('qt' + i).focus(); });
+QTABS.addEventListener('click', e => { const b = e.target.closest('.qtab'); if (!b) return; if (GRID.classList.contains('done')) exitReport(); if (+b.dataset.t === 1 && needGate()) return; selTab(+b.dataset.t, true); });
+QTABS.addEventListener('keydown', e => { if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return; e.preventDefault(); const i = 1 - QTAB; if (GRID.classList.contains('done')) exitReport(); if (i === 1 && needGate()) return; selTab(i, false); $('qt' + i).focus(); });
 const qtProg = () => { $('qtp1').textContent = $('prog1').textContent; $('qtp2').textContent = $('prog2').textContent; };
 new MutationObserver(qtProg).observe($('prog1'), {childList: true, characterData: true, subtree: true});
 new MutationObserver(qtProg).observe($('prog2'), {childList: true, characterData: true, subtree: true});
@@ -3974,7 +3983,10 @@ function htBad(){ const f = HT_FT.value, i = HT_IN.value; if (f === '' && i === 
   if (f === '4' && i === '') return false; return $('myHt').value === ''; }
 // Whole numbers only: a decimal point ends the number and anything typed after it is ignored until a character is deleted.
 // Still needed: names the questions left in Where to look and outlines them. All four empty reads as a starting instruction.
+var NEED_SHOW = false, NEED_LAST = [];   // the prompt stays quiet until someone tries to move on without the four basics
 function needPrompt(missing, extra){
+  NEED_LAST = missing.slice(); if (!missing.length) NEED_SHOW = false;
+  if (!NEED_SHOW){ missing = []; extra = ''; }
   const NEED_F = {'who you are': ['mySex', 'I am a'], 'who you’re looking for': ['seek', 'Looking for'], 'your ZIP code': ['zip', 'My ZIP code'], 'where to search': ['mode', 'Search in']};
   const st = $('start'); if (!st) return;
   Object.values(NEED_F).forEach(([id]) => { const l = document.querySelector(`label[for="${id}"]`); if (l) l.classList.toggle('need-f', missing.some(m => NEED_F[m] && NEED_F[m][0] === id)); });
@@ -3982,7 +3994,7 @@ function needPrompt(missing, extra){
   if (extra) names.push(extra);
   const list = names.length > 1 ? names.slice(0, -1).join(', ') + ' and ' + names[names.length - 1] : names[0];
   st.hidden = !names.length;
-  st.innerHTML = !names.length ? '' : `<span>${missing.length === 4 ? 'Start with these four questions. They set up your search, and every question after them makes your report more accurate.' : `Still needed to set up your search: ${list}. Then keep going, since every answer makes your report more accurate.`}</span>`;
+  st.innerHTML = !names.length ? '' : `<span>${missing.length === 4 ? 'Answer these four questions first. They set up your search, and every question after them makes your report more accurate.' : `Still needed to set up your search: ${list}. Then keep going, since every answer makes your report more accurate.`}</span>`;
 }
 function wholeOnly(el, after){ el.addEventListener('input', e => { const raw = el.value;
   if (/^delete/.test(e.inputType || '')) el.dataset.cents = '';
