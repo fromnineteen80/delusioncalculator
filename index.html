@@ -670,8 +670,11 @@ html:root[data-scheme="dark"] .msi{font-variation-settings:"GRAD" -25}
 .dm-ticks{display:flex;justify-content:space-between;font:500 11.5px var(--body);color:var(--muted);margin:5px 0 0}
 .dm-keys{display:flex;flex-wrap:wrap;gap:6px 16px;margin:10px 0 0;font-size:12px;color:var(--muted)} .dm-keys span{display:flex;align-items:center;gap:6px}
 .dm-k{width:14px;height:14px;border-radius:3px;display:inline-block} .dm-home{border:2px solid var(--navy)} .dm-rural{background:var(--track)} .dm-zero{background:repeating-linear-gradient(-45deg,var(--poor) 0 1.5px,transparent 1.5px 5px);border:1px solid var(--rule)}
-.dm-pop .maplibregl-popup-content{background:var(--sheet);color:var(--ink);border:1px solid var(--rule);border-radius:8px;padding:8px 10px;font:12.5px/1.4 var(--body);box-shadow:0 6px 18px rgba(0,0,0,.15)}
-.dm-pop .maplibregl-popup-tip{display:none} .dm-pop b{display:block;font-weight:700} .dm-pop span{display:block;color:var(--muted)} .dm-pop strong{display:block;font:700 15px/1.3 var(--display);color:var(--navy);margin-top:4px} .dm-pop em{display:block;font-style:normal;color:var(--muted);font-size:12px}
+.dm-pop .maplibregl-popup-content{background:var(--sheet);color:var(--ink);border:1px solid var(--rule);border-radius:8px;padding:12px 14px;min-width:210px;max-width:270px;font:12px/1.4 var(--body);box-shadow:0 6px 18px rgba(0,0,0,.15)}
+.dm-pop .maplibregl-popup-tip{display:none}
+.dp-h b{display:block;font:600 13px/1.3 var(--body);color:var(--ink)} .dp-h span{display:block;margin-top:2px;font-size:11.5px;color:var(--muted)}
+.dp-n{margin-top:10px;padding-top:10px;border-top:1px solid var(--rule)} .dp-n strong{display:block;font:700 22px/1.1 var(--display);color:var(--navy)} .dp-n span{display:block;margin-top:3px;font-size:11.5px;color:var(--muted)}
+.dp-s{display:grid;gap:4px;margin:10px 0 0} .dp-s div{display:flex;align-items:baseline;gap:8px} .dp-s dt{min-width:42px;font-weight:600;color:var(--ink)} .dp-s dd{margin:0;font-size:11.5px;color:var(--muted)}
 .ff-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;align-items:start}
 @media (min-width:980px){.ff-grid{grid-template-columns:repeat(2,minmax(0,1fr))} .ff-wide{grid-column:1/-1}}
 .rp-card.c-floor,.rp-card.c-map{border-top-color:var(--faint)}   /* same as Overview and deep dive */
@@ -3573,7 +3576,7 @@ async function buildReport(F, A, C, fin, WB, live, X = {}){
   box.classList.remove('stale');
   box.innerHTML = `<div class="ff-title sec-title sec-econ" id="secEcon"><h2>The Dating Economy</h2><p>Where you stand where you live: who would date you, who you compete with and your odds.</p></div>${reportSummary(F, A, C, fin, WB, rows, X)}
     <nav class="rp-jump" aria-label="Jump to a card">${cards.map(c => { const m = c.match(/class="rp-card ([\w-]+)".*?<\/span>([^<]+)<\/h3>/); return m ? `<a href="#" data-to="${m[1]}">${m[2]}</a>` : ''; }).join('')}</nav>
-    <div class="rp-cards" id="rpCards">${cards.join('')}</div><div class="spon spon-line" data-spon="line1" hidden></div><div class="spon spon-ban" data-spon="econ" hidden></div>${(m => m ? `<div class="sec-nation"><div class="ff-title sec-title" id="secNation"><h2>Your Chances Nationwide</h2><p>The same you, scored in every metro and micro area in the country.</p></div>${m}</div>` : '')(dmapCard(F, X))}${familyFloor(F)}`;
+    <div class="rp-cards" id="rpCards">${cards.join('')}</div><div class="spon spon-line" data-spon="line1" hidden></div><div class="spon spon-ban" data-spon="econ" hidden></div>${(m => m ? `<div class="sec-nation"><div class="ff-title sec-title" id="secNation"><h2>Your Chances Nationwide</h2><p>The same you, scored in every metro and micro area in the country.</p></div><div class="ff-warn"><p><b>Give the map a few seconds to fill in.</b> It scores every metro, micro area and county in the country against your answers. Each place is scored the way your home market is: the singles there who fit what you want, the ones who would want you back and how many others are going after the same people. A county turns green when you stand out against that competition, not just because it has more people.</p></div>${m}</div>` : '')(dmapCard(F, X))}${familyFloor(F)}`;
   box.querySelectorAll('.rp-slot').forEach(sl => sl.dataset.adopt.split('|').forEach(sel => { const n = document.querySelector(sel); if (n && !box.contains(n)) sl.append(rpAdopt(n)); }));
   layoutCards(true); setTimeout(ffAfterRender, 350); setTimeout(dmapInit, 50); sponRender(); $('resultsBtn').hidden = false; $('shareBtn').hidden = false; REPORT_FOR = JSON.stringify(F); if (JSON.stringify(readForm()) === REPORT_FOR) REPORT_CODE = answersCode(); $('reportClose').textContent = SUM_MIN ? 'Open summary' : 'Close summary';
 }
@@ -4578,7 +4581,12 @@ async function dmapInit(){
   const pop = new maplibregl.Popup({closeButton: false, closeOnClick: false, offset: 8, className: 'dm-pop'});
   const show = e => { const f = e.features && e.features[0]; if (!f) return; const p = f.properties;
     const F0 = L.args[0], them = F0.T === 'B' ? 'people' : oriWord(F0.T, F0.mySex), has = X.wb && X.wb.has(+p.i), wd = has ? X.wb.get(+p.i) : null;
-    pop.setLngLat(e.lngLat).setHTML(`<b>${esc(p.n)}</b>${p.v === -2 ? '<span>Outside metro and micro areas</span>' : `<span>${esc(p.m)}${p.h ? ' · your area' : ''}</span><strong>${!has ? 'Counting…' : wd == null ? '' : `${wd >= 1 ? fmtN(wd) : 'No'} single ${them} interested in you`}</strong>${has && wd != null && X.of && X.of.get(+p.i) > 0 ? (o => `<em>${(wd / o * 100).toFixed(1)}% of ${fmtN(o)} local single ${them}</em>`)(X.of.get(+p.i)) : ''}<em>${dmapFmt(+p.v)}% chance in the dating economy</em>`}`).addTo(map); };
+    const head = `<div class="dp-h"><b>${esc(p.n)}</b><span>${p.v === -2 ? 'Outside metro and micro areas' : esc(p.m) + (p.h ? ' · your area' : '')}</span></div>`;
+    if (p.v === -2) return pop.setLngLat(e.lngLat).setHTML(head).addTo(map);
+    const o = has && wd != null && X.of ? X.of.get(+p.i) : 0;
+    const num = !has ? '<div class="dp-n"><strong>Counting…</strong></div>' : wd == null ? '' : `<div class="dp-n"><strong>${wd >= 1 ? fmtN(wd) : 'None'}</strong><span>single ${them} interested in you</span></div>`;
+    const rows = [o > 0 ? [`${(wd / o * 100).toFixed(1)}%`, `of ${fmtN(o)} local single ${them}`] : null, [`${dmapFmt(+p.v)}%`, 'chance in the dating economy']].filter(Boolean);
+    pop.setLngLat(e.lngLat).setHTML(head + num + `<dl class="dp-s">${rows.map(([v, t]) => `<div><dt>${v}</dt><dd>${t}</dd></div>`).join('')}</dl>`).addTo(map); };
   map.on('mousemove', 'dm-fill', e => { map.getCanvas().style.cursor = 'pointer'; show(e); });
   map.on('mouseleave', 'dm-fill', () => { map.getCanvas().style.cursor = ''; pop.remove(); });
   map.on('click', 'dm-fill', show);
