@@ -588,11 +588,11 @@ html:root[data-scheme="dark"] .msi{font-variation-settings:"GRAD" -25}
 .dm-leg{margin:12px 0 0;max-width:560px} .dm-ramp{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:2px;height:14px} .dm-ramp span{position:relative;border-radius:2px}
 .dm-you{position:absolute;left:50%;bottom:calc(100% + 3px);transform:translateX(-50%);font:700 10.5px var(--body);font-style:normal;color:var(--navy);white-space:nowrap} .dm-you::after{content:"";position:absolute;left:50%;top:100%;margin-left:-4px;border:4px solid transparent;border-top-color:var(--navy)}
 .dm-ramp:has(.dm-you){margin-top:18px}
-.dm-ticks{display:flex;justify-content:space-between;font:500 11px var(--mono);color:var(--muted);margin:4px 0 0}
+.dm-ticks{display:flex;justify-content:space-between;font:500 11.5px var(--body);color:var(--muted);margin:5px 0 0}
 .dm-keys{display:flex;flex-wrap:wrap;gap:6px 16px;margin:10px 0 0;font-size:12px;color:var(--muted)} .dm-keys span{display:flex;align-items:center;gap:6px}
 .dm-k{width:14px;height:14px;border-radius:3px;display:inline-block} .dm-home{border:2px solid var(--navy)} .dm-rural{background:var(--track)} .dm-zero{background:repeating-linear-gradient(-45deg,var(--poor) 0 1.5px,transparent 1.5px 5px);border:1px solid var(--rule)}
 .dm-pop .maplibregl-popup-content{background:var(--sheet);color:var(--ink);border:1px solid var(--rule);border-radius:8px;padding:8px 10px;font:12.5px/1.4 var(--body);box-shadow:0 6px 18px rgba(0,0,0,.15)}
-.dm-pop .maplibregl-popup-tip{display:none} .dm-pop b{display:block;font-weight:700} .dm-pop span{display:block;color:var(--muted)} .dm-pop em{display:block;font-style:normal;font-weight:600;color:var(--navy);margin-top:2px}
+.dm-pop .maplibregl-popup-tip{display:none} .dm-pop b{display:block;font-weight:700} .dm-pop span{display:block;color:var(--muted)} .dm-pop strong{display:block;font:700 15px/1.3 var(--display);color:var(--navy);margin-top:4px} .dm-pop em{display:block;font-style:normal;color:var(--muted);font-size:12px}
 .ff-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;align-items:start}
 @media (min-width:980px){.ff-grid{grid-template-columns:repeat(2,minmax(0,1fr))} .ff-wide{grid-column:1/-1}}
 .rp-card.c-floor{border-top-color:var(--navy)}
@@ -4362,10 +4362,9 @@ function dmapScale(X){
 function dmapText(X){
   const S = dmapScale(X), home = S.val.get(D.codes[X.mine]), hb = S.bin(home), name = shortName(D.cbsa[X.mine].n);
   const beat = S.pos.length ? Math.round(S.pos.filter(v => v < home).length / S.val.size * 100) : 0, cols = dmapRamp(S.n), flat = S.hi - S.lo < 2 && S.hi >= 1;
-  const lede = `Your chance in the dating economy in every county, scored with the same answers in each metro and micro area. The colors follow your own range, red where you’d do worst and green where you’d do best. Home, ${esc(name)}, is ${dmapFmt(home)} out of 100, better than ${beat}% of the ${fmtN(S.val.size)} areas scored.${flat ? ' Your chances barely change from place to place, so small differences show as big color changes here.' : ''}`;
-  const edges = [S.lo, ...S.br, S.hi];
+  const lede = `Your chance in the dating economy in every county, scored with the same answers in each metro and micro area. The colors compare places against each other for you, from red where you’d do worst to green where you’d do best. Home, ${esc(name)}, gives you a ${dmapFmt(home)}% chance, better than ${beat}% of the ${fmtN(S.val.size)} areas. Point to any county for your chance there.${flat ? ' Your chances barely change from place to place, so small differences show as big color changes here.' : ''}`;
   const legend = `<div class="dm-ramp">${cols.map((c, k) => `<span style="background:${c}">${k === hb ? '<i class="dm-you">You</i>' : ''}</span>`).join('')}</div>
-    <div class="dm-ticks">${edges.map(v => `<span>${dmapFmt(v)}</span>`).join('')}</div>
+    <div class="dm-ticks"><span>Worst areas for you</span><span>Best areas for you</span></div>
     <div class="dm-keys"><span><i class="dm-k dm-home"></i>Your area</span>${S.zeros ? '<span><i class="dm-k dm-zero"></i>No mutual chance</span>' : ''}<span><i class="dm-k dm-rural"></i>Outside metro and micro areas</span></div>`;
   return {lede, legend};
 }
@@ -4376,7 +4375,7 @@ function dmapCard(F, X){
     <div class="rp-body"><div class="dm-wrap"><div class="dm-box" id="dmapBox" role="img" aria-label="Map of the United States by county, colored by your chances in the dating economy"></div>
     <button type="button" class="dm-homebtn" id="dmapHome"><span class="msi" aria-hidden="true">my_location</span>Your area</button><p class="dm-status" id="dmapStatus" hidden></p></div>
     <div class="dm-leg" id="dmapLeg" aria-hidden="true">${T.legend}</div>
-    <p class="ff-note">Each county takes its metro or micro area’s score. Drag to move around; use two fingers on a phone or Ctrl and scroll on a computer to zoom. County lines: Census Bureau 2023. Basemap: OpenFreeMap, © OpenStreetMap contributors.</p></div></section>`;
+    <p class="ff-note">Each county takes its metro or micro area’s numbers. Drag to move around; use two fingers on a phone or Ctrl and scroll on a computer to zoom. County lines: Census Bureau 2023. Basemap: OpenFreeMap, © OpenStreetMap contributors.</p></div></section>`;
 }
 // The report scores the metro areas; the micro areas are scored here in the background, then the map, scale and legend refresh.
 async function dmapMicros(X, F){
@@ -4389,10 +4388,27 @@ async function dmapMicros(X, F){
   }
   if (st) st.hidden = true; X.microsDone = true; return true;
 }
+// The hover count is the top bar's big number for each area: single people interested in you with every ideal-match filter off,
+// counted over everyone single (not only those actively dating), the same way the bar counts it. Nearest areas first.
+async function dmapCounts(X, F){
+  if (X.wbDone) return; X.wb = X.wb || new Map(); X.of = X.of || new Map();
+  const job = JOB, FB = {...blankFilters(F), ageMin: 18, ageMax: 84, looking: F.looking}; for (const k2 of MY_KEYS) FB[k2] = F[k2];
+  const ob = l => { const o = l.find(x => x.title === 'Open to dating you'); return o ? o.before : 0; };
+  const one = i => { const w1 = T => wouldDate(compete([i], {...FB, T}, RUN)), wb = F.T === 'B' ? (a => a.includes(null) ? null : a[0] + a[1])([w1('F'), w1('M')]) : w1(F.T);
+    if (wb == null) return null; if (F.looking === false) return wb; const bA = ob(computeAll([i], {...FB, looking: false})), bL = ob(computeAll([i], {...FB, looking: true})); return bL > 0 ? wb * bA / bL : wb; };
+  const c0 = D.cbsa[X.mine], R = Math.PI / 180, dist = c => Math.hypot((c.lo - c0.lo) * Math.cos(c0.la * R), c.la - c0.la);
+  const todo = D.codes.map((c, i) => i).filter(i => !X.wb.has(i)).sort((a, b) => dist(D.cbsa[a]) - dist(D.cbsa[b])), st = document.getElementById('dmapStatus');
+  for (let s = 0; s < todo.length; s += 4){
+    if (job !== JOB || !document.getElementById('dmapBox')) return;
+    if (st && s % 40 === 0){ st.hidden = false; st.textContent = `Counting who would date you in every area · ${Math.round(s / todo.length * 100)}%`; }
+    await later(() => { for (const i of todo.slice(s, s + 4)){ X.wb.set(i, one(i)); if (F.T !== 'B') X.of.set(i, oriCount([i], F, F.T, F.mySex)); } });
+  }
+  if (st) st.hidden = true; X.wbDone = true;
+}
 function dmapFeatures(X){
   const S = dmapScale(X), homeCode = D.codes[X.mine], fc = DMAP.fc || (DMAP.fc = topojson.feature(DMAP.geo, DMAP.geo.objects.c)), idx = DMAP.idx || (DMAP.idx = new Map(D.codes.map((c, i) => [c, i])));
   for (const f of fc.features){ const p = f.properties, v = p.k != null ? S.val.get(p.k) : undefined;
-    p.v = v == null ? -2 : v; p.b = v == null ? -2 : S.bin(v); p.h = p.k === homeCode ? 1 : 0; p.m = p.k != null && idx.has(p.k) ? shortName(D.cbsa[idx.get(p.k)].n) : ''; }
+    p.v = v == null ? -2 : v; p.i = p.k != null && idx.has(p.k) ? idx.get(p.k) : -1; p.b = v == null ? -2 : S.bin(v); p.h = p.k === homeCode ? 1 : 0; p.m = p.k != null && idx.has(p.k) ? shortName(D.cbsa[idx.get(p.k)].n) : ''; }
   DMAP.data = {fc, S, homeCode};
 }
 async function dmapInit(){
@@ -4407,12 +4423,13 @@ async function dmapInit(){
   DMAP.map = map; map.on('style.load', () => dmapLayers(map));
   const pop = new maplibregl.Popup({closeButton: false, closeOnClick: false, offset: 8, className: 'dm-pop'});
   const show = e => { const f = e.features && e.features[0]; if (!f) return; const p = f.properties;
-    pop.setLngLat(e.lngLat).setHTML(`<b>${esc(p.n)}</b>${p.v === -2 ? '<span>Outside metro and micro areas</span>' : `<span>${esc(p.m)}${p.h ? ' · your area' : ''}</span><em>${p.v <= 0 ? 'No mutual chance' : 'Your chance: ' + dmapFmt(+p.v) + ' / 100'}</em>`}`).addTo(map); };
+    const F0 = L.args[0], them = F0.T === 'B' ? 'people' : oriWord(F0.T, F0.mySex), has = X.wb && X.wb.has(+p.i), wd = has ? X.wb.get(+p.i) : null;
+    pop.setLngLat(e.lngLat).setHTML(`<b>${esc(p.n)}</b>${p.v === -2 ? '<span>Outside metro and micro areas</span>' : `<span>${esc(p.m)}${p.h ? ' · your area' : ''}</span><strong>${!has ? 'Counting…' : wd == null ? '' : `${wd >= 1 ? fmtN(wd) : 'No'} single ${them} interested in you`}</strong>${has && wd != null && X.of && X.of.get(+p.i) > 0 ? (o => `<em>${(wd / o * 100).toFixed(1)}% of ${fmtN(o)} local single ${them}</em>`)(X.of.get(+p.i)) : ''}<em>${dmapFmt(+p.v)}% chance in the dating economy</em>`}`).addTo(map); };
   map.on('mousemove', 'dm-fill', e => { map.getCanvas().style.cursor = 'pointer'; show(e); });
   map.on('mouseleave', 'dm-fill', () => { map.getCanvas().style.cursor = ''; pop.remove(); });
   map.on('click', 'dm-fill', show);
   const hb = document.getElementById('dmapHome'); if (hb) hb.onclick = () => dmapHome(map);
-  { const c = D.cbsa[X.mine], el = document.createElement('div'); el.className = 'dm-pin'; el.innerHTML = '<span>You</span>';
+  { const c = D.cbsa[X.mine], el = document.createElement('div'); el.className = 'dm-pin'; el.innerHTML = `<span>${esc(shortName(c.n))}</span>`;
     new maplibregl.Marker({element: el, anchor: 'bottom'}).setLngLat([c.lo, c.la]).addTo(map); }
   map.on('load', () => { const a = box.querySelector('.maplibregl-ctrl-attrib'); if (a) a.classList.remove('maplibregl-compact-show'); });
   if (!X.microsDone && await dmapMicros(X, L.args[0]) && DMAP.map === map){
@@ -4421,6 +4438,7 @@ async function dmapInit(){
     const go = () => { if (map.getSource('dm')){ map.removeLayer('dm-home'); map.removeLayer('dm-line'); map.removeLayer('dm-zero'); map.removeLayer('dm-fill'); map.removeSource('dm'); if (map.hasImage('dm-hatch')) map.removeImage('dm-hatch'); } dmapLayers(map); };
     if (map.isStyleLoaded()) go(); else map.once('style.load', go);
   }
+  if (DMAP.map === map) dmapCounts(X, L.args[0]);
 }
 function dmapHome(map){
   const {fc, homeCode} = DMAP.data, b = [180, 90, -180, -90];
@@ -4433,6 +4451,7 @@ function dmapLayers(map){
   const navy = cs.getPropertyValue('--navy').trim() || '#1e2b45', rural = cs.getPropertyValue('--track').trim() || '#ddd', sheet = cs.getPropertyValue('--sheet').trim() || '#fff';
   if (!map.hasImage('dm-hatch')){ const c = document.createElement('canvas'); c.width = c.height = 8; const g = c.getContext('2d'); g.strokeStyle = cols[0]; g.lineWidth = 1.5;
     g.beginPath(); g.moveTo(0, 8); g.lineTo(8, 0); g.moveTo(-2, 2); g.lineTo(2, -2); g.moveTo(6, 10); g.lineTo(10, 6); g.stroke(); map.addImage('dm-hatch', g.getImageData(0, 0, 8, 8)); }
+  map.getStyle().layers.forEach(l => { if (l.type === 'symbol') map.setLayoutProperty(l.id, 'visibility', 'none'); });   // no cities or labels but your own metro (the pin)
   const L0 = map.getStyle().layers, firstSym = (L0.find(l => l['source-layer'] === 'transportation' || l['source-layer'] === 'boundary' || l.type === 'symbol') || {}).id;
   if (map.getSource('dm')) return; map.addSource('dm', {type: 'geojson', data: fc});
   const color = ['match', ['get', 'b'], -2, rural, -1, sheet, ...cols.flatMap((c, k) => [k, c]), rural];
