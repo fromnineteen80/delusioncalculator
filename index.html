@@ -285,10 +285,13 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
 
 /* results */
 .out{display:flex;flex-direction:column;gap:16px;min-width:0}
-.psb{display:none;position:absolute;top:6px;bottom:6px;right:0;width:6px;touch-action:none}
-.psb::before{content:"";position:absolute;left:1px;width:4px;top:0;bottom:0;border-radius:2px;background:var(--rule)}
-.psb i{position:absolute;left:0;top:0;width:6px;border-radius:3px;background:color-mix(in srgb,var(--navy) 35%,var(--sheet));cursor:grab;will-change:transform;transition:background .15s}
+.psb{display:none;position:absolute;top:6px;bottom:6px;right:-2px;width:12px;touch-action:none}
+.psb::before{content:"";position:absolute;left:4px;width:4px;top:0;bottom:0;border-radius:2px;background:var(--rule)}
+.psb i{position:absolute;left:3px;top:0;width:6px;border-radius:3px;background:color-mix(in srgb,var(--navy) 35%,var(--sheet));cursor:grab;will-change:transform;transition:background .15s}
 .psb:hover i,.psb.drag i{background:var(--accent)} .psb.drag i{cursor:grabbing}
+/* Where the browser can, the thumb is driven by the list's scroll itself, so it moves in the same frame as the list. */
+@keyframes psb{from{transform:translateY(0)}to{transform:translateY(var(--room,0px))}}
+@supports (animation-timeline: scroll()){.prof-wrap{timeline-scope:--profsc} .prof-sc{scroll-timeline:--profsc y} .psb i{animation:psb linear both;animation-timeline:--profsc}}
 .card{background:var(--sheet);border:1px solid var(--rule);border-radius:8px;padding:16px 18px;min-width:0}
 .card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px 16px;flex-wrap:wrap;margin-bottom:6px}
 .card h2{font:700 20px/1.2 var(--display);color:var(--navy);margin:0}
@@ -772,10 +775,10 @@ body.qtabbed .part-head{padding:14px 0 12px} body.qtabbed .part-head .step,body.
   /* Step by step fills the column and its list scrolls inside the card, with the app's own scrollbar in the card's right padding. */
   body.qtabbed .grid:not(.done) #profile{flex:1 1 auto;min-height:260px;display:flex;flex-direction:column}
   body.qtabbed .grid:not(.done) #profile > .card-head,body.qtabbed .grid:not(.done) .out > :not(#profile){flex:none}
-  body.qtabbed .grid:not(.done) .prof-wrap{flex:1 1 auto;min-height:0;position:relative;display:flex;flex-direction:column}
-  body.qtabbed .grid:not(.done) .prof-sc{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none}
-  /* With the bar showing, the list makes room for it: the bar sits the card's 18px padding from the right edge, with 18px between it and the list. */
-  body.qtabbed .grid:not(.done) .prof-wrap.long .prof-sc{padding-right:24px}
+  body.qtabbed .grid:not(.done) .prof-wrap{flex:1 1 auto;min-height:0;position:relative;display:flex;flex-direction:column;margin-right:-14px}
+  body.qtabbed .grid:not(.done) .prof-sc{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none;padding-right:14px}
+  /* The bar sits in the card's right padding; when it shows, the list stops 18px short of it. */
+  body.qtabbed .grid:not(.done) .prof-wrap.long .prof-sc{padding-right:32px}
   body.qtabbed .grid:not(.done) .prof-sc::-webkit-scrollbar{display:none}
   body.qtabbed .grid:not(.done) .prof-wrap.long .psb{display:block}
  
@@ -3846,11 +3849,12 @@ function showReport(){
 { const sc = document.querySelector('.prof-sc'), wrap = sc && sc.parentNode, bar = wrap && wrap.querySelector('.psb'), th = bar && bar.firstChild;
   if (sc && th){ let raf = 0, tH = 0, room = 0, max = 0;
   // Sizes are measured only when the layout changes; scrolling just moves the thumb, once a frame.
-  const move = () => { raf = 0; th.style.transform = `translate3d(0,${max > 0 ? sc.scrollTop / max * room : 0}px,0)`; };
+  const css = window.CSS && CSS.supports('animation-timeline: scroll()');
+  const move = () => { raf = 0; if (!css) th.style.transform = `translate3d(0,${max > 0 ? sc.scrollTop / max * room : 0}px,0)`; };
   const size = () => { const long = getComputedStyle(sc).overflowY === 'auto' && sc.scrollHeight > sc.clientHeight + 2;
     if (long !== wrap.classList.contains('long')) wrap.classList.toggle('long', long);
     if (!long) return; const track = bar.clientHeight; max = sc.scrollHeight - sc.clientHeight; tH = Math.max(32, track * sc.clientHeight / sc.scrollHeight);
-    room = track - tH; th.style.height = tH + 'px'; move(); };
+    room = track - tH; th.style.height = tH + 'px'; th.style.setProperty('--room', room + 'px'); move(); };
   const upd = size;
   sc.addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(move); }, {passive: true}); addEventListener('resize', size);
   if (window.ResizeObserver){ const ro = new ResizeObserver(size); ro.observe(sc); ro.observe($('prof')); }
