@@ -3068,6 +3068,13 @@ async function compJob(F, A, rows, mine, base, fin, w, token, C0, WB){
   let worst = cand.filter(r => r.i !== mine && (odds.get(r.i).poolN || 0) >= WMIN).sort((a, b) => (odds.get(a.i).chance || 0) - (odds.get(b.i).chance || 0)).slice(0, 13);
   for (const r of worst){ await later(() => { if (!live()) return; odds.set(r.i, compete([r.i], F, RUN)); }); if (!live()) return; }
   worst = worst.sort((a, b) => (odds.get(a.i).chance || 0) - (odds.get(b.i).chance || 0)).slice(0, 10);
+  // Nearby: the closest metro areas within 250 miles and the four closest of 500,000 people or more, rescored with the same run as the best and worst.
+  const near = (() => { const c0 = D.cbsa[mine], R0 = Math.PI / 180, mi = c => 3959 * Math.hypot((c.lo - c0.lo) * R0 * Math.cos((c.la + c0.la) / 2 * R0), (c.la - c0.la) * R0);
+    const byD = cand.filter(r => r.i !== mine).map(r => ({i: r.i, d: mi(D.cbsa[r.i])})).sort((a, b) => a.d - b.d);
+    const nr = byD.filter(o => o.d <= 250).slice(0, 8), nb = byD.filter(o => BIG_METROS.has(D.codes[o.i])).slice(0, 4);
+    return [...nr, ...nb.filter(o => !nr.includes(o))].map(o => ({...o, big: BIG_METROS.has(D.codes[o.i])})); })();
+  for (const o of near){ if (pre.some(r => r.i === o.i) || worst.some(r => r.i === o.i)) continue;
+    await later(() => { if (!live()) return; odds.set(o.i, compete([o.i], F, RUN)); }); if (!live()) return; }
   // Per metro, counted the same way as the top bar: single people who would date you, and the people you'd pursue.
   const ex = new Map(), FBm = {...blankFilters(F), ageMin: 18, ageMax: 84, looking: F.looking}; for (const k2 of MY_KEYS) FBm[k2] = F[k2];
   const obm = l => { const o = l.find(x => x.title === 'Open to dating you'); return o ? o.before : l[l.length - 1].after; };
@@ -3115,7 +3122,7 @@ async function compJob(F, A, rows, mine, base, fin, w, token, C0, WB){
   if (combo) html += `<li class="e-h">Best combination</li>` + row(combo, n++);
   $('exp').innerHTML = html;
   EXP = best;
-  LAST_JOB = {key: JSON.stringify(F), args: [F, A, C, fin, WB, {ranked, odds, mine, best, gain, CF: CFv, worst, ex, WMIN}]};
+  LAST_JOB = {key: JSON.stringify(F), args: [F, A, C, fin, WB, {ranked, odds, mine, best, gain, CF: CFv, worst, ex, WMIN, near}]};
   if (document.querySelector('.grid').classList.contains('done')) await buildReport(F, A, C, fin, WB, live, LAST_JOB.args[5]);
 }
 let EXP = [];
@@ -3523,6 +3530,16 @@ async function buildReport(F, A, C, fin, WB, live, X = {}){
   cards.push(card('c-best', 'star', 'Best 10 metros', `Consider the best local dating economies in the United States based on who you are and what you are looking for. Ranked by your chances in each metro, which count your competition and where you rank, so a metro with more mutual matches doesn’t always rank higher.`, slot('#cmpCard .tw')));
   if (X.worst && X.worst.length) cards.push(card('c-worst', 'arrow_downward', 'Worst 10 metros', `Where your same answers do worst, among metro areas with at least as many ${them} you’d pursue as you have here. Ranked by your chances, so a big metro can rank low when the competition there is steep.`,
     `<div class="tw"><table class="cmpw"><thead><tr><th></th><th class="m">Metro area</th><th>You’d pursue</th><th>Mutual matches</th><th>Your chances</th></tr></thead><tbody>${X.worst.map((r, n) => { const e = (X.ex && X.ex.get(r.i)) || {}, o = X.odds && X.odds.get(r.i); return `<tr><td class="r">${n + 1}</td><td class="m">${esc(shortName(r.n))}</td><td class="v">${e.p != null ? fmtN(e.p) : '—'}</td><td class="v">${e.m != null ? fmtN(e.m) : '—'}</td><td class="v">${o ? chanceTxt(o.chance) : '—'}</td></tr>`; }).join('')}</tbody></table></div>`));
+  // Nearby: your same answers scored in the closest metro areas and the closest major metros.
+  if (X.near && X.near.length && X.odds){
+    const home = A.label || shortName(D.cbsa[A.codes[0]].n), hc = C.chance;
+    const L = X.near.map(o => ({...o, n: shortName(D.cbsa[o.i].n), c: (X.odds.get(o.i) || {}).chance || 0}));
+    const best = L.reduce((a, b) => b.c > a.c ? b : a);
+    const lede = `Your same answers scored in the metro areas closest to ${esc(home)} and the nearest major metros. ` + (chanceTxt(best.c) !== chanceTxt(hc) && best.c > hc
+      ? `${esc(best.n)}, ${Math.round(best.d)} miles away, takes your chances from ${chanceTxt(hc)} to ${chanceTxt(best.c)}.` : `None of them beats your chances here.`);
+    const li = [{n: home, c: hc, me: true}, ...L].sort((a, b) => b.c - a.c).map(o => { const sm = chanceTxt(o.c) === chanceTxt(hc), up = o.c > hc;
+      return `<li${o.me ? ' class="ff-me"' : ''}><span class="ff-nm">${esc(o.n)}<small>${o.me ? 'your area' : Math.round(o.d) + ' miles'}${o.big && !o.me ? ' · major metro' : ''}</small></span><span class="ff-v">${chanceTxt(o.c)}</span><span class="ff-df ${o.me || sm ? '' : up ? 'ok' : 'up'}">${o.me ? '' : sm ? 'same' : up ? 'higher' : 'lower'}</span></li>`; }).join('');
+    cards.push(card('c-near', 'near_me', 'Your chances nearby', lede, `<ol class="ff-near">${li}</ol><p class="ff-note">Best chances first. The closest metro areas within 250 miles, plus the four closest metro areas of 500,000 people or more (Census Bureau, 2025). Each is scored the way your area is: the ${them} there who fit what you want, the ones who would want you back and how many others are going after the same people.</p>`)); }
   // Every metro: your mutual matches there (log scale) against your chance there, same answers everywhere.
   if (X.ranked && X.odds && X.ranked.length > 20){
     const pts = X.ranked.map(r => { const o = X.odds.get(r.i); return o ? {i: r.i, n: shortName(D.cbsa[r.i].n), x: Math.max(1, r.f || 0), y: score100(o.chance || 0), c: (o.chance || 0) * 100, pop: adultsIn([r.i], 'M') + adultsIn([r.i], 'F')} : null; }).filter(Boolean);
@@ -3705,8 +3722,8 @@ function layoutCards(force){ setTimeout(fitRibbon, 0);
 let KEY_SEL = null;
 const CARD_PIN = ['c-bell', 'c-glance', 'c-odds', 'c-rank', 'c-scatter', 'c-mkt'];
 const CARD_ORDER = ['c-bell', 'c-glance', 'c-exp', 'c-mutual', 'c-want', 'c-age', 'c-reach', 'c-ladder', 'c-moves', 'c-local-them', 'c-minor',
-  'c-rank', 'c-comp', 'c-ahead', 'c-you', 'c-local-you', 'c-best', 'c-worst', 'c-scatter', 'c-mkt', 'c-hist', 'c-odds'];
-const KEY_GRP = {m: ['c-exp', 'c-mutual', 'c-want', 'c-age', 'c-reach', 'c-ladder', 'c-local-them', 'c-minor'], c: ['c-rank', 'c-comp', 'c-ahead', 'c-you', 'c-local-you'], o: ['c-glance', 'c-mkt', 'c-hist', 'c-best', 'c-worst', 'c-scatter', 'c-bell', 'c-odds']};
+  'c-rank', 'c-comp', 'c-ahead', 'c-you', 'c-local-you', 'c-best', 'c-worst', 'c-near', 'c-scatter', 'c-mkt', 'c-hist', 'c-odds'];
+const KEY_GRP = {m: ['c-exp', 'c-mutual', 'c-want', 'c-age', 'c-reach', 'c-ladder', 'c-local-them', 'c-minor'], c: ['c-rank', 'c-comp', 'c-ahead', 'c-you', 'c-local-you'], o: ['c-glance', 'c-mkt', 'c-hist', 'c-best', 'c-worst', 'c-near', 'c-scatter', 'c-bell', 'c-odds']};
 document.addEventListener('click', e => { const b = e.target.closest('.rp-key button[data-g]'); if (!b) return;
   KEY_SEL = KEY_SEL === b.dataset.g ? null : b.dataset.g; document.querySelectorAll('.rp-key button[data-g]').forEach(x => x.setAttribute('aria-pressed', String(x.dataset.g === KEY_SEL))); layoutCards(true); });
 if (window.ResizeObserver) new ResizeObserver(() => layoutCards()).observe(document.getElementById('reportBody') || document.body);
