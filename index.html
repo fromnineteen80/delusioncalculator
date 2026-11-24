@@ -30,7 +30,7 @@
 <body>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,500,0,-25..0&icon_names=account_balance_wallet,arrow_downward,arrow_forward,balance,bookmark,contrast,dark_mode,diversity_3,favorite,filter_alt,groups,history,home,hourglass,info_i,insights,ios_share,leaderboard,light_mode,location_city,man,map,more_horiz,my_location,near_me,percent,person,route,scatter_plot,search,star,swords,trending_up,tune,woman&display=block">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,500,0,-25..0&icon_names=account_balance_wallet,arrow_downward,arrow_forward,balance,bookmark,contrast,dark_mode,diversity_3,favorite,filter_alt,groups,history,home,hourglass,info_i,insights,ios_share,leaderboard,light_mode,location_city,man,map,more_horiz,my_location,near_me,percent,person,route,scatter_plot,search,stacked_line_chart,star,swords,trending_up,tune,woman&display=block">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
 /* Layout: federal statistical brief. Sticky result bar on top; questionnaire left, tabulated profile right; single column on phones. */
@@ -683,6 +683,15 @@ html:root[data-scheme="dark"] .msi{font-variation-settings:"GRAD" -25}
 .ff-card .rp-body{margin-top:10px}
 .ff-where{margin:0 0 10px;font-size:13px;line-height:1.45}
 .ff-note{margin:10px 0 0;font-size:11.5px;line-height:1.4;color:var(--muted)}
+/* Reach vs. match: the partner band, the most common match and the dashed reach line, in the theme's colors. */
+.rv-band{fill:color-mix(in srgb,var(--accent) 34%,transparent)} .rv-band.dim,.rv-pt.dim,.rv-tri.dim{opacity:.5}
+.rv-line{fill:none;stroke:var(--navy);stroke-width:2} .rv-pt{fill:var(--navy);stroke:var(--sheet);stroke-width:1.5}
+.rv-reach{fill:none;stroke:var(--long);stroke-width:2;stroke-dasharray:5 4} .rv-tri{fill:var(--long);stroke:var(--sheet);stroke-width:1}
+.rv-low{fill:color-mix(in srgb,var(--track) 60%,transparent)} .rv-lowt{font:600 9.5px var(--body);fill:var(--muted)} .rv-lows{font:9px var(--body);fill:var(--muted)}
+.rv-me{fill:var(--accent-soft)} .rv-ax{font:10px var(--body);fill:var(--muted)} .rv-mex{font:700 10px var(--mono);fill:var(--navy)}
+.rv-two{display:grid;grid-template-columns:minmax(0,1fr);gap:18px;margin:6px 0 14px} @media (min-width:768px){.rv-two{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+.rv-two figure{margin:0} .rv-two figcaption{font:700 14px/1.3 var(--display);color:var(--navy);margin:0 0 6px}
+.rv-k{display:inline-block;vertical-align:middle;margin-right:6px}
 /* ranking */
 .ff-find{display:flex;align-items:center;gap:6px;max-width:280px;margin:0 0 10px;padding:0 10px;border:1px solid var(--rule);border-radius:6px;background:var(--sheet)}
 .ff-find .msi{font-size:18px;color:var(--faint)} .ff-find input{flex:1;min-width:0;border:0;background:none;padding:7px 0;font:13px var(--body);color:var(--ink);outline:none}
@@ -927,6 +936,7 @@ body.rv .part{padding-left:18px}   /* results page: same left padding as the rep
         <label for="myRace" class="wide">Race and ethnicity<select id="myRace"><option value="">Skip</option><option value="H">White, not Hispanic</option><option value="I">Hispanic or Latino, any race</option><option value="B">Black</option><option value="D">Asian</option><option value="C">American Indian or Alaska Native</option><option value="E">Native Hawaiian or Pacific Islander</option><option value="G">Two or more races</option><option value="F">Another race</option></select></label>
         <label>Height<span class="ftin"><span class="u" data-u="ft"><input class="htFt" type="text" inputmode="numeric" maxlength="1" autocomplete="off" placeholder="Feet" aria-label="Height in feet"></span><span class="u" data-u="in"><input class="htIn" type="text" inputmode="numeric" maxlength="2" autocomplete="off" placeholder="Inches" aria-label="Height in inches"></span></span><input id="myHt" type="text" hidden tabindex="-1" aria-hidden="true"></label>
         <label for="myWt">Weight<input id="myWt" type="number" min="80" max="500" step="1" inputmode="numeric" placeholder="Pounds"></label>
+        <label for="myLooks">Looks, as others would rate you<select id="myLooks"><option value="">Skip</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10 (top)</option></select></label>
       </div>
       <div class="zipinfo" id="bmiO" style="margin-top:-4px"></div>
       <div class="zipinfo bad" id="valO" style="margin-top:-4px"></div>
@@ -1100,6 +1110,8 @@ body.rv .part{padding-left:18px}   /* results page: same left padding as the rep
     <div class="srcs">
       <p><b>Why we built the calculator.</b> Both the Manosphere and the Femosphere get the data wrong when they lob narratives at one another these days. When we dug into the viral (and admittedly intriguing) <a class="ext" href="https://igotstandardsbro.com/" target="_blank" rel="noopener">Female Delusion Calculator</a> and heard the “I’m Looking for a Man in Finance” meme a million times, we decided it was time to put all the data on the table.</p>
       <p><b>Mutual matches.</b> Your mutual matches are people who meet your expectations and would also be open to dating you. Most dating calculators count only the first part, the people who fit your list, but a relationship needs interest on both sides, so this calculator counts both. The big number at the top of your results is everyone single and not in a relationship who would be interested in you, before any of your filters, and the line under it shows how many of them are actively dating right now. Your mutual matches are the part of that group you’d actually pursue. If your number is high, you know your expectations are realistic for your market. If it’s low, the report shows whether your list or your market is holding it down, and which change would help most.</p>
+      <p><b>Reach vs. match.</b> Who people end up with and who they go after aren’t the same. On a dating site with millions of messages, both men and women wrote to people about 25% more desirable than themselves, and the further up they reached the less often anyone replied (Bruch and Newman 2018). Couples’ looks match only loosely, with a correlation around 0.4, so each rating ends up with a wide band of partners. The charts below turn that research into an illustrative 1 to 10 model. Below about 5 we don’t draw a band, because the research there shows far less attention rather than a different match.</p>
+      <div class="rv-two" id="reachHow"></div>
       <p><b>Scarcity isn’t value.</b> The filter calculators that went viral measure how rare the person you want is. How rare someone is doesn’t tell you how much demand there is for them, and the online gender debate often treats the two as the same thing. A six foot tall man earning a six figure income might not be commonplace, but scarcity alone can’t tell you whether he’d date you or how many others are chasing him. The same concept applies to a drug user or perhaps a man who is 5′2″. True, this might be rare in the metro area you’re searching, but those traits do not necessarily assign those single daters value. Value in the dating market comes from demand, and researchers have measured it directly by tracking who messages whom on dating sites and who writes back, then ranking every user by how sought-after they are (Bruch &amp; Newman 2018). So we count both sides. Scarcity comes from public data: how many people meet your filters where you live (Census and CDC). Value comes from behavior: how open those people are to someone with your answers (Hitsch, Hortaçsu &amp; Ariely 2010), how many competitors want the same people, weighted toward the most desirable, and where you rank among them. Your chances in the dating economy combine the two. When the people you want are both rare and in high demand, both lower your chances: there are fewer of them, and more people are after them.</p>
       <p><b>Starting count.</b> Every count begins with the Census Bureau’s tally of single people, meaning never married, divorced or widowed, by sex and age in every metro area (American Community Survey 2020–2024). Each answer you give narrows that number from there.</p>
       <p><b>Not in a relationship.</b> The Census counts people who live with a partner or are in a committed relationship as single, so we remove them first, in a step of their own. About 6 in 10 unmarried adults are not in a relationship (Pew Research Center 2022), and “You’d pursue” counts only them.</p>
@@ -2621,6 +2633,52 @@ function eliteCounts(codes, F){
   const women = Math.max(0, datingCount(codes, F, 'F', wb) - datingCount(codes, F, 'F', {...wb, edu: 1}));
   return {men, women};
 }
+// Reach vs. match: an illustrative model, not measured scores. Built from Bruch and Newman (2018: people message partners about 25% more
+// desirable than themselves, and replies fall the further up they reach) and couples' attractiveness correlating around 0.4.
+// Per rating: [band low, band high, most common match, reach]. Men's chart: his rating against hers; women's: hers against his.
+const REACH = {M: {5: [4, 6, 5, 7], 6: [5, 7, 6, 8], 7: [5.5, 7.5, 6.5, 8.5], 8: [6.5, 8.5, 7.5, 9.5], 9: [7.5, 9.5, 8.5, 10], 10: [8, 10, 9, 10]},
+  F: {5: [4.5, 6.5, 5.5, 7], 6: [5.5, 7.5, 6.5, 8], 7: [6, 8, 7, 8.5], 8: [7, 9, 8, 9.5], 9: [7.5, 9.5, 8.5, 10], 10: [8, 10, 9, 10]}};
+// Below 5, attention falls off: the most attractive men got about 11 times the messages of the least attractive, women about 25 times (OkCupid 2009).
+function reachSVG(sex, o = {}){
+  const W = 340, H = 268, l = 30, r = 8, t = 22, b = 36, cw = (W - l - r) / 10, X = k => l + (k - .5) * cw, Y = v => t + (10 - v) / 9 * (H - t - b);
+  const cl = v => Math.max(1, Math.min(10, v)), sh = o.shift || 0, me = o.me || 0, him = sex === 'M';
+  let g = '';
+  for (const v of [2, 4, 6, 8, 10]) g += `<line x1="${l}" x2="${W - r}" y1="${Y(v)}" y2="${Y(v)}" class="sc-grid"/><text x="${l - 6}" y="${Y(v) + 3.5}" class="sc-tick" text-anchor="end">${v}</text>`;
+  if (me) g = `<rect x="${(X(me) - cw / 2).toFixed(1)}" y="${t - 6}" width="${cw.toFixed(1)}" height="${H - t - b + 6}" rx="4" class="rv-me"/>` + g;
+  g += `<rect x="${l}" y="${t}" width="${(4 * cw).toFixed(1)}" height="${H - t - b}" class="rv-low"/>`;
+  const cx = l + 2 * cw, mult = him ? 11 : 25;
+  g += `<text x="${cx}" y="${Y(8.4)}" class="rv-lowt" text-anchor="middle">Below 5,</text><text x="${cx}" y="${Y(8.4) + 12}" class="rv-lowt" text-anchor="middle">far less attention</text>`
+    + `<text x="${cx}" y="${Y(8.4) + 28}" class="rv-lows" text-anchor="middle">The most attractive ${him ? 'men' : 'women'}</text><text x="${cx}" y="${Y(8.4) + 39}" class="rv-lows" text-anchor="middle">got ${mult} times the messages</text><text x="${cx}" y="${Y(8.4) + 50}" class="rv-lows" text-anchor="middle">of the least attractive</text>`;
+  const ks = [5, 6, 7, 8, 9, 10], d = k => { const [a, z, m, re] = REACH[sex][k]; return {a: cl(a + sh), z: cl(z + sh), m: cl(m + sh), re: cl(re)}; }, dim = k => me && k !== me ? ' dim' : '';
+  for (const k of ks){ const q = d(k); g += `<rect x="${(X(k) - cw * .26).toFixed(1)}" y="${Y(q.z).toFixed(1)}" width="${(cw * .52).toFixed(1)}" height="${(Y(q.a) - Y(q.z)).toFixed(1)}" rx="3" class="rv-band${dim(k)}"/>`; }
+  g += `<polyline points="${ks.map(k => `${X(k).toFixed(1)},${Y(d(k).re).toFixed(1)}`).join(' ')}" class="rv-reach"/><polyline points="${ks.map(k => `${X(k).toFixed(1)},${Y(d(k).m).toFixed(1)}`).join(' ')}" class="rv-line"/>`;
+  for (const k of ks){ const q = d(k), x = X(k), y = Y(q.re);
+    g += `<path d="M${x.toFixed(1)} ${(y - 5).toFixed(1)}l4.5 7.5h-9z" class="rv-tri${dim(k)}"/><circle cx="${x.toFixed(1)}" cy="${Y(q.m).toFixed(1)}" r="3.6" class="rv-pt${dim(k)}"/>`; }
+  for (let k = 1; k <= 10; k++) g += `<text x="${X(k).toFixed(1)}" y="${H - b + 14}" class="${k === me ? 'rv-mex' : 'sc-tick'}" text-anchor="middle">${k}</text>`;
+  g += `<text x="${l + (W - l - r) / 2}" y="${H - 4}" class="rv-ax" text-anchor="middle">${him ? 'His' : 'Her'} rating</text><text x="${l}" y="${t - 10}" class="rv-ax">${him ? 'Her' : 'His'} rating</text>`;
+  const sw = (cls, svg) => `<svg class="rv-k" width="18" height="10" viewBox="0 0 18 10" aria-hidden="true">${svg}</svg>`;
+  const legend = `<div class="sq-legend"><span>${sw('', '<rect x="5" y="0" width="8" height="10" rx="2" class="rv-band"/>')}Typical partner range</span><span>${sw('', '<line x1="0" y1="5" x2="18" y2="5" class="rv-line"/><circle cx="9" cy="5" r="3" class="rv-pt"/>')}Most common match</span><span>${sw('', '<line x1="0" y1="5" x2="18" y2="5" class="rv-reach"/><path d="M9 1l4 7h-8z" class="rv-tri"/>')}Reach (who ${him ? 'he' : 'she'} pursues)</span></div>`;
+  const label = `Reach vs. match: ${him ? 'men' : 'women'} rated 5 to 10, the ${him ? 'women' : 'men'} they most often end up with and the ${him ? 'women' : 'men'} they pursue`;
+  return `<div class="sc-wrap"><svg viewBox="0 0 ${W} ${H}" class="sc" role="img" aria-label="${label}">${g}</svg></div>${legend}`;
+}
+const REACH_NOTE = 'Illustrative model built from couples’ attractiveness correlating around 0.4 and messaging data showing people pursue partners about 25% more desirable than themselves (Bruch and Newman 2018). Attention below 5: OkCupid 2009. Not measured scores.';
+// The general version in How this works: men's and women's charts side by side, stacked on a phone.
+function reachHow(){ const el = $('reachHow'); if (!el) return;
+  el.innerHTML = `<figure><figcaption>Men</figcaption>${reachSVG('M')}</figure><figure><figcaption>Women</figcaption>${reachSVG('F')}</figure><p class="ff-note" style="grid-column:1/-1;margin:0">${REACH_NOTE}</p>`; }
+// The personal version: your own column picked out, and the band moved by your metro's ratio of single people looking, at most half a point.
+function reachCard(F, A){
+  if (F.T === 'B' || !F.mySex || F.mySex === F.T) return '';
+  const me = +($('myLooks') || {}).value || 0, you1 = F.mySex === 'M' ? 'man' : 'woman', them = F.mySex === 'M' ? 'women' : 'men', area = A.label || shortName(D.cbsa[A.codes[0]].n);
+  const opp = datingCount(A.codes, F, F.T, {}), same = datingCount(A.codes, F, F.mySex, {}), ratio = same > 0 ? opp / same : 1;
+  const shift = Math.round(Math.max(-.5, Math.min(.5, .5 * Math.log2(ratio))) * 10) / 10;
+  const q = me >= 5 ? REACH[F.mySex][me] : null, f1 = v => (Math.round(Math.max(1, Math.min(10, v)) * 10) / 10).toString();
+  const lede = !me ? `Who ${you1 === 'man' ? 'men' : 'women'} at each rating most often end up with, and who they go after. Rate your looks in About you to see your own column.`
+    : q ? `You rated your looks ${me}. In this model a ${you1} at ${me} most often ends up with ${them} around ${f1(q[2] + shift)}, within about ${f1(q[0] + shift)} to ${f1(q[1] + shift)}, and goes after ${them} around ${f1(q[3])}.`
+    : `You rated your looks ${me}. Below 5 the research shows far less attention rather than a different match, so there’s no band to draw for you.`;
+  const shiftS = Math.abs(shift) < .05 ? `In ${esc(area)} there are about as many single ${them} looking as single ${you1 === 'man' ? 'men' : 'women'}, so the baseline isn’t moved.`
+    : `The baseline model is moved ${shift > 0 ? 'up' : 'down'} ${Math.abs(shift)} for the ratio of single people looking in ${esc(area)}: ${ratio.toFixed(2)} ${them} for every ${you1}. That’s an adjustment to the model, not a measured local statistic.`;
+  return `<section class="rp-card c-reach" id="reachCard"><h3><span class="msi" aria-hidden="true">stacked_line_chart</span>Reach vs. match</h3><p class="rp-cl">${lede}</p><div class="rp-body">${reachSVG(F.mySex, {me, shift})}<p class="ff-note">${shiftS} ${REACH_NOTE}</p></div></section>`;
+}
 function ratioBlock(F, C, A, CF){
   if (!C || F.T === 'B' || !C.compN || !C.poolN || !CF || !CF.attR) return '';
   const you = F.mySex === 'M' ? 'men' : 'women', them = F.T === 'M' ? 'men' : 'women', area = A.label || shortName(D.cbsa[A.codes[0]].n);
@@ -3542,6 +3600,7 @@ async function buildReport(F, A, C, fin, WB, live, X = {}){
         `<ul class="ratio-list lv">${li}</ul><div class="sq-legend"><span><i class="k on"></i>${esc(area)}</span><span><i class="k" style="background:var(--muted)"></i>All U.S. metro areas</span></div>`));
     }
   }
+  { const rc = reachCard(F, A); if (rc) cards.push(rc); }   // Reach vs. match, men's or women's model
   // Loosening ladder: your mutual matches as your costliest expectations are dropped, one more at a time, in order of cost.
   if (EXR && EXR.ladder && EXR.ladder.length){
     const pts = [{label: 'Now', m: fin}, ...EXR.ladder], W = 340, H = 220, l = 40, rt = 14, tp = 18, bt = 30, raw = Math.max(1, ...pts.map(p => p.m)) * 1.08 / 4, e10 = 10 ** Math.floor(Math.log10(raw)), stp = [1, 2, 2.5, 5, 10].map(f => f * e10).find(v => v >= raw), top = stp * 4;
@@ -3646,9 +3705,9 @@ function layoutCards(force){ setTimeout(fitRibbon, 0);
 }
 let KEY_SEL = null;
 const CARD_PIN = ['c-bell', 'c-glance', 'c-odds', 'c-rank', 'c-scatter', 'c-mkt'];
-const CARD_ORDER = ['c-bell', 'c-glance', 'c-exp', 'c-mutual', 'c-want', 'c-age', 'c-ladder', 'c-moves', 'c-local-them', 'c-minor',
+const CARD_ORDER = ['c-bell', 'c-glance', 'c-exp', 'c-mutual', 'c-want', 'c-age', 'c-reach', 'c-ladder', 'c-moves', 'c-local-them', 'c-minor',
   'c-rank', 'c-comp', 'c-ahead', 'c-you', 'c-local-you', 'c-best', 'c-worst', 'c-scatter', 'c-mkt', 'c-hist', 'c-odds'];
-const KEY_GRP = {m: ['c-exp', 'c-mutual', 'c-want', 'c-age', 'c-ladder', 'c-local-them', 'c-minor'], c: ['c-rank', 'c-comp', 'c-ahead', 'c-you', 'c-local-you'], o: ['c-glance', 'c-mkt', 'c-hist', 'c-best', 'c-worst', 'c-scatter', 'c-bell', 'c-odds']};
+const KEY_GRP = {m: ['c-exp', 'c-mutual', 'c-want', 'c-age', 'c-reach', 'c-ladder', 'c-local-them', 'c-minor'], c: ['c-rank', 'c-comp', 'c-ahead', 'c-you', 'c-local-you'], o: ['c-glance', 'c-mkt', 'c-hist', 'c-best', 'c-worst', 'c-scatter', 'c-bell', 'c-odds']};
 document.addEventListener('click', e => { const b = e.target.closest('.rp-key button[data-g]'); if (!b) return;
   KEY_SEL = KEY_SEL === b.dataset.g ? null : b.dataset.g; document.querySelectorAll('.rp-key button[data-g]').forEach(x => x.setAttribute('aria-pressed', String(x.dataset.g === KEY_SEL))); layoutCards(true); });
 if (window.ResizeObserver) new ResizeObserver(() => layoutCards()).observe(document.getElementById('reportBody') || document.body);
@@ -4074,6 +4133,8 @@ HDR.forEach(([b]) => $(b).addEventListener('click', () => {
 }));
 $('mktBody').addEventListener('mousemove', gridRead);
 $('mktBody').addEventListener('click', gridRead);
+$('myLooks').addEventListener('change', () => { const c = document.getElementById('reachCard'); if (c && LAST_JOB){ const h = reachCard(LAST_JOB.args[0], LAST_JOB.args[1]); if (h) c.outerHTML = h; } });
+reachHow();
 $('reportBody').addEventListener('mousemove', gridRead); $('reportBody').addEventListener('click', gridRead);   // the grids live in the report cards once it is built
 // "Open to dating someone like you": slides open and closed like the other sections.
 $('prof').addEventListener('click', e => { const b = e.target.closest('.cm-sum'); if (!b) return; const w = b.parentNode, on = !w.classList.contains('open'); w.classList.toggle('open', on); b.setAttribute('aria-expanded', String(on)); });
