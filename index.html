@@ -418,7 +418,7 @@ th{font:600 11.5px/1.4 var(--mono);letter-spacing:.06em;text-transform:uppercase
 td.m,th.m{text-align:left;width:100%}
 td.r{color:var(--muted);font:400 11.5px/1.4 var(--mono);width:2.5ch}
 td.v{font-family:var(--mono);white-space:nowrap}
-tr.me td{background:var(--accent-soft)} .cmp-near td.m small{display:block;font-size:11px;color:var(--muted);font-weight:400} .cmp-near tr.me td{font-weight:700}
+tr.me td{background:var(--accent-soft)} .cmp-near td.m small{display:block;font-size:11px;color:var(--muted);font-weight:400} .cmp-near tr.me td{font-weight:700} .cmp-near .pos{color:var(--good)} .cmp-near .neg{color:var(--poor)}
 td button{font:600 13px var(--body);color:var(--accent-ink);background:none;border:1px solid var(--rule);border-radius:6px;padding:4px 10px;cursor:pointer;white-space:nowrap}
 td button:hover{border-color:var(--accent-ink)}
 @media (max-width:560px){.hide-sm{display:none} #cmp .pill{display:none} #cmp td button,.cmpw td button{padding-left:8px;padding-right:8px} #cmp th,.cmpw th{white-space:normal;letter-spacing:0;font-size:11.5px;line-height:1.4} #cmp th,#cmp td,.cmpw th,.cmpw td{padding-left:4px;padding-right:4px}}
@@ -3538,9 +3538,12 @@ async function buildReport(F, A, C, fin, WB, live, X = {}){
     const lede = `Your same answers counted in the metro areas closest to ${esc(home)} and the nearest major metros. ` + ((best.m || 0) > fin
       ? `${esc(best.n)}, ${Math.round(best.d)} miles away, has the most mutual matches for you: ${fmtN(best.m)}, against ${fmtN(fin)} here.` : `None of them has more mutual matches for you than ${esc(home)}.`);
     const nv = v => v != null ? fmtN(Math.max(0, v)) : '—';
-    const tr = [{n: home, w: WB, m: fin, me: true}, ...L].sort((a, b) => (b.m || 0) - (a.m || 0)).map(o =>
-      `<tr class="${o.me ? 'me' : ''}"><td class="m">${esc(o.n)}<small>${o.me ? 'your area' : Math.round(o.d) + ' miles'}${o.big && !o.me ? ' · major metro' : ''}</small></td><td class="v">${nv(o.w)}</td><td class="v">${nv(o.m)}</td></tr>`).join('');
-    cards.push(card('c-near', 'near_me', 'Your chances nearby', lede, `<div class="tw"><table class="cmpw cmp-near"><thead><tr><th class="m">Metro area</th><th>${Them} who’d date you</th><th>Mutual matches</th></tr></thead><tbody>${tr}</tbody></table></div><p class="ff-note">Most mutual matches first. The closest metro areas within 250 miles, plus the four closest metro areas of 500,000 people or more (Census Bureau, 2025). Counted the same way as the numbers at the top of your report.</p>`)); }
+    // Your income against what a family of four needs in each area: plus is left over, minus is the gap.
+    const inc = F.myInc > 0 ? F.myInc : null, bud = i => FFD.rows && FFD.rows[i] ? FFD.rows[i][0] : null, hi = A.codes.length === 1 ? A.codes[0] : X.mine;
+    const gap = i => { const b = bud(i); if (inc == null || b == null) return ''; const d = inc - b; return Math.abs(d) < 500 ? '$0' : `<span class="${d < 0 ? 'neg' : 'pos'}">${d < 0 ? '−' : '+'}${ffK(Math.abs(d))}</span>`; };
+    const tr = [{n: home, w: WB, m: fin, me: true, i: hi}, ...L].sort((a, b) => (b.m || 0) - (a.m || 0)).map(o =>
+      `<tr class="${o.me ? 'me' : ''}"><td class="m">${esc(o.n)}<small>${o.me ? 'your area' : Math.round(o.d) + ' miles'}${o.big && !o.me ? ' · major metro' : ''}</small></td><td class="v">${nv(o.w)}</td><td class="v">${nv(o.m)}</td>${inc != null ? `<td class="v">${gap(o.i)}</td>` : ''}</tr>`).join('');
+    cards.push(card('c-near', 'near_me', 'Your chances nearby', lede, `<div class="tw"><table class="cmpw cmp-near"><thead><tr><th class="m">Metro area</th><th>${Them} who’d date you</th><th>Mutual matches</th>${inc != null ? '<th>Income (surplus or shortfall)</th>' : ''}</tr></thead><tbody>${tr}</tbody></table></div><p class="ff-note">Most mutual matches first. The closest metro areas within 250 miles, plus the four closest metro areas of 500,000 people or more (Census Bureau, 2025). Counted the same way as the numbers at the top of your report.${inc != null ? ` Income (surplus or shortfall) is your ${ffK(inc)} income minus what a family of four needs in that area.` : ''}</p>`)); }
   // Every metro: your mutual matches there (log scale) against your chance there, same answers everywhere.
   if (X.ranked && X.odds && X.ranked.length > 20){
     const pts = X.ranked.map(r => { const o = X.odds.get(r.i); return o ? {i: r.i, n: shortName(D.cbsa[r.i].n), x: Math.max(1, r.f || 0), y: score100(o.chance || 0), c: (o.chance || 0) * 100, pop: adultsIn([r.i], 'M') + adultsIn([r.i], 'F')} : null; }).filter(Boolean);
