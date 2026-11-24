@@ -4531,10 +4531,13 @@ function ffPartner(F, me){
 }
 
 // 5. The same budget in the closest areas: how much a move changes the floor.
+// Metro areas of 500,000 people or more (Census Bureau, July 1, 2025 estimates); the nearby card always adds the four closest.
+const BIG_METROS = new Set('10420,10580,10740,10900,12060,12260,12420,12540,12580,12940,13820,14260,14460,14860,15380,15980,16700,16740,16860,16980,17140,17410,17820,17900,18140,19100,19430,19660,19740,19780,19820,20500,21340,22220,23420,24340,24660,24860,25420,25540,26420,26620,26900,27140,27260,28140,28660,28880,28940,29460,29540,29820,30460,30780,31080,31140,31540,32580,32820,33100,33340,33460,33700,34980,35300,35380,35620,35840,36260,36420,36540,36740,37100,37340,37860,37980,38060,38300,38860,38900,38940,39300,39340,39580,39900,40060,40140,40380,40900,41180,41620,41700,41740,41860,41940,42540,42660,44060,44180,44700,45060,45300,45780,46060,46140,46520,47260,47900,48620,49180,49340'.split(','));
 function ffNear(me){
   const c0 = D.cbsa[me.i], R = Math.PI / 180, mi = (a, b) => { const x = (b.lo - a.lo) * R * Math.cos((a.la + b.la) / 2 * R), y = (b.la - a.la) * R; return 3959 * Math.hypot(x, y); };
-  return D.cbsa.map((c, i) => ({i, d: mi(c0, c)})).filter(o => o.i !== me.i && FFD.rows[o.i] && o.d <= 250).sort((a, b) => a.d - b.d).slice(0, 8)
-    .map(o => ({...o, name: FFD.names[o.i], t: FFD.rows[o.i][0]}));
+  const all = D.cbsa.map((c, i) => ({i, d: mi(c0, c)})).filter(o => o.i !== me.i && FFD.rows[o.i]).sort((a, b) => a.d - b.d);
+  const near = all.filter(o => o.d <= 250).slice(0, 8), big = all.filter(o => BIG_METROS.has(D.codes[o.i])).slice(0, 4);
+  return [...near, ...big.filter(o => !near.includes(o))].map(o => ({...o, name: FFD.names[o.i], t: FFD.rows[o.i][0], big: BIG_METROS.has(D.codes[o.i])}));
 }
 // Median full-time weekly pay (BLS, Q3 2019 $919, Q3 2026 $1,232) and CPI-U (October 2019 257.346, October 2026 337.511)
 const FF_WAGE = 1232 / 919 - 1, FF_CPI = 337.511 / 257.346 - 1;
@@ -4556,14 +4559,14 @@ function ffNearby(F, me){
   const near = ffNear(me);
   if (!near.length) return '';
   const inc = F.myInc > 0 ? F.myInc : null, best = near.reduce((a, b) => b.t < a.t ? b : a);
-  const lede = best.t < me.total ? `The same family budget in the areas closest to ${ffEsc(me.name)}. ${ffEsc(best.name)}, ${Math.round(best.d)} miles away, lowers what a family of four needs by ${ffM(me.total - best.t)}.`
-    : `The same family budget in the areas closest to ${ffEsc(me.name)}. None of them costs less.`;
+  const lede = best.t < me.total ? `The same family budget in the areas closest to ${ffEsc(me.name)} and the nearest major metros. ${ffEsc(best.name)}, ${Math.round(best.d)} miles away, lowers what a family of four needs by ${ffM(me.total - best.t)}.`
+    : `The same family budget in the areas closest to ${ffEsc(me.name)} and the nearest major metros. None of them costs less.`;
   const rows = [{i: me.i, d: 0, name: me.name, t: me.total, me: true}, ...near].sort((a, b) => a.t - b.t).map(o => {
     const df = o.t - me.total, ok = inc && o.t <= inc;
-    return `<li${o.me ? ' class="ff-me"' : ''}><span class="ff-nm">${ffEsc(o.name)}<small>${o.me ? 'your area' : Math.round(o.d) + ' miles'}${ok ? ' · on your income' : ''}</small></span><span class="ff-v">${ffM(o.t)}</span><span class="ff-df ${df < 0 ? 'ok' : df > 0 ? 'up' : ''}">${o.me ? '' : Math.abs(df) < 500 ? 'same' : (df < 0 ? '−' : '+') + ffK(Math.abs(df))}</span></li>`; }).join('');   // under $500 apart reads as the same, not "−$0k"
+    return `<li${o.me ? ' class="ff-me"' : ''}><span class="ff-nm">${ffEsc(o.name)}<small>${o.me ? 'your area' : Math.round(o.d) + ' miles'}${o.big && !o.me ? ' · major metro' : ''}${ok ? ' · on your income' : ''}</small></span><span class="ff-v">${ffM(o.t)}</span><span class="ff-df ${df < 0 ? 'ok' : df > 0 ? 'up' : ''}">${o.me ? '' : Math.abs(df) < 500 ? 'same' : (df < 0 ? '−' : '+') + ffK(Math.abs(df))}</span></li>`; }).join('');   // under $500 apart reads as the same, not "−$0k"
   return `<section class="rp-card ff-card c-floor" id="ffNear"><h3><span class="msi" aria-hidden="true">near_me</span>What the same life costs nearby</h3>
     <p class="rp-cl">${lede}</p><div class="rp-body"><ol class="ff-near">${rows}</ol>
-    <p class="ff-note">Cheapest first. Areas within 250 miles, including smaller cities and towns the Census calls micro areas.</p></div></section>`;
+    <p class="ff-note">Cheapest first. The closest areas within 250 miles, including smaller cities and towns the Census calls micro areas, plus the four closest metro areas of 500,000 people or more (Census Bureau, 2025).</p></div></section>`;
 }
 // The middle-class warning: Pew's middle-income ceiling for a family of four (double the size-adjusted national median, 2025) against every area's family floor.
 const FF_MIDTOP = 240400;
