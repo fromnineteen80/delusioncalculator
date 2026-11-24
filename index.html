@@ -306,7 +306,7 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
 .rp-type span{font:600 11.5px/1.4 var(--body);letter-spacing:.04em;text-transform:uppercase;color:var(--muted)} .rp-type h3{margin:2px 0 12px;font:700 26px/1.15 var(--display);color:var(--navy)}
 .pbars{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 24px;margin:0 0 14px} @media (max-width:760px){.pbars{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}} @media (max-width:420px){.pbars{grid-template-columns:minmax(0,1fr)}}
 .pb-l{display:flex;justify-content:space-between;font-size:13px;color:var(--ink)} .pb-l b{font:600 13px var(--mono)}
-.pb-t{height:4px;background:var(--track);border-radius:2px;overflow:hidden;margin:5px 0 3px} .pb-t i{display:block;height:100%;background:var(--accent)}
+.pb-t{height:4px;background:var(--track);border-radius:2px;overflow:hidden;margin:5px 0 3px} .pb-t i{display:block;height:100%;background:var(--accent)} .pb-tw{position:relative} .pb-tk{position:absolute;top:-3px;width:2px;height:10px;margin-left:-1px;border-radius:1px;background:var(--ink)}
 .pb.vhigh .pb-t i{background:var(--good)} .pb.high .pb-t i{background:var(--hi)} .pb.mod .pb-t i{background:var(--fair)} .pb.low .pb-t i{background:var(--long)} .pb.vlow .pb-t i{background:var(--poor)}
 .pb.vhigh .pb-l b{color:var(--good)} .pb.high .pb-l b{color:var(--hi)} .pb.mod .pb-l b{color:var(--fair-ink)} .pb.low .pb-l b{color:var(--long)} .pb.vlow .pb-l b{color:var(--poor)}
 .pb-d{margin:4px 0 0;font-size:11.5px;line-height:1.4;color:var(--ink);opacity:.8}
@@ -3184,8 +3184,8 @@ function reportSummary(F, A, C, fin, WB, rows, X){
   const eraS = near ? pick([`That’s about what ${near.s} looked like.`, `History has a match for that: ${near.s}.`])
     : above && below ? `That’s steeper than ${below.s}, though not as bad as ${above.s}.` : below ? `That’s steeper than ${below.s}.` : '';
   const perS = r => r < 1 ? `about ${Math.max(1, Math.round(r * 10))} ${you} competing for every 10` : r < 10 ? `about ${r.toFixed(1)} ${you} competing for each` : `about ${Math.round(r)} ${you} competing for each`;
-  const compS = rIA > 1 ? pick([`On paper there are ${perS(raw)} actively dating ${raw < 1 ? them : them1} you’d pursue. Most of the attention goes to the strongest few, so in practice it’s closer to ${rIA.toFixed(1)} to one, and at that ratio about ${Math.round(dim.comp)}% of your competition ends up with nobody.`,
-      `By the numbers there are ${perS(raw)} actively dating ${raw < 1 ? them : them1} you’d pursue. Count who actually gets the attention and it’s closer to ${rIA.toFixed(1)}, which leaves about ${Math.round(dim.comp)}% of your competition with nobody.`])
+  const leftS = dim.comp >= 5 ? `about 1 in ${Math.max(2, Math.round(100 / dim.comp))}` : 'almost none';
+  const compS = rIA > 1 ? `Once you count where attention actually goes, ${leftS} of the ${you} chasing the same ${them} end up with nobody.`
     : `There are enough of these ${them} to go around, even after the strongest ${you} take their share.`;
   // drivers, each told through what it actually does
   const sorted = rows.slice().sort((a, b) => Math.abs(b.dc) - Math.abs(a.dc)).filter(r => Math.abs(r.dc) >= .3);
@@ -3210,8 +3210,8 @@ function reportSummary(F, A, C, fin, WB, rows, X){
   // Each driver is told as where you'd be without it, the same number the cards below show.
   // A filter is told as where you'd be without it; one of your own traits, as where you'd be scored as a typical person on it.
   const wo = r => PC(Math.max(0, C.chance - r.dc / 100));
-  const wo1 = r => r.side === 'you' ? `Scored as a typical ${one} on it, you’d be at ${wo(r)}.` : r.side === 'market' ? `In a typical market you’d be at ${wo(r)}.` : `Without it you’d be at ${wo(r)}.`;
-  const wo2 = r => r.side === 'you' ? `Scored as a typical ${one} on ${name(r)}, you’d be at ${wo(r)}.` : r.side === 'market' ? `In a typical market you’d be at ${wo(r)}.` : `Without ${name(r)} you’d be at ${wo(r)}.`;
+  const wo1 = r => r.side === 'you' ? `Without that ${r.dc > 0 ? 'edge' : 'drag'} you’d be at ${wo(r)}.` : r.side === 'market' ? `In a typical market you’d be at ${wo(r)}.` : `Without it you’d be at ${wo(r)}.`;
+  const wo2 = r => r.side === 'you' ? `${cap(name(r))} ${r.dc > 0 ? 'helps too' : 'also hurts'}: without that you’d be at ${wo(r)}.` : r.side === 'market' ? `In a typical market you’d be at ${wo(r)}.` : `Without ${name(r)} you’d be at ${wo(r)}.`;
   if (ups.length){ const r = ups[0], h0 = how(r);
     drvS += h0 ? pick([`Your biggest asset is ${name(r)}. It ${h0}. ${wo1(r)}`, `${cap(name(r))} helps you most: it ${h0}. ${wo1(r)}`]) : `Your biggest asset is ${name(r)}. ${wo1(r)}`;
     if (ups[1]) drvS += ` ${wo2(ups[1])}`; }
@@ -3253,12 +3253,19 @@ function reportSummary(F, A, C, fin, WB, rows, X){
   const tierOf = g => g >= 80 ? 'vhigh' : g >= 60 ? 'high' : g >= 40 ? 'mod' : g >= 20 ? 'low' : 'vlow';
   const bar = (label, v, lo, hi, worse, d) => `<div class="pb ${tierOf(worse ? 100 - v : v)}"><div class="pb-l"><span>${label}</span><b>${v >= 99.5 && v < 100 ? '>99%' : v > 0 && v < .5 ? '<1%' : Math.round(v) + '%'}</b></div><div class="pb-t"><i style="width:${Math.max(1, v).toFixed(1)}%"></i></div><div class="pb-e"><span>${lo}</span><span>${hi}</span></div>${d ? `<p class="pb-d">${d}</p>` : ''}</div>`;
   const r0 = v => Math.round(v);
+  // A meter drawn on your own chance scale: a filled stretch from a to b (0–1 of the track) and an optional tick for the typical person.
+  const barX = (label, val, tier, lo, hi, a, b, tick, d) => `<div class="pb ${tier}"><div class="pb-l"><span>${label}</span><b>${val}</b></div><div class="pb-tw"><div class="pb-t"><i style="margin-left:${(a * 100).toFixed(1)}%;width:${Math.max(1, (b - a) * 100).toFixed(1)}%"></i></div>${tick != null ? `<span class="pb-tk" style="left:${(tick * 100).toFixed(1)}%"></span>` : ''}</div><div class="pb-e"><span>${lo}</span><span>${hi}</span></div>${d ? `<p class="pb-d">${d}</p>` : ''}</div>`;
+  const PCs = chanceTxt, top = Math.min(1, Math.max(C.chance, h, bestCh) * 1.2), at = v => Math.min(1, v / top);
+  const mkt = dim.market >= 58 ? 'Favors you' : dim.market > 42 ? 'About average' : 'Works against you';
+  const left = dim.comp >= 5 ? `1 in ${Math.max(2, Math.round(100 / dim.comp))} left out` : 'Almost no one left out';
+  const oddsT = ratio >= 1.15 ? 'vhigh' : ratio >= .87 ? 'mod' : ratio >= .5 ? 'low' : 'vlow', gainR = C.chance > 0 ? bestCh / C.chance : 1;
+  const moveT = gainR >= 2 ? 'vhigh' : gainR >= 1.3 ? 'high' : gainR >= 1.1 ? 'mod' : 'low';
   const bars = [bar('Your appeal', dim.appeal, 'Behind others', 'Ahead of others', false, `You outrank ${r0(dim.appeal)}% of the ${you} competing for the same ${them}.`),
     bar('Your selectivity', dim.select, 'Open', 'Selective', true, `Your list rules out ${dim.select >= 99.5 && dim.select < 100 ? 'more than 99' : r0(dim.select)}% of the ${them} who would date you.`),
-    bar('Your local market', dim.market, 'Works against you', 'Favors you', false, `50% is the national average. Above 50% means less competition here than typical.`),
-    bar('Competition with others', dim.comp, 'Even', 'Steep', true, `${r0(dim.comp)}% of the ${you} chasing the same ${them} would end up with nobody.`),
-    bar('Your odds vs. typical', dim.fit, 'Below typical', 'Above typical', false, `50% means the same odds as a typical ${one} your age. Above 50% is better.`),
-    bar('Room to improve', dim.lev, 'Few good moves', 'Big moves available', false, `How much your best change, or a move to a better city, would raise your chances.`)].join('');
+    barX('Your local market', mkt, mkt === 'Favors you' ? 'vhigh' : mkt === 'About average' ? 'mod' : 'low', 'Works against you', 'Favors you', 0, dim.market / 100, .5, `How much competition you face here compared with the same search nationwide. The mark is the national average.`),
+    barX('Competition with others', left, dim.comp < 10 ? 'vhigh' : dim.comp < 20 ? 'high' : dim.comp < 35 ? 'mod' : dim.comp < 50 ? 'low' : 'vlow', 'Even', 'Steep', 0, dim.comp / 100, null, `${r0(dim.comp)}% of the ${you} chasing the same ${them} would end up with nobody.`),
+    barX('Your chances vs. typical', `${PCs(C.chance)} vs. ${PCs(h)}`, oddsT, '0%', PCs(top), 0, at(C.chance), at(h), `Your chances against a typical ${one} your age, marked on the bar at ${PCs(h)}.`),
+    barX('Your best move', bestCh > C.chance + .0005 ? `${PCs(C.chance)} → ${PCs(bestCh)}` : 'No better move', bestCh > C.chance + .0005 ? moveT : 'low', 'Now', 'With your best move', at(C.chance), at(Math.max(C.chance, bestCh)), null, bestCh > C.chance + .0005 ? `Where your chances go with the best change to your answers, or the best city to move to, named below.` : `Nothing you could change, and no other city, raises your chances.`)].join('');
   return `<div class="rp-sum${SUM_MIN ? ' min' : ''}" id="rpSum"><span class="rp-ribbon"><svg class="rb-pin" viewBox="2 3 20 18.35" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="#fff"/><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" class="rb-in" transform="translate(12 11.6) scale(.45) translate(-12 -12)"/></svg><span class="rb-t">${area}</span></span><div class="rp-type"><div><span>Your dating persona</span><h3>${pname}</h3></div><button type="button" class="pm" id="rpSumTog" aria-expanded="${!SUM_MIN}" aria-label="Show or hide the summary">${SUM_MIN ? '+' : '–'}</button></div>
     ${(() => { const ow = oriWord(F.T, F.mySex), wdm = WB != null ? WB : fin, st = (n, l) => `<div><b>${fmtN(Math.max(0, n))}</b><span>${l}</span></div>`;
       return `<div class="rp-mini">${st(oriCount(A.codes, F, F.T, F.mySex), ow.includes(' ') ? `single ${ow.replace(' ', ' local ')}` : `single local ${ow}`)}${st(wdm, `${them} who would date you`)}${st(C.poolN, `${them} you’d pursue`)}${st(C.compN, `${you} competing for them`)}</div>`; })()}
@@ -3341,7 +3348,7 @@ async function buildReport(F, A, C, fin, WB, live, X = {}){
   const rowsOf = list => { const L = list.filter(big), mx = Math.max(1, ...L.map(r => Math.abs(r.dc)));
     return L.map(r => `<li class="rk-row ${r.dc >= 0 ? 'up' : 'dn'}"><div class="rk-m"><div class="rk-l">${esc(r.label)}</div>
       <div class="rk-bar"><i style="width:${Math.max(2, Math.abs(r.dc) / mx * 100).toFixed(1)}%"></i></div>${chan(r) ? `<div class="rk-w"><span>${chan(r)}</span></div>` : ''}</div>
-      <div class="rk-v"><b>${chanceTxt(Math.max(0, C.chance - r.dc / 100))}</b><small>${r.side === 'you' ? 'if typical' : 'without it'}</small></div></li>`).join(''); };
+      <div class="rk-v"><b>${chanceTxt(Math.max(0, C.chance - r.dc / 100))}</b><small>${r.side === 'you' ? 'if average' : 'without it'}</small></div></li>`).join(''); };
   const ptsC = v => { const x = Math.abs(v); return `${x.toFixed(x < 10 ? 1 : 0)}%`; };
   const tot = (list, f) => list.filter(f).reduce((a, r) => a + r.dc, 0);
   const card = (cls, icon, title, lede, body) => `<section class="rp-card ${cls}"><h3><span class="msi" aria-hidden="true">${icon}</span>${title}</h3>${lede ? `<p class="rp-cl">${lede}</p>` : ''}<div class="rp-body">${body}</div></section>`;
@@ -3396,7 +3403,7 @@ async function buildReport(F, A, C, fin, WB, live, X = {}){
         + P(`${fmtN(N.wbAct)} of them are actively dating`, 'right now.')
         + P(`${fin >= 1 ? fmtN(fin) : 'None'} of them ${Math.round(fin) === 1 ? 'is also one of the' : 'are also'} ${them} you’d pursue.`, 'These are your mutual matches.') : '');
     cards.unshift(card('c-glance', 'insights', 'Your results at a glance', `What your answers mean in ${area}: first the ${them} you’d pursue, then the ${them} who would date you.`, body)); }
-  if (C.answered) cards.splice(1, 0, card('c-rank', 'leaderboard', 'Where you rank', `${Math.round(C.compN) < GRID_N ? 'Each dot is one of the' : `Each dot stands for about ${perDot(C.compN / GRID_N)} of the`} ${fmtN(C.compN)} single ${you} competing against you for the ${them} you want, ranked by appeal on the questions you answered.${YOU_PART ? ` Below the grid, the answers that move your chances most, each with where you’d be if you were scored as a typical ${one} on it instead of your ${chanceTxt(C.chance)}.` : ''}`, slot('#mktBody .grids .gcol:not(.rare)') + YOU_PART));
+  if (C.answered) cards.splice(1, 0, card('c-rank', 'leaderboard', 'Where you rank', `${Math.round(C.compN) < GRID_N ? 'Each dot is one of the' : `Each dot stands for about ${perDot(C.compN / GRID_N)} of the`} ${fmtN(C.compN)} single ${you} competing against you for the ${them} you want, ranked by appeal on the questions you answered.${YOU_PART ? ` Below the grid, the answers that move your chances most, each with where you’d be if you were average on it instead of your ${chanceTxt(C.chance)}.` : ''}`, slot('#mktBody .grids .gcol:not(.rare)') + YOU_PART));
   cards.splice(C.answered ? 2 : 1, 0, card('c-exp', 'filter_alt', 'Your expectations', (document.querySelector('#mktBody .mutual .ghead') || {}).innerHTML || '', slot('#mktBody .gcol.rare')));
   // Your competition: from every single person of your sex and orientation here down to the ones who outscore you.
   if (F.T !== 'B' && C.compN >= 1){
@@ -3589,7 +3596,7 @@ async function buildReport(F, A, C, fin, WB, live, X = {}){
   { const small = rows.filter(r => r.side !== 'market' && !big(r) && Math.abs(r.dc) >= .05);   // anything that rounds to 0 is left out
     // Your own answers and your filters can share a topic (your religion and the religion you want), so they're listed apart.
     const mi = list => list.map(r => `<li><span>${esc(r.label)}</span><b>${chanceTxt(Math.max(0, C.chance - r.dc / 100))}</b></li>`).join(''), sy = small.filter(r => r.side === 'you'), sw = small.filter(r => r.side !== 'you');
-    if (small.length) cards.push(card('c-minor', 'more_horiz', 'Also consider', `Your chances are ${chanceTxt(C.chance)}. Each of these moves them by less than 1%. For your own answers the number is where you’d be scored as a typical ${one} on it; for a filter, where you’d be without it.`,
+    if (small.length) cards.push(card('c-minor', 'more_horiz', 'Also consider', `Your chances are ${chanceTxt(C.chance)}. Each of these moves them by less than 1%. For your own answers the number is where you’d be if you were average on it; for a filter, where you’d be without it.`,
       (sy.length ? `<p class="gl-h">About you</p><ul class="rp-minor">${mi(sy)}</ul>` : '') + (sw.length ? `<p class="gl-h">What you’re asking for</p><ul class="rp-minor">${mi(sw)}</ul>` : ''))); }
   cards.splice(0, cards.length, ...cardOrder(cards));   // the jump links and the cards share one order
   box.classList.remove('stale');
