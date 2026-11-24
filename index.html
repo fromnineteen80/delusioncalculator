@@ -3187,26 +3187,21 @@ function reportSummary(F, A, C, fin, WB, rows, X){
   const area = esc(A.label || shortName(D.cbsa[A.codes[0]].n)), P = v => Math.round(v * 100), ch = P(C.chance);
   const pctTxt = v => v >= .995 ? 'over 99%' : v < .01 ? 'under 1%' : P(v) + '%';
   const age0 = F.myAge || (F.ageMin + F.ageMax) / 2 + (F.mySex === F.T ? 0 : F.mySex === 'M' ? 2 : -2), h = age0 < 30 ? .15 : age0 < 45 ? .23 : age0 < 65 ? .21 : .08;
+  const ageW = F.myAge ? 'your age' : 'here';
   const clamp100 = v => Math.max(0, Math.min(100, v)), odds = p => p / Math.max(1e-6, 1 - p);
   // ---- dimensions and type ----
   let bestCh = C.chance, bestIdea = null, bestMetro = null;
   if (X.best && X.best.length) for (const b of X.best) if (b.C2 && b.C2.chance > bestCh){ bestCh = b.C2.chance; bestIdea = b; }
   if (X.ranked && X.odds){ const m = X.ranked.find(r => r.i !== X.mine), o = m && X.odds.get(m.i); if (o && P(o.chance) > ch) bestMetro = {m, o}; if (o && o.chance > bestCh) bestCh = o.chance; }
   const raw = C.compN / Math.max(1e-9, C.poolN), rIA = X.CF && X.CF.attR ? raw * X.CF.attR : raw;
-  const dim = { appeal: clamp100(C.pct * 100), select: WB > 0 ? clamp100((1 - fin / WB) * 100) : 0, market: clamp100(100 / (1 + (C.marketF || 1))),
+  const ranked = !!C.answered && isFinite(C.pct);
+  const dim = { appeal: ranked ? clamp100(C.pct * 100) : 50, select: WB > 0 ? clamp100((1 - fin / WB) * 100) : 0, market: clamp100(100 / (1 + (C.marketF || 1))),
     comp: clamp100((1 - 1 / Math.max(1, rIA)) * 100), fit: clamp100(odds(C.chance) / (odds(C.chance) + odds(h)) * 100),
     lev: C.chance < .999 ? clamp100((bestCh - C.chance) / (1 - C.chance) * 100) : 0 };
   const hiA = dim.appeal >= 60, hiS = dim.select >= 80, hiC = dim.comp >= 50;
-  const TYPES = {
-    HHL: ['The Picky Standout', 'You’re in demand and the field is open. The only thing standing between you and a relationship is your own list.'],
-    HHH: ['The Contested Standout', 'You’re in demand, but you’ve picked the same people every other strong competitor picked.'],
-    HLL: ['The Front-Runner', 'You’re a strong catch with realistic standards, and the market has room for you. If you’re still single a year from now, it won’t be the math.'],
-    HLH: ['The Holdout', 'You hold real value and you know it. But in a market this crowded, waiting for better is a bet, and every month you hold out it’s a bet against you.'],
-    LLL: ['The Long Shot', dim.appeal < 20 ? 'You’re not asking for much and the field isn’t crowded, but you rank near the bottom of the people you’re up against. Being realistic isn’t enough when almost everyone else is a stronger pick.' : 'You’re not asking for much, and the field isn’t crowded. But most of the people you’re up against rank ahead of you, so your odds rest on someone choosing you over them.'],
-    LLH: ['The Outmatched', 'Your expectations are realistic, but you’re outmatched in a crowded market. The fix is you, or a different city.'],
-    LHL: ['The Overreacher', 'The people you want would mostly choose someone else, even with little competition around. Your list is ahead of your standing.'],
-    LHH: ['The Delusional Dater', 'You want what everyone wants, and most of the people chasing it are ahead of you in a crowded field. These odds don’t come back unless something changes.'] };
-  const [pname, pline] = TYPES[(hiA ? 'H' : 'L') + (hiS ? 'H' : 'L') + (hiC ? 'H' : 'L')];
+  const TYPES = { HHL: 'The Picky Standout', HHH: 'The Contested Standout', HLL: 'The Front-Runner', HLH: 'The Holdout',
+    LLL: 'The Long Shot', LLH: 'The Outmatched', LHL: 'The Overreacher', LHH: 'The Delusional Dater' };
+  const pname = ranked ? TYPES[(hiA ? 'H' : 'L') + (hiS ? 'H' : 'L') + (hiC ? 'H' : 'L')] : 'The Unranked';
   // ---- voice: plain sentences, chosen by this person's situation; where two phrasings fit the same situation,
   // a stable pick from their own numbers decides, so different people don't read the same lines ----
   let seed = (Math.round(C.chance * 1e5) * 31 + Math.round(fin || 0) * 7 + Math.round(C.compN)) >>> 0;
@@ -3220,13 +3215,13 @@ function reportSummary(F, A, C, fin, WB, rows, X){
   const FR = [[.25,'about a quarter of'],[1/3,'about a third of'],[.5,'about half'],[2/3,'about two thirds of'],[.75,'about three quarters of']], fr = FR.find(f => Math.abs(ratio - f[0]) < .04);
   // Name the problem: when the odds are well under typical, say which side is causing it, in points (expectations vs. what you bring).
   const costOf = side => rows.filter(r => r.side === side && r.dc < 0).reduce((a, r) => a + r.dc, 0), cW = costOf('want'), cY = costOf('you');
-  const verdictS = ratio >= .6 ? '' : cW <= -1 && cW <= cY ? ` That strategy doesn’t work. Your filters cost you more than anything about you, and the only way up is to loosen them.`
-    : cY <= -1 ? ` Loosening your filters won’t fix that. Your own traits cost you more than anything you’re asking for.` : '';
+  const verdictS = ratio >= .6 ? '' : cW <= -1 && cW <= cY ? ` Your filters cost you more than anything about you, and the only way up is to loosen them.`
+    : cY <= -1 ? (cW < 0 ? ` Loosening your filters won’t fix that. Your own traits cost you more than anything you’re asking for.` : ` Your own traits are what hold your number down.`) : '';
   const PC = chanceTxt, oddsS = `With the expectations you’ve set, your chances in the dating economy are ${PC(C.chance)}. ` + (
-    ratio >= 1.15 ? pick([`A typical ${one} your age is at ${PC(h)}.`, `That beats the ${PC(h)} a typical ${one} your age can count on.`])
-    : ratio > .87 ? `That’s about what a typical ${one} your age has.`
-    : fr ? `That’s ${fr[1]} the ${PC(h)} a typical ${one} your age has.`
-    : ratio >= .2 ? `A typical ${one} your age is at ${PC(h)}.` : `A typical ${one} your age is at ${PC(h)}, so you’re nowhere close.`)
+    ratio >= 1.15 ? pick([`A typical ${one} ${ageW} is at ${PC(h)}.`, `That beats the ${PC(h)} a typical ${one} ${ageW} can count on.`])
+    : ratio > .87 ? `That’s about what a typical ${one} ${ageW} has.`
+    : fr ? `That’s ${fr[1]} the ${PC(h)} a typical ${one} ${ageW} has.`
+    : ratio >= .2 ? `A typical ${one} ${ageW} is at ${PC(h)}.` : `A typical ${one} ${ageW} is at ${PC(h)}, so you’re nowhere close.`)
     + (dim.market >= 55 ? pick([' The local market is on your side.', ' The market here works in your favor.']) : dim.market <= 45 ? pick([' The local market isn’t helping either.', ' The market here works against you too.']) : '') + verdictS;
   // what your list does
   let listS = '';
@@ -3243,9 +3238,10 @@ function reportSummary(F, A, C, fin, WB, rows, X){
   const eraS = near ? pick([`That’s about what ${near.s} looked like.`, `History has a match for that: ${near.s}.`])
     : above && below ? `That’s steeper than ${below.s}, though not as bad as ${above.s}.` : below ? `That’s steeper than ${below.s}.` : '';
   const perS = r => r < 1 ? `about ${Math.max(1, Math.round(r * 10))} ${you} competing for every 10` : r < 10 ? `about ${r.toFixed(1)} ${you} competing for each` : `about ${Math.round(r)} ${you} competing for each`;
-  const leftS = dim.comp >= 5 ? `about 1 in ${Math.max(2, Math.round(100 / dim.comp))}` : 'almost none';
-  const compS = rIA > 1 ? `Once you count where attention actually goes, ${leftS} of the ${you} chasing the same ${them} end up with nobody.`
-    : `There are enough of these ${them} to go around, even after the strongest ${you} take their share.`;
+  // A share as the simplest 'n in d' that's within 3 points of it, so the words match the percent shown beside them.
+  const frac = p => { for (let d = 2; d <= 10; d++){ const n = Math.round(p * d / 100); if (n >= 1 && n < d && Math.abs(n / d * 100 - p) <= 3) return `${n} in ${d}`; } return `${Math.round(p)}%`; };
+  const leftS = dim.comp >= 97 ? 'almost all' : dim.comp >= 5 ? `about ${frac(dim.comp)}` : 'almost none';
+  const compS = rIA > 1 ? `Because most people go after the same few, ${leftS} of the ${you} chasing the same ${them} end up with nobody.` : '';
   // drivers, each told through what it actually does
   const sorted = rows.slice().sort((a, b) => Math.abs(b.dc) - Math.abs(a.dc)).filter(r => Math.abs(r.dc) >= .3);
   const PHR = {myKids:{yes:'having kids', no:'not having kids'}, mySmoke:{yes:'smoking', no:'not smoking'}, myVape:{yes:'vaping', no:'not vaping'},
@@ -3264,13 +3260,15 @@ function reportSummary(F, A, C, fin, WB, rows, X){
     if (C.answered && r.pct0 != null && Math.abs(C.pct - r.pct0) >= .08 && Math.sign(C.pct - r.pct0) === Math.sign(r.dc)) return `moves you from the ${ord(P(r.pct0))} to the ${ord(P(C.pct))} percentile`;
     if (r.key === 'myAge' && Math.abs(r.dm) >= .03) return r.dc < 0 ? `brings in more ${them} who’d date you, but people your age pair off less often in a given year` : `means fewer ${them} would date you, but people your age pair off more often in a given year`;
     return ''; };
-  const ups = sorted.filter(r => r.dc > 0).slice(0, 2), dns = sorted.filter(r => r.dc <= 0).slice(0, 2);
   let drvS = '';
   // Each driver is told as where you'd be without it, the same number the cards below show.
   // A filter is told as where you'd be without it; one of your own traits, as where you'd be scored as a typical person on it.
   const wo = r => PC(Math.max(0, C.chance - r.dc / 100));
-  const wo1 = r => r.side === 'you' ? `Without that ${r.dc > 0 ? 'edge' : 'drag'} you’d be at ${wo(r)}.` : r.side === 'market' ? `In a typical market you’d be at ${wo(r)}.` : `Without it you’d be at ${wo(r)}.`;
-  const wo2 = r => r.side === 'you' ? `${cap(name(r))} ${r.dc > 0 ? 'helps too' : 'also hurts'}: without that you’d be at ${wo(r)}.` : r.side === 'market' ? `In a typical market you’d be at ${wo(r)}.` : `Without ${name(r)} you’d be at ${wo(r)}.`;
+  const wo1 = r => r.side === 'you' ? `If you were average on this, you’d be at ${wo(r)}.` : r.side === 'market' ? `In a typical market you’d be at ${wo(r)}.` : `Without it you’d be at ${wo(r)}.`;
+  const wo2 = r => r.side === 'you' ? `${cap(name(r))} ${r.dc > 0 ? 'helps too' : 'also hurts'}: if you were average on it, you’d be at ${wo(r)}.` : r.side === 'market' ? `In a typical market you’d be at ${wo(r)}.` : `Without ${name(r)} you’d be at ${wo(r)}.`;
+  // A trait is only named when we can say how it works; the market only when it actually changes your number.
+  const ok = r => r.side === 'you' ? !!how(r) : r.side === 'market' ? wo(r) !== PC(C.chance) : true;
+  const ups = sorted.filter(r => r.dc > 0 && ok(r)).slice(0, 2), dns = sorted.filter(r => r.dc <= 0 && ok(r)).slice(0, 2);
   if (ups.length){ const r = ups[0], h0 = how(r);
     drvS += h0 ? pick([`Your biggest asset is ${name(r)}. It ${h0}. ${wo1(r)}`, `${cap(name(r))} helps you most: it ${h0}. ${wo1(r)}`]) : `Your biggest asset is ${name(r)}. ${wo1(r)}`;
     if (ups[1]) drvS += ` ${wo2(ups[1])}`; }
@@ -3282,11 +3280,11 @@ function reportSummary(F, A, C, fin, WB, rows, X){
   const limS = lim[1] > -1 || verdictS ? '' : lim[0] === 'want' ? pick(['Most of the damage is coming from your list, not from you.', 'Your expectations are costing you more than anything about you.'])
     : lim[0] === 'you' ? pick(['It’s your own traits, more than what you’re asking for, that hold your number down.', 'Your list isn’t the main problem. Your own traits are.']) : (dns[0] && dns[0].side === 'market' ? '' : 'Where you live is holding you back more than anything about you.');
   // The persona's description, built from where this person actually falls on each measure, so every phrase is true for them.
-  const appP = dim.appeal >= 80 ? 'you’re near the top of the field' : dim.appeal >= 60 ? 'you outrank most of the competition' : dim.appeal >= 40 ? 'you’re in the middle of the pack' : 'most of the competition outranks you';
+  const appP = !ranked ? '' : dim.appeal >= 80 ? `you’re ahead of almost all the ${you} you’re up against` : dim.appeal >= 60 ? `you’re ahead of most of the ${you} you’re up against` : dim.appeal >= 40 ? `you’re in the middle of the ${you} you’re up against` : `most of the ${you} you’re up against rank ahead of you`;
   const selP = dim.select >= 99 ? `your list rules out almost everyone who’d date you` : dim.select >= 80 ? `your list rules out most of the ${them} who’d date you` : dim.select >= 50 ? `your list rules out about half of the ${them} who’d date you` : 'your list is easy to meet';
-  const compP = dim.comp >= 60 ? 'the field is crowded' : dim.comp >= 40 ? 'the competition is steady' : 'there’s room to spare';
-  const endP = ratio < .2 ? 'These odds don’t come back unless something changes.' : ratio < .87 ? 'There’s ground to make up.' : ratio < 1.15 ? `You’re about where a typical ${one} your age is.` : 'The math is on your side.';
-  const personaS = `${cap(selP)}. ${cap(appP)}, and ${compP}.`;
+  const compP = dim.comp >= 60 ? `a lot of ${you} are chasing the same ${them}` : dim.comp >= 40 ? `there’s steady competition for the same ${them}` : `there are enough ${them} to go around`;
+  const endP = ratio < .2 ? 'These odds don’t come back unless something changes.' : ratio < .87 ? 'There’s ground to make up.' : ratio < 1.15 ? `You’re about where a typical ${one} ${ageW} is.` : 'The math is on your side.';
+  const personaS = appP ? `${cap(selP)}. ${cap(appP)}, and ${compP}.` : `${cap(selP)}, and ${compP}.`;
   const p1 = `${personaS} ${rankS} ${oddsS}`;
   const p2 = [listS, compS, drvS, limS].filter(Boolean).join(' ');
   // what would change it
@@ -3302,11 +3300,11 @@ function reportSummary(F, A, C, fin, WB, rows, X){
     const lab = bestIdea ? esc(bestIdea.label.split(/,\s*and\s+/i).map(act).join(' and ')) : '';
     p3 = bestIdea ? pick([`The best thing you could do is this: ${lab}. That takes you from ${PC(C.chance)} to ${PC(bestIdea.C2.chance)}.`, `Of everything you could change, ${bestIdea.kind === 'combo' ? 'one pair of changes' : 'one change'} does the most: ${lab}. It takes you from ${PC(C.chance)} to ${PC(bestIdea.C2.chance)}.`]) : '';
     if (bestMetro){ const mn = esc(shortName(bestMetro.m.n)), y = PC(bestMetro.o.chance);
-      p3 += (p3 ? ' ' : '') + (bestIdea ? pick([`Or stay exactly as you are and move. In ${mn} you’d be at ${y}.`, `Moving works too: with the same answers in ${mn} you’d be at ${y}.`]) : `Your answers don’t leave much room, but location does. With the same answers in ${mn} you’d be at ${y}.`); }
+      p3 += (p3 ? ' ' : '') + (bestIdea ? pick([`Or stay exactly as you are and move. In ${mn} you’d be at ${y}.`, `Moving works too: with the same answers in ${mn} you’d be at ${y}.`]) : (bestCh - C.chance < .03 ? `With the same answers in ${mn} you’d be at ${y}.` : `Nothing you could change helps much, but location does. With the same answers in ${mn} you’d be at ${y}.`)); }
     const two = bestIdea && bestMetro, moved = bestCh - C.chance;
     p3 += moved < .03 ? ` ${two ? 'Neither changes' : 'That doesn’t change'} much. This is roughly where you stand.`
-      : bestCh >= h && C.chance < h ? ` ${two ? 'The better of the two' : 'That'} puts you ${bestCh >= h * 1.15 ? 'ahead of' : 'level with'} a typical ${one} your age.`
-      : C.chance >= h ? '' : ` ${two ? 'Even the better of the two' : 'Even that'} leaves you behind a typical ${one} your age.`;
+      : bestCh >= h && C.chance < h ? ` ${two ? 'The better of the two' : 'That'} puts you ${bestCh >= h * 1.15 ? 'ahead of' : 'level with'} a typical ${one} ${ageW}.`
+      : C.chance >= h ? '' : ` ${two ? 'Even the better of the two' : 'Even that'} leaves you behind a typical ${one} ${ageW}.`;
   } else p3 = `Nothing you could change here moves your chances by even 1%. This is where you stand.`;
   // Color uses the page's odds scale (outcome tiers); on Selectivity and Competition higher is worse for you, so the color reads 100 − value.
   const tierOf = g => g >= 80 ? 'vhigh' : g >= 60 ? 'high' : g >= 40 ? 'mod' : g >= 20 ? 'low' : 'vlow';
@@ -3316,14 +3314,15 @@ function reportSummary(F, A, C, fin, WB, rows, X){
   const barX = (label, val, tier, lo, hi, a, b, tick, d) => `<div class="pb ${tier}"><div class="pb-l"><span>${label}</span><b>${val}</b></div><div class="pb-tw"><div class="pb-t"><i style="margin-left:${(a * 100).toFixed(1)}%;width:${Math.max(1, (b - a) * 100).toFixed(1)}%"></i></div>${tick != null ? `<span class="pb-tk" style="left:${(tick * 100).toFixed(1)}%"></span>` : ''}</div><div class="pb-e"><span>${lo}</span><span>${hi}</span></div>${d ? `<p class="pb-d">${d}</p>` : ''}</div>`;
   const PCs = chanceTxt, top = Math.min(1, Math.max(C.chance, h, bestCh) * 1.2), at = v => Math.min(1, v / top);
   const mkt = dim.market >= 58 ? 'Favors you' : dim.market > 42 ? 'About average' : 'Works against you';
-  const left = dim.comp >= 5 ? `1 in ${Math.max(2, Math.round(100 / dim.comp))} left out` : 'Almost no one left out';
+  const left = dim.comp >= 97 ? 'Almost all left out' : dim.comp >= 5 ? `${frac(dim.comp)} left out` : 'Almost no one left out';
   const oddsT = ratio >= 1.15 ? 'vhigh' : ratio >= .87 ? 'mod' : ratio >= .5 ? 'low' : 'vlow', gainR = C.chance > 0 ? bestCh / C.chance : 1;
   const moveT = gainR >= 2 ? 'vhigh' : gainR >= 1.3 ? 'high' : gainR >= 1.1 ? 'mod' : 'low';
-  const bars = [bar('Your appeal', dim.appeal, 'Behind others', 'Ahead of others', false, `You outrank ${r0(dim.appeal)}% of the ${you} competing for the same ${them}.`),
+  const bars = [ranked ? bar('Your appeal', dim.appeal, 'Behind others', 'Ahead of others', false, `You outrank ${r0(dim.appeal)}% of the ${you} competing for the same ${them}.`)
+      : barX('Your appeal', 'Not ranked', 'mod', 'Behind others', 'Ahead of others', 0, .5, null, `You skipped the questions about yourself, so you’re scored as the typical ${one} here.`),
     bar('Your selectivity', dim.select, 'Open', 'Selective', true, `Your list rules out ${dim.select >= 99.5 && dim.select < 100 ? 'more than 99' : r0(dim.select)}% of the ${them} who would date you.`),
     barX('Your local market', mkt, mkt === 'Favors you' ? 'vhigh' : mkt === 'About average' ? 'mod' : 'low', 'Works against you', 'Favors you', 0, dim.market / 100, .5, `How much competition you face here compared with the same search nationwide. The mark is the national average.`),
     barX('Competition with others', left, dim.comp < 10 ? 'vhigh' : dim.comp < 20 ? 'high' : dim.comp < 35 ? 'mod' : dim.comp < 50 ? 'low' : 'vlow', 'Even', 'Steep', 0, dim.comp / 100, null, `${r0(dim.comp)}% of the ${you} chasing the same ${them} would end up with nobody.`),
-    barX('Your chances vs. typical', `${PCs(C.chance)} vs. ${PCs(h)}`, oddsT, '0%', PCs(top), 0, at(C.chance), at(h), `Your chances against a typical ${one} your age, marked on the bar at ${PCs(h)}.`),
+    barX('Your chances vs. typical', `${PCs(C.chance)} vs. ${PCs(h)}`, oddsT, '0%', '', 0, at(C.chance), at(h), `Your chances against a typical ${one} ${ageW}, marked on the bar at ${PCs(h)}.`),
     barX('Your best move', bestCh > C.chance + .0005 ? `${PCs(C.chance)} → ${PCs(bestCh)}` : 'No better move', bestCh > C.chance + .0005 ? moveT : 'low', 'Now', 'With your best move', at(C.chance), at(Math.max(C.chance, bestCh)), null, bestCh > C.chance + .0005 ? `Where your chances go with the best change to your answers, or the best city to move to, named below.` : `Nothing you could change, and no other city, raises your chances.`)].join('');
   return `<div class="rp-sum${SUM_MIN ? ' min' : ''}" id="rpSum"><span class="rp-ribbon"><svg class="rb-pin" viewBox="2 3 20 18.35" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="#fff"/><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" class="rb-in" transform="translate(12 11.6) scale(.45) translate(-12 -12)"/></svg><span class="rb-t">${area}</span></span><div class="rp-type"><div><span>Your dating persona</span><h3>${pname}</h3></div><button type="button" class="pm" id="rpSumTog" aria-expanded="${!SUM_MIN}" aria-label="Show or hide the summary">${SUM_MIN ? '+' : '–'}</button></div>
     ${(() => { const ow = oriWord(F.T, F.mySex), wdm = WB != null ? WB : fin, st = (n, l) => `<div><b>${fmtN(Math.max(0, n))}</b><span>${l}</span></div>`;
