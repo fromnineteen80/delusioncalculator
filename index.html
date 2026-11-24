@@ -722,6 +722,8 @@ html:root[data-scheme="dark"] .msi{font-variation-settings:"GRAD" -25}
 .ff-head,.ff-step{display:grid;grid-template-columns:minmax(170px,1.1fr) 92px minmax(0,1.7fr) minmax(0,1.7fr);gap:4px 14px;align-items:center}
 .ff-head{padding:0 0 4px;border-bottom:1px solid var(--rule);font-size:11px;font-weight:600;color:var(--muted)}
 .ff-steps{list-style:none;margin:0;padding:0}
+/* On a phone the Gauntlet reads as its step list first; the wide flow diagram, which scrolls sideways, comes after the tally. */
+@media (max-width:767px){#ffGauntlet .rp-body{display:flex;flex-direction:column} #ffGauntlet .ff-you{order:1} #ffGauntlet .ff-head{order:2} #ffGauntlet .ff-steps{order:3} #ffGauntlet .ff-tally{order:4;margin-bottom:14px} #ffGauntlet .ff-key{order:5} #ffGauntlet .ff-hint{order:6} #ffGauntlet .ff-flow{order:7}}
 .ff-step{padding:7px 0;border-bottom:1px dotted var(--rule);font-size:12px;line-height:1.35}
 .ff-sl{display:flex;align-items:baseline;gap:8px} .ff-sl b{font-size:13px;color:var(--navy)} .ff-n{color:var(--faint);font-variant-numeric:tabular-nums;min-width:12px}
 .ff-bar{display:flex;height:14px;background:var(--track);border-radius:3px;overflow:hidden} .ff-bar i{display:block;height:100%}
@@ -2691,7 +2693,7 @@ function ratioBlock(F, C, A, CF){
   const rt = x => (x >= 10 ? Math.round(x) : Math.round(x * 10) / 10) + ':1', rtl = (x, a, b) => a === b ? `${rt(x)} competitors to each ${a === 'men' ? 'man' : 'woman'} you want` : x >= 1 ? `${rt(x)} ${a} to ${b}` : `${rt(1 / x)} ${b} to ${a}`;
   const rows = [...ERAS.map(e => ({v: leftOver(e.r), label: `${e.name} · ${rtl(e.r, 'women', 'men')}`, note: e.note, cls: ''})),
     ...(F.mySex === F.T ? [] : [{v: lo(rawR), label: `Everyone single and looking in ${area}, counting where interest goes · ${rtl(rawR, you, them)}`, note: `${(rawComp / rawPool).toFixed(2)} single ${you} are looking for every single ${them === 'men' ? 'man' : 'woman'} looking here, the operational sex ratio. Most interest goes to a few, so it plays out like ${rawR.toFixed(1)} to one.`, cls: 'mk'}]),
-    {v: lo(myR), label: `Your filtered dating economy in ${area} · ${rtl(myR, you, them)}`, note: `${(C.compN / C.poolN).toFixed(2)} ${you} compete for every ${them === 'men' ? 'man' : 'woman'} you want. Counting where interest actually goes, it plays out like ${myR.toFixed(1)} to one.`, cls: 'mk me'}].sort((a, b) => a.v - b.v);
+    {v: lo(myR), label: `Your filtered dating economy in ${area} · ${rtl(myR, you, them)}`, note: `${(C.compN / C.poolN).toFixed(2)} ${you} per ${them === 'men' ? 'man' : 'woman'} you’d pursue by headcount, the figure in Your chances. Most interest goes to a few, so it plays out like ${myR.toFixed(1)} to one.`, cls: 'mk me'}].sort((a, b) => a.v - b.v);
   const e = near(lo(myR));
   const sentence = myR > 1
     ? `In ${area}, there aren’t enough of the ${them} you want to go around. Even if every single adult paired up, ${pct(lo(myR))} of the ${you} competing for ${them} would be left out. That’s closest to ${plainEra(e)}.`
@@ -2700,12 +2702,11 @@ function ratioBlock(F, C, A, CF){
   const osrM = datingCount(A.codes, F, 'M', {}), osrW = datingCount(A.codes, F, 'F', {}), EL = eliteCounts(A.codes, F);
   const fx = v => v >= 10 ? v.toFixed(0) : v.toFixed(2);
   const sr = `<div class="sxr">
-    ${F.mySex === F.T ? '' : `<div class="sxr-row"><div class="sxr-t">${area} operational sex ratio<span>${fmtX(osrM)} single straight men looking, ${fmtX(osrW)} single straight women looking</span></div><div class="sxr-v">${fx(osrM / osrW)}<small>men per woman</small></div></div>`}
-    <div class="sxr-row me"><div class="sxr-t">Your filtered dating economy in ${area}<span>${fmtX(C.compN)} ${you} competing for ${fmtX(C.poolN)} actively dating ${them} who meet your expectations</span></div><div class="sxr-v">${fx(C.compN / C.poolN)}<small>competitors per ${them === 'men' ? 'man' : 'woman'}</small></div></div>
-    ${F.mySex === F.T ? '' : `<div class="sxr-row"><div class="sxr-t">High-status ratio<span>${fmtX(EL.men)} high-status men (27 to 50, 6 ft or taller, a degree, $250k or more) and ${fmtX(EL.women)} highly sought-after women (25 to 37, slim, active, no college degree)</span></div><div class="sxr-v">${Math.round(EL.men) >= 1 ? fx(EL.women / EL.men) : '—'}<small>women per man</small></div></div>`}
+    ${F.mySex === F.T ? '' : `<div class="sxr-row"><div class="sxr-t">${area} operational sex ratio<span>${fmtX(osrW)} single straight women looking, ${fmtX(osrM)} single straight men looking</span></div><div class="sxr-v">${F.mySex === 'M' ? fx(osrM / osrW) : fx(osrW / osrM)}<small>${you} per ${them === 'men' ? 'man' : 'woman'}</small></div></div>`}
+    ${F.mySex === F.T ? '' : `<div class="sxr-row"><div class="sxr-t">High-status ratio<span>${fmtX(EL.men)} high-status men (27 to 50, 6 ft or taller, a degree, $250k or more) and ${fmtX(EL.women)} highly sought-after women (25 to 37, slim, active, no college degree)</span></div><div class="sxr-v">${F.mySex === 'M' ? (Math.round(EL.women) >= 1 ? fx(EL.men / EL.women) : '—') : (Math.round(EL.men) >= 1 ? fx(EL.women / EL.men) : '—')}<small>${you} per ${them === 'men' ? 'man' : 'woman'}</small></div></div>`}
   </div>`;
   const band = v => v < .25 ? 'var(--good)' : v < .5 ? 'var(--fair)' : v < .75 ? 'var(--long)' : 'var(--poor)';   // green, yellow, orange, red by share left over
-  return `<div class="ratio"><p class="gl-h">Sex ratios</p><p class="ghead">The balance of men and women around you, counted by heads. The first line counts everyone single and looking where you live. The second counts only your competition for the ${them} you want. The last compares the most sought-after men and women.</p>${sr}<div class="ratio-hist"><p class="gl-h">Across history</p><p class="ghead">${sentence}</p>
+  return `<div class="ratio"><p class="gl-h">Sex ratios</p><p class="ghead">The balance of men and women around you, counted by heads and written as ${you} per ${them === 'men' ? 'man' : 'woman'}, like every ratio in your report. The first line counts everyone single and looking where you live; the second compares the most sought-after men and women. Your own competition is in Your chances in the dating economy.</p>${sr}<div class="ratio-hist"><p class="gl-h">Across history</p><p class="ghead">${sentence}</p>
     <ul class="ratio-list">${rows.map(r2 => `<li class="${r2.cls}"><div class="rl"><span>${esc(r2.label)}</span><b>${pct(r2.v)}</b></div><div class="rb"><i style="width:${Math.max(1, r2.v * 100).toFixed(1)}%;background:${band(r2.v)}"></i></div><div class="rn">${esc(r2.note)}</div></li>`).join('')}</ul></div></div>`;
 }
 function adultsIn(codes, S){ return codes.reduce((a, i) => a + ((D.cbsa[i].ad || {})[S] || 0), 0); }
@@ -3023,12 +3024,12 @@ async function compJob(F, A, rows, mine, base, fin, w, token, C0, WB){
   { const sl = document.querySelector('#bar .cmpSlot'); if (sl && C.compN >= 1) sl.innerHTML = `<span class="res-only">${sl.parentNode.textContent.trim() ? ' · ' : ''}${fmtN(C.compN)} ${F.mySex === F.T ? oriWord(F.mySex, F.T) : you} are competing with you</span>`; }
   $('mktBody').innerHTML = `${WB != null && C.answered ? (() => {
       const share = WB > 0 ? fin / WB : 0, one = share > 0 ? Math.max(1, Math.round(1 / share)) : 0;
-      const head = `<b>${fmtN(WB)}</b> ${F.looking !== false ? 'actively dating ' : ''}single ${them} here would date you. <b>${fin >= 1 ? fmtN(fin) : 'None'}</b> of them ${Math.round(fin) === 1 ? `is also ${them === 'women' ? 'a woman' : 'a man'} you’d pursue: your one mutual match` : `are also ${them} you’d pursue: your mutual matches`}${share > 0 && share < .5 && Math.round(fin) >= 1 ? `, about 1 in ${fmtN(Math.round(WB) / Math.round(fin))}` : ''}.`;
+      const head = `Of the <b>${fmtN(WB)}</b> ${F.looking !== false ? 'actively dating ' : ''}single ${them} here who would date you, <b>${fin >= 1 ? fmtN(fin) : 'none'}</b> ${Math.round(fin) === 1 ? `is also ${them === 'women' ? 'a woman' : 'a man'} you’d pursue` : `are also ${them} you’d pursue`}${share > 0 && share < .5 && Math.round(fin) >= 1 ? `, about 1 in ${fmtN(Math.round(WB) / Math.round(fin))}` : ''}.`;
       const tail = share >= .5 ? ' Your expectations keep most of the people who would date you.'
         : C.pct >= .6 ? ' You stand out against your competition, so your expectations, not your appeal, are what limit you most.'
         : C.pct < .4 ? ' Loosening your expectations widens your options, but your standing against your competition limits you more.'
         : ' Both your expectations and your standing against your competition shape your options.';
-      return `<div class="mutual first"><p class="ghead"><b>Mutual matches.</b> ${head}${tail} ${oTot >= GRID_N ? `Each square in the grid below stands for about ${fmtN(oTot / GRID_N)} of the ${fmtN(oTot)} local single ${oriWord(F.T, F.mySex)}.` : `Each square in the grid below is one of the ${fmtN(oTot)} local single ${oriWord(F.T, F.mySex)}.`}</p></div>`; })() : ''}
+      return `<div class="mutual first"><p class="ghead">${head}${tail} ${oTot >= GRID_N ? `Each square in the grid below stands for about ${fmtN(oTot / GRID_N)} of the ${fmtN(oTot)} local single ${oriWord(F.T, F.mySex)}.` : `Each square in the grid below is one of the ${fmtN(oTot)} local single ${oriWord(F.T, F.mySex)}.`}</p></div>`; })() : ''}
     ${rankHtml}
     <div class="odds mkt-odds ${ok}">
       <div class="o-head"><b>${chanceTxt(ch)}</b>${pill(ch)}<span>your chances in the dating economy</span></div>
@@ -3453,9 +3454,8 @@ async function buildReport(F, A, C, fin, WB, live, X = {}){
     const P = (b, t) => `<p class="gl-p"><b>${b}</b>${t ? ' ' + t : ''}</p>`, aim = trigOf(F).r > 0;
     const body = `<p class="gl-h">The ${them} you’d pursue</p>`
       + P(`${fmtN(N.pAll)} single ${ow}`, `meet everything you’re looking for. ${fmtN(N.pAct)} of them are actively dating right now.`)
-      + (F.T !== 'B' && C.compN >= 1 ? P((r => r < 1 ? `About ${Math.max(1, Math.round(r * 10))} ${you} compete for every 10 of those ${fmtN(C.poolN)} ${them}.` : `About ${r.toFixed(1)} ${you} compete for each of those ${fmtN(C.poolN)} ${them}.`)(C.compN / Math.max(1, C.poolN)), `${cap0(you)} are counted by how much of their attention goes to ${them} like them${C.desire && C.desire > 1.05 ? `, and ${them} this sought-after draw more attention than average` : ''}.`) : '')
+      + (F.T !== 'B' && C.compN >= 1 ? P((r => r < 1 ? `About ${Math.max(1, Math.round(r * 10))} ${you} compete for every 10 of those ${fmtN(C.poolN)} ${them}.` : `About ${r.toFixed(1)} ${you} compete for each of those ${fmtN(C.poolN)} ${them}.`)(C.compN / Math.max(1, C.poolN)), `A ${you === 'men' ? 'man' : 'woman'} who also dates other kinds of ${them} counts only partly${C.desire && C.desire > 1.05 ? `, and ${them} this sought-after draw more attention than average` : ''}.`) : '')
       + (C.answered && F.T !== 'B' ? P(`You outrank ${Math.round(C.pct * 100)}% of that competition`, `on the questions you answered.${ageNote(rows)}`) : '')
-      + (WB != null ? P(`${fin >= 1 ? fmtN(fin) : 'No'} mutual match${Math.round(fin) === 1 ? '' : 'es'}:`, `${F.looking !== false ? 'actively dating ' : ''}${them} you’d pursue who would also date you.`) : '')
       + (N.wbAll != null ? `<p class="gl-h">The ${them} who’d date you</p>`
         + P(`${fmtN(N.wbAll)} single ${ow}`, `would be open to dating a ${me} like you, based on your About you answers alone.`)
         + P(`${fmtN(N.wbAct)} of them are actively dating`, 'right now.')
@@ -3470,13 +3470,13 @@ async function buildReport(F, A, C, fin, WB, live, X = {}){
     const pctT = v => v >= .995 ? 'over 99%' : v < .01 ? 'under 1%' : P(v) + '%';
     const st = [[`Single ${oriW}`, `All single ${oriW} in ${area}`, all],
       ['Actively dating', `Single ${oriW} in ${area} actively dating ${them}`, C.compAll],
-      ['After the same ' + them, `${You} after the same ${them} you want, weighted by how much of their dating attention goes to them`, C.compN]];
-    if (C.answered) st.push(['At or above you', `Competition that scores at or above you on the questions you answered, weighted the same way`, C.atOrAbove]);
+      ['After the same ' + them, `${You} after the same ${them} you want, counting those who also date other kinds of ${them} only partly`, C.compN]];
+    if (C.answered) st.push(['At or above you', `Competition that scores at or above you on the questions you answered, counted the same way`, C.atOrAbove]);
     const list = `<ol class="prof">${st.map(([t, c, n], i) => `<li class="${i === st.length - 1 ? 'final' : ''}"><div><div class="t">${t}</div><div class="crit">${c}</div></div><div class="n"><b>${fmtN(n)}</b><small>${i ? fmtPct(all > 0 ? n / all : 0) + ' of start' : 'to start'}</small></div><div class="meter${i >= 2 ? ' avail' : ''}"><i style="width:${(all > 0 ? Math.max(1, n / all * 100) : 0).toFixed(1)}%"></i></div></li>`).join('')}</ol>`;
     const per = C.poolN >= 1 ? C.compN / C.poolN : 0, perT = per >= 10 ? Math.round(per).toLocaleString() : per.toFixed(1);
     const para = `In ${area}, ${fmtN(all)} single ${oriW} are your potential competition, and ${fmtN(C.compAll)} of them are actively dating ${them}. `
-      + (anyAge ? `They’re counted by how much of their dating attention goes to the ${them} you want${C.desire && Math.abs(C.desire - 1) >= .05 ? `, and ${C.desire > 1 ? 'raised' : 'lowered'} ${Math.round(Math.abs(C.desire - 1) * 100)}% because ${them} who meet your expectations are ${C.desire > 1 ? 'more' : 'less'} sought-after than the typical local ${them === 'men' ? 'man' : 'woman'}` : ''}.`
-                : `The ones who date ${them} ${ages} are counted by how much of their dating attention goes to the ${them} you want${C.desire && Math.abs(C.desire - 1) >= .05 ? `, ${C.desire > 1 ? 'raised' : 'lowered'} ${Math.round(Math.abs(C.desire - 1) * 100)}% because ${them} who meet your expectations are ${C.desire > 1 ? 'more' : 'less'} sought-after than the typical local ${them === 'men' ? 'man' : 'woman'}` : ''}.`)
+      + (anyAge ? `A ${you === 'men' ? 'man' : 'woman'} who also dates other kinds of ${them} counts only partly${C.desire && Math.abs(C.desire - 1) >= .05 ? `, and the total is ${C.desire > 1 ? 'raised' : 'cut'} ${Math.round(Math.abs(C.desire - 1) * 100)}% because the ${them} you want get ${C.desire > 1 ? 'more' : 'less'} attention than the typical local ${them === 'men' ? 'man' : 'woman'}` : ''}.`
+                : `Of the ones who date ${them} ${ages}, a ${you === 'men' ? 'man' : 'woman'} who also dates other kinds of ${them} counts only partly${C.desire && Math.abs(C.desire - 1) >= .05 ? `, and the total is ${C.desire > 1 ? 'raised' : 'cut'} ${Math.round(Math.abs(C.desire - 1) * 100)}% because the ${them} you want get ${C.desire > 1 ? 'more' : 'less'} attention than the typical local ${them === 'men' ? 'man' : 'woman'}` : ''}.`)
       + (C.answered ? ageNote(rows) : ` Answer the questions in About you to see where you rank among these ${you}.`);   // the per-person ratio and your rank are told once, in the summary and the glance card
     const ri = cards.findIndex(c => c.includes('rp-card c-rank'));
     cards.splice(ri + 1, 0, card('c-comp', 'swords', 'Your competition', para, list));
@@ -3485,7 +3485,7 @@ async function buildReport(F, A, C, fin, WB, live, X = {}){
   { const N2 = funnelNums(A, F, WB), look2 = F.looking !== false, one2 = them === 'men' ? 'man' : 'woman', ow2 = F.T === 'B' ? them : oriWord(F.T, F.mySex);
     const pc = v => v >= .995 ? 'over 99%' : v < .01 ? 'under 1%' : Math.round(v * 100) + '%', R2 = [];
     if (N2.wbAll != null) R2.push(['Would date you', `${look2 ? 'Actively dating single' : 'Single'} ${ow2} who would date you, from your About you answers`, fmtN(look2 ? N2.wbAct : N2.wbAll)]);
-    if (F.T !== 'B' && C.compN >= 1 && C.poolN >= 1) R2.push([`Competition for each ${one2} you’d pursue`, `${fmtN(C.compN)} ${you} compete for the ${fmtN(C.poolN)} actively dating ${them} you’d pursue`, (C.compN / C.poolN).toFixed(1)]);
+    if (F.T !== 'B' && C.compN >= 1 && C.poolN >= 1) R2.push([`${cap0(you)} competing for each ${one2} you’d pursue`, `${fmtN(C.compN)} ${you} compete for the ${fmtN(C.poolN)} actively dating ${them} you’d pursue, by headcount`, (C.compN / C.poolN).toFixed(2)]);
     const ord = n => n + (n % 100 >= 11 && n % 100 <= 13 ? 'th' : ['th', 'st', 'nd', 'rd'][n % 10] || 'th');
     if (C.answered && F.T !== 'B' && RANK_ALL != null) R2.push([`Where you rank among all ${you}`, `Your percentile among all single ${oriWord(F.mySex, F.T)} in ${area} who are dating ${them}, whoever they’re after`, ord(Math.max(1, Math.min(99, Math.round(RANK_ALL * 100))))]);
     if (C.answered && F.T !== 'B'){ R2.push([`Where you rank among your competition`, `The share of the ${you} going after the same ${them} as you that you outrank`, pc(C.pct)]); R2.push(['Ranked higher', `${cap0(you)} at or above you on the questions you answered`, fmtN(C.atOrAbove)]); }
@@ -3548,7 +3548,7 @@ async function buildReport(F, A, C, fin, WB, live, X = {}){
       // Labels: you, the best chance, and the biggest metros, skipping any that would collide.
       const lab = [me, pts.slice().sort((a, b) => b.y - a.y)[0], ...pts.slice().sort((a, b) => b.pop - a.pop).slice(0, 4)].filter((p, k, a) => p && a.indexOf(p) === k);
       const boxes = []; let labs = '';
-      for (const p of lab){ const cx = X_(p.x), cy = Y_(p.y), w = p.n.length * 5.6 + (p === me ? 30 : 4), right = cx + 8 + w < W - rt, bx = right ? cx + 7 : cx - 7 - w, by = cy - 13;
+      for (const p of lab){ const cx = X_(p.x), cy = Y_(p.y), w = (p === me ? ('You: ' + p.n).length * 6.6 : p.n.length * 6.1) + 4, right = cx + 8 + w < W - rt, bx = right ? cx + 7 : cx - 7 - w, by = cy - 13;
         if (p !== me && boxes.some(b => bx < b[0] + b[2] + 4 && bx + w + 4 > b[0] && by < b[1] + 18 && by + 18 > b[1])) continue; boxes.push([bx, by, w]);
         labs += `<text x="${right ? cx + 7 : cx - 7}" y="${cy - 6}" text-anchor="${right ? 'start' : 'end'}" class="sc-lab${p === me ? ' me' : ''}">${esc(p === me ? 'You: ' + p.n : p.n)}</text>`; }
       const svg = `<svg viewBox="0 0 ${W} ${H}" class="sc" data-pts="${tipData}" data-box="${l},${tp},${W - rt},${H - bt}" data-noun="${C.answered ? 'mutual matches' : esc(them) + ' who fit'}" role="img" aria-label="Your chances against your ${C.answered ? 'mutual matches' : 'pool'} in ${pts.length} metro areas">${g}${dots}<circle cx="${X_(me.x).toFixed(1)}" cy="${Y_(me.y).toFixed(1)}" r="6" class="sc-me"/>${labs}<g class="sc-tip" visibility="hidden"><circle r="5.5" class="sc-hl"/><rect rx="5" class="sc-tipbox"/><text class="sc-tipt" text-anchor="middle"><tspan class="n"/><tspan class="v" dy="14"/></text></g></svg>`;
@@ -3609,7 +3609,7 @@ async function buildReport(F, A, C, fin, WB, live, X = {}){
     let d = ''; pts.forEach((p, k) => { d += (k ? `H${X_(k).toFixed(1)}V` : `M${X_(0).toFixed(1)} `) + Y_(p.m).toFixed(1); });
     g += `<path d="${d}" class="ld-line"/>` + pts.map((p, k) => `<circle cx="${X_(k).toFixed(1)}" cy="${Y_(p.m).toFixed(1)}" r="3.5" class="ld-dot"/><text x="${(X_(k) + (k === pts.length - 1 ? 4 : 0)).toFixed(1)}" y="${(Y_(p.m) - 8).toFixed(1)}" class="ld-v" text-anchor="${k === pts.length - 1 ? 'end' : 'middle'}">${fmtN(p.m)}</text><text x="${X_(k).toFixed(1)}" y="${H - bt + 16}" class="sc-tick" text-anchor="middle">${k ? k : 'Now'}</text>`).join('');
     const one = EXR.ladder[0], last = EXR.ladder[EXR.ladder.length - 1], n = EXR.ladder.length;
-    const lede = `Dropping your ${n === 1 ? 'costliest expectation' : `${n} costliest expectations`}, one more at a time. ${one.label} alone takes you from ${fmtN(fin)} to ${fmtN(one.m)} mutual matches${n > 1 ? `; all ${n} together reach ${fmtN(last.m)} mutual matches` : ''}.`;
+    const lede = `Dropping your ${n === 1 ? 'costliest expectation' : `${n} costliest expectations`}, one more at a time.${n > 1 ? ' Each step builds on the ones before it, so a later filter can add far more matches here than it costs on its own.' : ''} ${one.label} alone takes you from ${fmtN(fin)} to ${fmtN(one.m)} mutual matches${n > 1 ? `; all ${n} together reach ${fmtN(last.m)} mutual matches` : ''}.`;
     cards.push(card('c-ladder', 'trending_up', 'The loosening ladder', lede,
       `<div class="sc-wrap"><svg viewBox="0 0 ${W} ${H}" class="sc" role="img" aria-label="${esc(lede)}">${g}</svg></div><ol class="ld-list">${EXR.ladder.map((p, k) => `<li><span>${k + 1}. ${esc(p.drop || 'Drop ' + p.label.toLowerCase())}</span><b>${fmtN(p.m)}</b></li>`).join('')}</ol>`));
   }
@@ -4482,10 +4482,10 @@ function ffGauntlet(F){
     <p class="rp-cl">Start with 1,000 men turning 37 and apply the published share who clear each step to the men still in the running. 51 men end up married, with two kids, a home near good jobs and $250,000 a year between them. 949 men don’t. And $250,000 is the old benchmark: in the typical large metro the same life now takes closer to $300,000. Keep that in mind before setting an income filter or writing someone off over a paycheck. The life most of us picture as normal now takes an income only a small share of couples reach, and most men are being measured against it, by women and by themselves.</p>
     <div class="rp-body">${you}
     <div class="ff-key">${FF_PATHS.map(([l, c, n, m]) => `<span><span class="ff-dot ${c}"></span>${l}: ${m} of ${n} make it</span>`).join('')}</div>
+    <p class="ff-hint">Scroll sideways to follow every step.</p>
     ${ffFlowSVG(p)}
     <div class="ff-head" aria-hidden="true"><span>Step</span><span>Made it</span><span>What the numbers say</span><span>What is holding men back</span></div>
     <ol class="ff-steps">${rows}</ol>
-    <p class="ff-hint">Scroll sideways to follow every step.</p>
     <div class="ff-tally"><b>51</b> made it <span>·</span> <b>949</b> fell short: 377 never married, 122 divorced, 400 under $250,000, 15 couldn’t buy nearby, 35 had fewer than two kids</div></div></section>`;
 }
 
@@ -4524,7 +4524,7 @@ function ffPartner(F, me){
   const body = need <= 0 ? `<p class="ff-where">${typ ? 'That income' : 'Your income'} covers the ${ffM(me.total)} floor in ${ffEsc(me.name)} on its own.</p>`
     : `<div class="ff-split" role="img" aria-label="You ${Math.round(mineW)} percent, partner ${Math.round(100 - mineW)} percent"><i class="ff-you-b" style="width:${mineW}%">${mineW >= 24 ? `<span>${typ ? 'Typical' : 'You'} ${ffK(mine)}</span>` : ''}</i><i class="ff-them-b" style="width:${100 - mineW}%">${100 - mineW >= 24 ? `<span>Partner ${ffK(need)}</span>` : ''}</i></div>
        <p class="ff-legend"><span class="ff-sw ff-you-b"></span>${typ ? 'Typical' : 'You'} ${ffM(mine)}<span class="ff-sw ff-them-b"></span>Partner ${ffM(need)}</p>
-       <div class="ff-big"><span>A partner has to earn</span><b>${ffM(need)}</b><em>to reach ${ffEsc(me.name)}’s ${ffM(me.total)} floor</em></div>
+       <div class="ff-big"><span>A partner has to earn</span><b>${ffM(need)}</b><em>to reach ${ffEsc(me.name)}’s ${ffM(me.total)} floor to afford a family of four household</em></div>
        ${share != null ? `<p class="ff-where">About <b>${share < 0.1 ? (share * 100).toFixed(1) : Math.round(share * 100)}%</b> of ${pw.pl} ages ${lo} to ${hi} in ${ffEsc(me.name)} earn that much.${P === 'M' ? ' That’s why so many women ask what a man makes.' : ''}</p>` : ''}`;
   return `<section class="rp-card ff-card c-floor" id="ffPartner"><h3><span class="msi" aria-hidden="true">diversity_3</span>What your partner has to earn</h3>
     <p class="rp-cl">${lede} The rest of the family budget has to come from a partner.</p><div class="rp-body">${body}
