@@ -418,7 +418,7 @@ th{font:600 11.5px/1.4 var(--mono);letter-spacing:.06em;text-transform:uppercase
 td.m,th.m{text-align:left;width:100%}
 td.r{color:var(--muted);font:400 11.5px/1.4 var(--mono);width:2.5ch}
 td.v{font-family:var(--mono);white-space:nowrap}
-tr.me td{background:var(--accent-soft)}
+tr.me td{background:var(--accent-soft)} .cmp-near td.m small{display:block;font-size:11px;color:var(--muted);font-weight:400} .cmp-near tr.me td{font-weight:700}
 td button{font:600 13px var(--body);color:var(--accent-ink);background:none;border:1px solid var(--rule);border-radius:6px;padding:4px 10px;cursor:pointer;white-space:nowrap}
 td button:hover{border-color:var(--accent-ink)}
 @media (max-width:560px){.hide-sm{display:none} #cmp .pill{display:none} #cmp td button,.cmpw td button{padding-left:8px;padding-right:8px} #cmp th,.cmpw th{white-space:normal;letter-spacing:0;font-size:11.5px;line-height:1.4} #cmp th,#cmp td,.cmpw th,.cmpw td{padding-left:4px;padding-right:4px}}
@@ -3078,7 +3078,7 @@ async function compJob(F, A, rows, mine, base, fin, w, token, C0, WB){
   // Per metro, counted the same way as the top bar: single people who would date you, and the people you'd pursue.
   const ex = new Map(), FBm = {...blankFilters(F), ageMin: 18, ageMax: 84, looking: F.looking}; for (const k2 of MY_KEYS) FBm[k2] = F[k2];
   const obm = l => { const o = l.find(x => x.title === 'Open to dating you'); return o ? o.before : l[l.length - 1].after; };
-  for (const r of [...top, ...worst]){ if (ex.has(r.i)) continue;
+  for (const r of [...top, ...worst, ...near]){ if (ex.has(r.i)) continue;
     await later(() => { if (!live()) return; const wb = wouldDate(compete([r.i], FBm, RUN)), bA = obm(computeAll([r.i], {...FBm, looking: false})), bL = obm(computeAll([r.i], {...FBm, looking: true}));
       ex.set(r.i, {wb: wb == null ? null : F.looking === false ? wb : (bL > 0 ? wb * bA / bL : wb), p: obm(computeAll([r.i], {...F, looking: false})), m: (odds.get(r.i) || {}).would}); });
     if (!live()) return; }
@@ -3530,16 +3530,17 @@ async function buildReport(F, A, C, fin, WB, live, X = {}){
   cards.push(card('c-best', 'star', 'Best 10 metros', `Consider the best local dating economies in the United States based on who you are and what you are looking for. Ranked by your chances in each metro, which count your competition and where you rank, so a metro with more mutual matches doesn’t always rank higher.`, slot('#cmpCard .tw')));
   if (X.worst && X.worst.length) cards.push(card('c-worst', 'arrow_downward', 'Worst 10 metros', `Where your same answers do worst, among metro areas with at least as many ${them} you’d pursue as you have here. Ranked by your chances, so a big metro can rank low when the competition there is steep.`,
     `<div class="tw"><table class="cmpw"><thead><tr><th></th><th class="m">Metro area</th><th>You’d pursue</th><th>Mutual matches</th><th>Your chances</th></tr></thead><tbody>${X.worst.map((r, n) => { const e = (X.ex && X.ex.get(r.i)) || {}, o = X.odds && X.odds.get(r.i); return `<tr><td class="r">${n + 1}</td><td class="m">${esc(shortName(r.n))}</td><td class="v">${e.p != null ? fmtN(e.p) : '—'}</td><td class="v">${e.m != null ? fmtN(e.m) : '—'}</td><td class="v">${o ? chanceTxt(o.chance) : '—'}</td></tr>`; }).join('')}</tbody></table></div>`));
-  // Nearby: your same answers scored in the closest metro areas and the closest major metros.
-  if (X.near && X.near.length && X.odds){
-    const home = A.label || shortName(D.cbsa[A.codes[0]].n), hc = C.chance;
-    const L = X.near.map(o => ({...o, n: shortName(D.cbsa[o.i].n), c: (X.odds.get(o.i) || {}).chance || 0}));
-    const best = L.reduce((a, b) => b.c > a.c ? b : a);
-    const lede = `Your same answers scored in the metro areas closest to ${esc(home)} and the nearest major metros. ` + (chanceTxt(best.c) !== chanceTxt(hc) && best.c > hc
-      ? `${esc(best.n)}, ${Math.round(best.d)} miles away, takes your chances from ${chanceTxt(hc)} to ${chanceTxt(best.c)}.` : `None of them beats your chances here.`);
-    const li = [{n: home, c: hc, me: true}, ...L].sort((a, b) => b.c - a.c).map(o => { const sm = chanceTxt(o.c) === chanceTxt(hc), up = o.c > hc;
-      return `<li${o.me ? ' class="ff-me"' : ''}><span class="ff-nm">${esc(o.n)}<small>${o.me ? 'your area' : Math.round(o.d) + ' miles'}${o.big && !o.me ? ' · major metro' : ''}</small></span><span class="ff-v">${chanceTxt(o.c)}</span><span class="ff-df ${o.me || sm ? '' : up ? 'ok' : 'up'}">${o.me ? '' : sm ? 'same' : up ? 'higher' : 'lower'}</span></li>`; }).join('');
-    cards.push(card('c-near', 'near_me', 'Your chances nearby', lede, `<ol class="ff-near">${li}</ol><p class="ff-note">Best chances first. The closest metro areas within 250 miles, plus the four closest metro areas of 500,000 people or more (Census Bureau, 2025). Each is scored the way your area is: the ${them} there who fit what you want, the ones who would want you back and how many others are going after the same people.</p>`)); }
+  // Nearby: your same answers counted in the closest metro areas and the closest major metros, the same way as the top bar.
+  if (X.near && X.near.length && X.ex){
+    const home = A.label || shortName(D.cbsa[A.codes[0]].n), Them = them.charAt(0).toUpperCase() + them.slice(1);
+    const L = X.near.map(o => { const e = X.ex.get(o.i) || {}; return {...o, n: shortName(D.cbsa[o.i].n), w: e.wb, m: e.m}; });
+    const best = L.reduce((a, b) => (b.m || 0) > (a.m || 0) ? b : a);
+    const lede = `Your same answers counted in the metro areas closest to ${esc(home)} and the nearest major metros. ` + ((best.m || 0) > fin
+      ? `${esc(best.n)}, ${Math.round(best.d)} miles away, has the most mutual matches for you: ${fmtN(best.m)}, against ${fmtN(fin)} here.` : `None of them has more mutual matches for you than ${esc(home)}.`);
+    const nv = v => v != null ? fmtN(Math.max(0, v)) : '—';
+    const tr = [{n: home, w: WB, m: fin, me: true}, ...L].sort((a, b) => (b.m || 0) - (a.m || 0)).map(o =>
+      `<tr class="${o.me ? 'me' : ''}"><td class="m">${esc(o.n)}<small>${o.me ? 'your area' : Math.round(o.d) + ' miles'}${o.big && !o.me ? ' · major metro' : ''}</small></td><td class="v">${nv(o.w)}</td><td class="v">${nv(o.m)}</td></tr>`).join('');
+    cards.push(card('c-near', 'near_me', 'Your chances nearby', lede, `<div class="tw"><table class="cmpw cmp-near"><thead><tr><th class="m">Metro area</th><th>${Them} who’d date you</th><th>Mutual matches</th></tr></thead><tbody>${tr}</tbody></table></div><p class="ff-note">Most mutual matches first. The closest metro areas within 250 miles, plus the four closest metro areas of 500,000 people or more (Census Bureau, 2025). Counted the same way as the numbers at the top of your report.</p>`)); }
   // Every metro: your mutual matches there (log scale) against your chance there, same answers everywhere.
   if (X.ranked && X.odds && X.ranked.length > 20){
     const pts = X.ranked.map(r => { const o = X.odds.get(r.i); return o ? {i: r.i, n: shortName(D.cbsa[r.i].n), x: Math.max(1, r.f || 0), y: score100(o.chance || 0), c: (o.chance || 0) * 100, pop: adultsIn([r.i], 'M') + adultsIn([r.i], 'F')} : null; }).filter(Boolean);
